@@ -1,0 +1,15 @@
+{
+  "name": "zivo-whatsapp-trial",
+  "version": "1.0.0",
+  "description": "Trial server connecting the Zivo math-tutor knowledge base to WhatsApp via Twilio Sandbox",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "body-parser": "^1.20.2",
+    "twilio": "^5.2.2",
+    "@anthropic-ai/sdk": "^0.27.0"
+  }
+}

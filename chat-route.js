@@ -67,10 +67,15 @@ ${JSON.stringify(unit, null, 1)}
 - ענה תמיד ב${langName}, גם אם חלק מהחומר המקורי כתוב בשפה אחרת.
 - זו שיטת הוראה סוקרטית, לא שאלה-ותשובות: נסה להבין איפה התלמיד/ה תקוע/ה, שאל שאלה מנחה קצרה אחת, ורק אם עדיין תקוע/ה - תן את הצעד הבא.
 - אל תתן פתרון מלא מיד, גם אם מתבקשים. פרק לצעדים קטנים.
-- כשמסבירים פתרון מדורג, מספר כל שלב בשורה נפרדת (1. 2. 3.) בשורה נפרדת - זה יוצג ויזואלית כשלבי מחברת.
+- כשמסבירים פתרון מדורג עם כמה נקודות/שלבים ממוספרים (1. 2. 3.), חובה להשאיר שורה ריקה בין כל נקודה לנקודה הבאה - כלומר שתי ירידות שורה (\n\n) בין השלבים, לא רק אחת. זה קריטי לקריאות בצ'אט.
 - טון: חם, מעודד, סבלני. אף פעם לא מתנשא או ביקורתי על טעויות.
 - הודעות קצרות, מתאים לצ'אט וואטסאפ.
 - אם התלמיד עונה נכון - לחזק בקצרה ולעבור הלאה.
+- אם ציור/דיאגרמה יעזרו להבנה (משולש, זווית, מרובע, מעגל, מערכת צירים, גרף פונקציה וכו') - צייר אותם! כתוב קוד SVG פשוט ותקין, עטוף בדיוק כך:
+[DIAGRAM_START]
+<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">...</svg>
+[DIAGRAM_END]
+כללים לציור: viewBox="0 0 300 220" תמיד. שימוש ב-stroke="#2F6F5E" לקווי הצורה, stroke-width="2", fill="none" לצורות (אלא אם צריך למלא צבע ספציפי). טקסט/תוויות בתוך ה-SVG עם <text> ו-font-size="14". צורה אחת ברורה ופשוטה בכל דיאגרמה, לא מורכבת מדי. את הדיאגרמה תמיד ממקמים אחרי ההסבר המילולי הרלוונטי אליה, לא בהתחלה.
 
 בסוף כל תגובה שלך, הוסף שורה נסתרת (התלמיד לא רואה אותה, השרת מסיר אותה):
 [TOPIC: <שם הנושא הנוכחי בקצרה>]`;
@@ -149,12 +154,22 @@ router.post('/chat', upload.single('image'), async (req, res) => {
 
     const topicMatch = rawReply.match(/\[TOPIC:\s*(.+?)\]/);
     const topic = topicMatch ? topicMatch[1].trim() : (unit.topic_name || unit.topic_name_official || null);
-    const cleanReply = rawReply.replace(/\[TOPIC:\s*.+?\]/, '').trim();
+
+    // חילוץ דיאגרמות SVG שהמודל צייר, והסרתן מהטקסט הרגיל
+    const diagrams = [];
+    let replyNoTopic = rawReply.replace(/\[TOPIC:\s*.+?\]/, '');
+    const diagramRegex = /\[DIAGRAM_START\]([\s\S]*?)\[DIAGRAM_END\]/g;
+    let match;
+    while ((match = diagramRegex.exec(replyNoTopic)) !== null) {
+      const svg = match[1].trim();
+      if (svg.startsWith('<svg')) diagrams.push(svg);
+    }
+    const cleanReply = replyNoTopic.replace(diagramRegex, '').trim();
 
     // TODO: שמירה למסד נתונים לצורך דוח שבועי להורים:
     // studentId, studentName, grade, topic, timestamp
 
-    res.json({ reply: cleanReply, topic });
+    res.json({ reply: cleanReply, topic, diagrams });
   } catch (err) {
     console.error('Chat error:', err);
     res.status(500).json({ error: 'internal_error' });

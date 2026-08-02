@@ -10,9 +10,11 @@ const bodyParser = require("body-parser");
 const twilio = require("twilio");
 const Anthropic = require("@anthropic-ai/sdk");
 const fs = require("fs");
+const chatRouter = require("./chat-route");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/api", chatRouter);
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);

@@ -14,6 +14,16 @@ const multer = require('multer');
 const Anthropic = require('@anthropic-ai/sdk');
 
 const router = express.Router();
+
+// CORS - allow the website (daiz.co.il, hosted on Netlify) to call this
+// API even though it lives on a different domain (onrender.com).
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://daiz.co.il');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
 const anthropic = new Anthropic({

@@ -80,16 +80,25 @@ ${JSON.stringify(unit, null, 1)}
 // GET /api/topics?grade=ז
 // מחזיר את רשימת הנושאים הזמינים לכיתה נתונה (לתפריט הבחירה בצ'אט)
 // ---------------------------------------------------------------
+const DOMAIN_AR = {
+  'אלגברה': 'الجبر',
+  'גאומטריה': 'الهندسة',
+  'סטטיסטיקה': 'الإحصاء',
+  'מספרים': 'الأعداد',
+  'פונקציות': 'الدوال',
+};
+
 router.get('/topics', (req, res) => {
   const grade = req.query.grade;
+  const lang = req.query.lang === 'ar' ? 'ar' : 'he';
   if (!grade || !GRADES.includes(grade)) {
     return res.json({ grades: GRADES, topics: [] });
   }
-  const topics = topicsForGrade(grade).map(u => ({
-    id: u.topic_id,
-    name: u.topic_name || u.topic_name_official,
-    domain: u.domain_official,
-  }));
+  const topics = TOPICS.filter(t => t.grade === grade).map(t => ({
+    id: KB.math_units[t.id] ? KB.math_units[t.id].topic_id : null,
+    name: lang === 'ar' ? t.ar : t.he,
+    domain: lang === 'ar' ? (DOMAIN_AR[t.domain_he] || t.domain_he) : t.domain_he,
+  })).filter(t => t.id);
   res.json({ grades: GRADES, topics });
 });
 
@@ -100,12 +109,12 @@ router.get('/topics', (req, res) => {
 // ---------------------------------------------------------------
 router.post('/chat', upload.single('image'), async (req, res) => {
   try {
-    const { message, studentId, studentName, grade, topicId } = req.body;
+    const { message, studentId, studentName, grade, topicId, lang: langParam } = req.body;
     let history = [];
     try { history = JSON.parse(req.body.history || '[]'); } catch (e) { history = []; }
 
     const unit = findUnitById(topicId) || {};
-    const lang = /[\u0600-\u06FF]/.test(message || '') ? 'ar' : 'he';
+    const lang = langParam === 'ar' ? 'ar' : (langParam === 'he' ? 'he' : (/[\u0600-\u06FF]/.test(message || '') ? 'ar' : 'he'));
 
     const messages = history.map(m => ({
       role: m.role === 'user' ? 'user' : 'assistant',

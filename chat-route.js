@@ -2422,7 +2422,7 @@ const SUBJECTS = [
   { id: "math", he: "מתמטיקה", ar: "الرياضيات (بالعبرية)", kb_subject: "מתמטיקה", available: true },
   { id: "hebrew-grammar", he: "דקדוק עברית", ar: "قواعد اللغة العبرية", kb_subject: "עברית", available: true },
   { id: "arabic-grammar", he: "قواعد اللغة العربية", ar: "قواعد اللغة العربية", kb_subject: "ערבית", available: true },
-  { id: "hebrew-second-language", he: "عبرية كلغة ثانية", ar: "عبرية كلغة ثانية", kb_subject: "עברית כשפה שנייה", available: true },
+  { id: "hebrew-second-language", he: "העברית", ar: "العبرية", kb_subject: "עברית כשפה שנייה", available: true },
   { id: "math-arabic", he: "מתמטיקה (בערבית)", ar: "الرياضيات", kb_subject: "الرياضيات", available: true },
 ];
 
@@ -2517,7 +2517,7 @@ const DOMAIN_AR = {
 router.get('/subjects', (req, res) => {
   const lang = req.query.lang === 'ar' ? 'ar' : 'he';
   const subjects = SUBJECTS
-    .filter(s => s.id === 'math'
+    .filter(s => (s.id === 'math' && lang === 'he')
       || (s.id === 'hebrew-grammar' && lang === 'he')
       || (s.id === 'arabic-grammar' && lang === 'ar')
       || (s.id === 'hebrew-second-language' && lang === 'ar')

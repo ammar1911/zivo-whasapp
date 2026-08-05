@@ -2419,7 +2419,7 @@ const GRADES = ["ה", "ו", "ז", "ח", "ט"];
 // עד שתוכן דקדוק/قواعد ייכתב ויתווסף ל-KB.
 // =================================================================
 const SUBJECTS = [
-  { id: "math", he: "מתמטיקה", ar: "الرياضيات", kb_subject: "מתמטיקה", available: true },
+  { id: "math", he: "מתמטיקה", ar: "الرياضيات (بالعبرية)", kb_subject: "מתמטיקה", available: true },
   { id: "hebrew-grammar", he: "דקדוק עברית", ar: "قواعد اللغة العبرية", kb_subject: "עברית", available: true },
   { id: "arabic-grammar", he: "قواعد اللغة العربية", ar: "قواعد اللغة العربية", kb_subject: "ערבית", available: true },
   { id: "hebrew-second-language", he: "عبرية كلغة ثانية", ar: "عبرية كلغة ثانية", kb_subject: "עברית כשפה שנייה", available: true },

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+<title>חדר הלמידה - daiZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=Poppins:wght@700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A44;
+    --teal:#2F6F5E;
+    --teal-dark:#204F42;
+    --teal-tint:#E4EFEA;
+    --mustard:#D9A441;
+    --mustard-tint:#FBF0DC;
+    --paper:#FBF7EE;
+    --panel:#FFFFFF;
+    --line:rgba(30,42,68,0.12);
+    --muted:#5b6b7f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{height:100%; overflow:hidden;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Heebo', sans-serif; line-height:1.6;
+    display:flex; flex-direction:column; overflow:hidden;
+    /* app-shell is pinned to the actual visible viewport (set in px by JS via
+       the visualViewport API) so the mobile keyboard slides the input bar up
+       instead of squashing/cutting the chat, matching native app behavior. */
+    position:fixed; top:0; left:0; right:0; width:100%; height:100%;
+  }
+  body.lang-ar{ font-family:'Cairo', sans-serif; }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; background:rgba(251,247,238,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); z-index:10; flex-shrink:0;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Poppins','Heebo',sans-serif; font-weight:800; font-size:17px; color:var(--teal); }
+  .brand .mark{ flex-shrink:0; }
+  .brand .sub{ font-family:'Heebo',sans-serif; font-weight:600; font-size:10.5px; color:var(--muted); display:block; }
+  .topbar-right{ display:flex; align-items:center; gap:10px; }
+  .lang-toggle{ display:flex; gap:4px; background:#fff; border-radius:999px; padding:3px; box-shadow:0 2px 8px rgba(30,42,68,0.08); }
+  .lang-toggle button{ border:none; cursor:pointer; padding:6px 12px; border-radius:999px; font-size:11.5px; font-weight:700; background:transparent; color:var(--teal-dark); }
+  .lang-toggle button.active{ background:var(--teal); color:#fff; }
+  .topic-chip{ display:none; align-items:center; gap:6px; background:var(--mustard-tint); color:#8a6417; font-size:0.76rem; font-weight:700; padding:5px 11px; border-radius:999px; }
+  .topic-chip.show{ display:inline-flex; }
+  .change-topic-btn{ display:none; background:var(--teal-tint); color:var(--teal-dark); border:none; border-radius:8px; padding:6px 11px; font-size:0.76rem; font-weight:700; cursor:pointer; font-family:inherit; }
+  .change-topic-btn.show{ display:inline-flex; }
+
+  .picker-wrap{ flex:1; overflow-y:auto; padding:32px 20px; display:flex; flex-direction:column; align-items:center; }
+  .picker-title{ font-family:'Poppins','Heebo',sans-serif; font-weight:800; font-size:18px; margin-bottom:20px; text-align:center; }
+  .grade-grid{ display:flex; gap:12px; }
+  .grade-btn{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 30px; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:22px; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px rgba(30,42,68,0.06); }
+  .grade-btn:hover{ border-color:var(--teal); }
+  .topic-list{ display:flex; flex-direction:column; gap:10px; width:100%; max-width:460px; }
+  .topic-btn{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-align:start; cursor:pointer; box-shadow:0 2px 6px rgba(30,42,68,0.05); font-family:inherit; }
+  .topic-btn:hover{ border-color:var(--teal); }
+  .topic-btn .tname{ font-size:14px; font-weight:700; color:var(--ink); }
+  .topic-btn .tdomain{ font-size:11.5px; color:var(--muted); margin-top:3px; }
+  .back-link{ background:none; border:none; color:var(--teal); font-size:12.5px; font-weight:700; margin-bottom:14px; cursor:pointer; font-family:inherit; }
+  .subject-btn{ position:relative; }
+  .subject-btn.disabled{ opacity:0.55; cursor:not-allowed; }
+  .soon-badge{ display:inline-block; background:var(--mustard-tint); color:#8a6417; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; margin-inline-start:8px; }
+
+  .chat-wrap{ flex:1; overflow-y:auto; padding:20px; flex-direction:column; gap:4px; display:none; }
+  .chat-wrap.show{ display:flex; }
+  .chat-inner{ max-width:640px; margin:0 auto; width:100%; display:flex; flex-direction:column; gap:4px; }
+  .msg-row{ display:flex; margin-bottom:6px; }
+  .msg-row.in{ justify-content:flex-start; }
+  .msg-row.out{ justify-content:flex-end; }
+  .bubble{ max-width:80%; padding:11px 15px; border-radius:14px; font-size:14.5px; line-height:1.65; box-shadow:0 1px 2px rgba(27,42,68,0.06); white-space:pre-wrap; }
+  .msg-row.in .bubble{ background:#fff; color:var(--ink); border-bottom-right-radius:4px; border:1px solid var(--line); }
+  .msg-row.out .bubble{ background:var(--teal); color:#fff; border-bottom-left-radius:4px; }
+  .msg-time{ font-size:0.66rem; color:var(--muted); margin:2px 4px 10px; font-family:'IBM Plex Mono',monospace; }
+  .msg-row.out + .msg-time{ text-align:left; }
+  .typing-indicator{ display:flex; gap:4px; padding:11px 15px; }
+  .loading-wrap{ display:flex; flex-direction:column; align-items:center; gap:14px; padding:40px 20px; }
+  .loading-spinner{ width:34px; height:34px; border:3px solid var(--line); border-top-color:var(--teal); border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .loading-text{ font-size:13px; color:var(--muted); text-align:center; line-height:1.6; max-width:280px; }
+  .typing-indicator span{ width:6px; height:6px; border-radius:50%; background:var(--muted); opacity:0.5; animation:tb 1.2s infinite; }
+  .typing-indicator span:nth-child(2){ animation-delay:0.15s; }
+  .typing-indicator span:nth-child(3){ animation-delay:0.3s; }
+  @keyframes tb{ 0%,60%,100%{ transform:translateY(0); opacity:0.5; } 30%{ transform:translateY(-4px); opacity:1; } }
+
+  .input-bar{ border-top:1px solid var(--line); background:#fff; padding:12px 20px; display:none; flex-shrink:0; }
+  .input-bar.show{ display:block; }
+  .input-inner{ max-width:640px; margin:0 auto; display:flex; align-items:flex-end; gap:8px; }
+  .attach-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:11px; border:1px solid var(--line); background:var(--paper); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); }
+  .attach-btn:hover{ background:var(--teal-tint); color:var(--teal); }
+  .text-input{ flex:1; border:1px solid var(--line); border-radius:14px; padding:11px 15px; font-family:inherit; font-size:14px; resize:none; max-height:110px; min-height:42px; background:var(--paper); color:var(--ink); }
+  .text-input:focus{ outline:none; border-color:var(--teal); }
+  .send-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:11px; border:none; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .send-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+  .image-preview{ display:flex; align-items:center; gap:10px; max-width:640px; margin:0 auto 10px; background:var(--teal-tint); border-radius:10px; padding:8px 12px; }
+  .image-preview img{ width:40px; height:40px; object-fit:cover; border-radius:6px; flex-shrink:0; }
+  .image-preview .preview-text{ font-size:12.5px; color:var(--teal-dark); font-weight:600; flex:1; }
+  .image-preview .preview-remove{ background:none; border:none; color:var(--teal-dark); cursor:pointer; font-size:15px; padding:4px 8px; flex-shrink:0; }
+
+  .diagram-wrap{ margin-top:8px; background:#fff; border-radius:10px; padding:8px; border:1px solid var(--line); }
+  .diagram-wrap svg{ width:100%; height:auto; display:block; }
+  .msg-row.in .bubble .diagram-wrap{ background:var(--paper); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <svg class="mark" width="32" height="32" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="topbarGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F0C670"/>
+          <stop offset="100%" stop-color="#C6923A"/>
+        </linearGradient>
+      </defs>
+      <rect width="120" height="120" rx="27" fill="#2F6F5E"/>
+      <text x="60" y="80" text-anchor="middle" font-family="Poppins,Arial" font-weight="800" font-size="46" fill="#FBF7EE">d<tspan fill="url(#topbarGoldGrad)">Z</tspan></text>
+    </svg>
+    <div>daiZ<span class="sub">חדר הלמידה</span></div>
+  </div>
+  <div class="topbar-right">
+    <span class="topic-chip" id="topicChip"></span>
+    <button class="change-topic-btn" id="changeTopicBtn" onclick="resetToPicker()">החלף נושא</button>
+    <div class="lang-toggle">
+      <button id="btn-he" class="active" onclick="setLang('he')">עברית</button>
+      <button id="btn-ar" onclick="setLang('ar')">عربي</button>
+    </div>
+  </div>
+</div>
+
+<div class="picker-wrap" id="pickerWrap">
+  <div id="subjectStep">
+    <div class="picker-title" id="pickSubjectTitle">באיזה מקצוע נתרגל היום?</div>
+    <div class="topic-list" id="subjectList" style="max-width:420px; margin:0 auto;"></div>
+  </div>
+  <div id="gradeStep" style="display:none;">
+    <button class="back-link" onclick="showSubjectStep()" id="backLinkGrade">← חזרה</button>
+    <div class="picker-title" id="pickGradeTitle">באיזו כיתה אתה/את?</div>
+    <div class="grade-grid" id="gradeGrid"></div>
+  </div>
+  <div id="topicStep" style="display:none; width:100%; max-width:460px;">
+    <button class="back-link" onclick="showGradeStep()" id="backLink">← חזרה</button>
+    <div class="picker-title" id="pickTopicTitle">באיזה נושא נתרגל היום?</div>
+    <div class="topic-list" id="topicList"></div>
+  </div>
+</div>
+
+<div class="chat-wrap" id="chatWrap">
+  <div class="chat-inner" id="chatInner"></div>
+</div>
+
+<div class="input-bar" id="inputBar">
+  <div class="image-preview" id="imagePreview" style="display:none">
+    <img id="previewImg" alt="">
+    <span class="preview-text" id="previewText">התמונה תישלח עם ההודעה הבאה</span>
+    <button class="preview-remove" id="previewRemove" title="הסר">✕</button>
+  </div>
+  <div class="input-inner">
+    <button class="attach-btn" id="attachBtn" title="צרף תמונה">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><path d="M21 15l-5-5-9 9"/></svg>
+    </button>
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+    <textarea class="text-input" id="textInput" rows="1" placeholder="כתוב/י כאן..."></textarea>
+    <button class="send-btn" id="sendBtn" disabled>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'daiz_student_profile';
+  const API_BASE = 'https://zivo-whatsapp.onrender.com';
+
+  const STR = {
+    he: { pickGrade:'באיזו כיתה אתה/את?', pickTopic:'באיזה נושא נתרגל היום?', back:'← חזרה', changeTopic:'החלף נושא', placeholder:'כתוב/י כאן...', imgReady:'התמונה תישלח עם ההודעה הבאה', pickSubject:'באיזה מקצוע נתרגל היום?', soon:'בקרוב', loading:'מתחברים לשרת... זה יכול לקחת עד חצי דקה בפעם הראשונה' },
+    ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة' }
+  };
+  const GRADE_LABEL = {
+    he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'" },
+    ar: { 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع' }
+  };
+
+  let lang = 'he';
+  let subject = null;
+  let grade = null;
+  let topic = null;
+  let history = [];
+  let pendingImage = null;
+  let allTopics = [];
+  let lastGrades = ['ז','ח','ט'];
+
+  const subjectList = document.getElementById('subjectList');
+  const subjectStep = document.getElementById('subjectStep');
+  const gradeGrid = document.getElementById('gradeGrid');
+  const topicList = document.getElementById('topicList');
+  const gradeStep = document.getElementById('gradeStep');
+  const topicStep = document.getElementById('topicStep');
+  const pickerWrap = document.getElementById('pickerWrap');
+  const chatWrap = document.getElementById('chatWrap');
+  const chatInner = document.getElementById('chatInner');
+  const inputBar = document.getElementById('inputBar');
+  const textInput = document.getElementById('textInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const attachBtn = document.getElementById('attachBtn');
+  const fileInput = document.getElementById('fileInput');
+  const imagePreview = document.getElementById('imagePreview');
+  const previewImg = document.getElementById('previewImg');
+  const previewRemove = document.getElementById('previewRemove');
+  const topicChip = document.getElementById('topicChip');
+  const changeTopicBtn = document.getElementById('changeTopicBtn');
+
+  // --- Mobile keyboard fix ---------------------------------------------
+  // Mobile browsers (esp. iOS Safari / in-app webviews) don't resize the
+  // layout viewport when the on-screen keyboard opens; they resize the
+  // *visual* viewport instead, which otherwise leaves the input bar hidden
+  // behind the keyboard or the chat area visually squashed/cut. We pin the
+  // app shell's actual pixel height (and vertical offset) to
+  // window.visualViewport on every change, so the input bar always sits
+  // directly above the keyboard - the same behavior WhatsApp has.
+  function syncViewportHeight(){
+    const vv = window.visualViewport;
+    if(vv){
+      document.body.style.height = vv.height + 'px';
+      document.body.style.top = vv.offsetTop + 'px';
+    } else {
+      document.body.style.height = window.innerHeight + 'px';
+      document.body.style.top = '0px';
+    }
+    // keep the latest message in view once the keyboard/layout has settled
+    requestAnimationFrame(() => { chatWrap.scrollTop = chatWrap.scrollHeight; });
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', syncViewportHeight);
+    window.visualViewport.addEventListener('scroll', syncViewportHeight);
+  } else {
+    window.addEventListener('resize', syncViewportHeight);
+  }
+  syncViewportHeight();
+  // Some mobile browsers fire the keyboard-open animation slightly after
+  // focus, before visualViewport reports the new size - re-sync shortly
+  // after focus/blur as a safety net so the input never ends up hidden.
+  textInput.addEventListener('focus', () => {
+    setTimeout(syncViewportHeight, 50);
+    setTimeout(syncViewportHeight, 350);
+  });
+  textInput.addEventListener('blur', () => {
+    setTimeout(syncViewportHeight, 350);
+  });
+  // -----------------------------------------------------------------------
+
+  window.setLang = function(l){
+    lang = l;
+    document.body.classList.toggle('lang-ar', l === 'ar');
+    document.getElementById('btn-he').classList.toggle('active', l==='he');
+    document.getElementById('btn-ar').classList.toggle('active', l==='ar');
+    document.getElementById('pickSubjectTitle').textContent = STR[l].pickSubject;
+    document.getElementById('pickGradeTitle').textContent = STR[l].pickGrade;
+    document.getElementById('pickTopicTitle').textContent = STR[l].pickTopic;
+    document.getElementById('backLink').textContent = STR[l].back;
+    document.getElementById('backLinkGrade').textContent = STR[l].back;
+    changeTopicBtn.textContent = STR[l].changeTopic;
+    textInput.placeholder = STR[l].placeholder;
+    document.getElementById('previewText').textContent = STR[l].imgReady;
+    loadSubjects();
+    if(grade) renderGrades(lastGrades);
+    if(grade) selectGrade(grade, true);
+  };
+
+  async function loadSubjects(){
+    subjectList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
+    try {
+      const res = await fetch(API_BASE + '/api/subjects?lang=' + lang);
+      const data = await res.json();
+      renderSubjects(data.subjects || []);
+    } catch(e){
+      renderSubjects([{ id:'math', name: lang==='ar' ? 'الرياضيات' : 'מתמטיקה', available:true }]);
+    }
+  }
+
+  function renderSubjects(subjects){
+    subjectList.innerHTML = '';
+    subjects.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'topic-btn subject-btn' + (s.available ? '' : ' disabled');
+      btn.innerHTML = '<div class="tname">' + s.name + (s.available ? '' : '<span class="soon-badge">' + STR[lang].soon + '</span>') + '</div>';
+      if(s.available){
+        btn.onclick = () => selectSubject(s);
+      } else {
+        btn.disabled = true;
+      }
+      subjectList.appendChild(btn);
+    });
+  }
+
+  window.showSubjectStep = function(){
+    subjectStep.style.display = 'block';
+    gradeStep.style.display = 'none';
+    topicStep.style.display = 'none';
+  };
+
+  function selectSubject(s){
+    subject = s.id;
+    subjectStep.style.display = 'none';
+    gradeStep.style.display = 'block';
+    loadGrades();
+  }
+
+  async function loadGrades(){
+    gradeGrid.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
+    try {
+      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject));
+      const data = await res.json();
+      lastGrades = data.grades || ['ז','ח','ט'];
+      renderGrades(lastGrades);
+    } catch(e){
+      renderGrades(lastGrades);
+    }
+  }
+
+  function renderGrades(grades){
+    gradeGrid.innerHTML = '';
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    grades.forEach(g => {
+      const btn = document.createElement('button');
+      btn.className = 'grade-btn';
+      btn.textContent = (GRADE_LABEL[effectiveLang] && GRADE_LABEL[effectiveLang][g]) || g;
+      btn.onclick = () => selectGrade(g);
+      gradeGrid.appendChild(btn);
+    });
+  }
+
+  async function selectGrade(g, keepStep){
+    grade = g;
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    if(!keepStep){
+      gradeStep.style.display = 'none';
+      topicStep.style.display = 'block';
+    }
+    topicList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
+    try {
+      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(g) + '&lang=' + effectiveLang);
+      const data = await res.json();
+      allTopics = data.topics || [];
+    } catch(e){
+      allTopics = [];
+    }
+    renderTopics();
+  }
+
+  function renderTopics(){
+    topicList.innerHTML = '';
+    allTopics.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'topic-btn';
+      btn.innerHTML = '<div class="tname">' + (t.name || '') + '</div><div class="tdomain">' + (t.domain || '') + '</div>';
+      btn.onclick = () => selectTopic(t);
+      topicList.appendChild(btn);
+    });
+  }
+
+  window.showGradeStep = function(){
+    gradeStep.style.display = 'block';
+    topicStep.style.display = 'none';
+  };
+
+  window.resetToPicker = function(){
+    topic = null;
+    history = [];
+    chatInner.innerHTML = '';
+    chatWrap.classList.remove('show');
+    inputBar.classList.remove('show');
+    pickerWrap.style.display = 'flex';
+    topicChip.classList.remove('show');
+    changeTopicBtn.classList.remove('show');
+    showGradeStep();
+  };
+
+  const PERSONA_NAME = {
+    math: { he: 'סוקרטס', ar: 'سقراط' },
+    'hebrew-grammar': { he: 'המורה', ar: 'המורה' },
+    'arabic-grammar': { he: 'אל-מותנבי', ar: 'المتنبي' },
+    'hebrew-second-language': { he: 'המורה', ar: 'المعلّم' },
+  };
+
+  function selectTopic(t){
+    topic = t;
+    pickerWrap.style.display = 'none';
+    chatWrap.classList.add('show');
+    inputBar.classList.add('show');
+    topicChip.classList.add('show');
+    // דקדוק ערבי - ההוראה תמיד בערבית, בלי קשר לטוגל השפה בממשק
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    const topicDisplay = effectiveLang === 'ar' && t.ar ? t.ar : t.name;
+    topicChip.textContent = '📚 ' + topicDisplay;
+    changeTopicBtn.classList.add('show');
+    chatInner.innerHTML = '';
+    history = [];
+    const personaName = (PERSONA_NAME[subject] && PERSONA_NAME[subject][effectiveLang]) || (effectiveLang === 'ar' ? 'سقراط' : 'סוקרטס');
+    const welcome = effectiveLang === 'ar'
+      ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. سنتدرّب اليوم على: ' + topicDisplay + '. من وين تحب تبدأ، أو عندك سؤال محدد؟'
+      : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. נתרגל היום את הנושא: ' + topicDisplay + '. מאיפה תרצה/י להתחיל, או שיש לך שאלה ספציפית?';
+    appendBubble('assistant', welcome);
+    textInput.focus();
+  }
+
+  function appendBubble(role, text, diagrams){
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + (role === 'user' ? 'out' : 'in');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    if(diagrams && diagrams.length){
+      diagrams.forEach(svg => {
+        const wrap = document.createElement('div');
+        wrap.className = 'diagram-wrap';
+        wrap.innerHTML = svg;
+        bubble.appendChild(wrap);
+      });
+    }
+    row.appendChild(bubble);
+    chatInner.appendChild(row);
+    const time = document.createElement('div');
+    time.className = 'msg-time';
+    time.style.textAlign = role === 'user' ? 'left' : 'right';
+    time.textContent = new Date().toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'});
+    chatInner.appendChild(time);
+    chatWrap.scrollTop = chatWrap.scrollHeight;
+  }
+
+  function showTyping(){
+    const row = document.createElement('div');
+    row.className = 'msg-row in';
+    row.id = 'typingRow';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble typing-indicator';
+    bubble.innerHTML = '<span></span><span></span><span></span>';
+    row.appendChild(bubble);
+    chatInner.appendChild(row);
+    chatWrap.scrollTop = chatWrap.scrollHeight;
+  }
+  function hideTyping(){
+    const row = document.getElementById('typingRow');
+    if(row) row.remove();
+  }
+
+  textInput.addEventListener('input', () => {
+    sendBtn.disabled = textInput.value.trim().length === 0 && !pendingImage;
+    textInput.style.height = 'auto';
+    textInput.style.height = Math.min(textInput.scrollHeight, 110) + 'px';
+  });
+  textInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+  });
+  attachBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if(fileInput.files[0]){
+      pendingImage = fileInput.files[0];
+      sendBtn.disabled = false;
+      attachBtn.style.background = 'var(--teal-tint)';
+      attachBtn.style.color = 'var(--teal)';
+      const reader = new FileReader();
+      reader.onload = (e) => { previewImg.src = e.target.result; };
+      reader.readAsDataURL(pendingImage);
+      imagePreview.style.display = 'flex';
+    }
+  });
+  previewRemove.addEventListener('click', () => {
+    pendingImage = null;
+    fileInput.value = '';
+    imagePreview.style.display = 'none';
+    attachBtn.style.background = '';
+    attachBtn.style.color = '';
+    sendBtn.disabled = textInput.value.trim().length === 0;
+  });
+  sendBtn.addEventListener('click', sendMessage);
+
+  let studentProfile = null;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) studentProfile = JSON.parse(saved);
+  } catch(e){}
+  if(!studentProfile){
+    studentProfile = { id: 'stu_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36) };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(studentProfile)); } catch(e){}
+  }
+
+  async function sendMessage(){
+    const text = textInput.value.trim();
+    if(!text && !pendingImage) return;
+    const userText = text || '📷 תמונה';
+    appendBubble('user', userText);
+    history.push({ role:'user', text:userText });
+
+    textInput.value = '';
+    textInput.style.height = 'auto';
+    sendBtn.disabled = true;
+    const imageToSend = pendingImage;
+    pendingImage = null;
+    fileInput.value = '';
+    imagePreview.style.display = 'none';
+    attachBtn.style.background = '';
+    attachBtn.style.color = '';
+
+    showTyping();
+    try {
+      const formData = new FormData();
+      formData.append('message', text);
+      formData.append('studentId', studentProfile.id);
+      formData.append('grade', grade);
+      formData.append('topicId', topic.id);
+      formData.append('lang', (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang);
+      formData.append('history', JSON.stringify(history.slice(-10)));
+      if(imageToSend) formData.append('image', imageToSend);
+
+      const res = await fetch(API_BASE + '/api/chat', { method:'POST', body: formData });
+      if(!res.ok) throw new Error('status ' + res.status);
+      const data = await res.json();
+      hideTyping();
+      appendBubble('assistant', data.reply, data.diagrams);
+      history.push({ role:'assistant', text:data.reply });
+      if(data.topic){ topicChip.textContent = '📚 ' + data.topic; }
+    } catch(err){
+      hideTyping();
+      const errMsg = lang === 'ar' ? 'حدثت مشكلة، حاول مرة أخرى.' : 'משהו השתבש, נסה/י שוב.';
+      appendBubble('assistant', errMsg);
+      console.error(err);
+    }
+  }
+
+  loadSubjects();
+})();
+</script>
+
+</body>
+</html>

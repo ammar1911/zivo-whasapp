@@ -180,8 +180,8 @@
     ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة' }
   };
   const GRADE_LABEL = {
-    he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'" },
-    ar: { 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع' }
+    he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"יא'", 'יב':"יב'" },
+    ar: { 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع', 'י':'الصف العاشر', 'יא':'الصف الحادي عشر', 'יב':'الصف الثاني عشر' }
   };
 
   let lang = 'he';
@@ -323,7 +323,7 @@
 
   function renderGrades(grades){
     gradeGrid.innerHTML = '';
-    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     grades.forEach(g => {
       const btn = document.createElement('button');
       btn.className = 'grade-btn';
@@ -335,7 +335,7 @@
 
   async function selectGrade(g, keepStep){
     grade = g;
-    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     if(!keepStep){
       gradeStep.style.display = 'none';
       topicStep.style.display = 'block';
@@ -381,6 +381,7 @@
 
   const PERSONA_NAME = {
     math: { he: 'סוקרטס', ar: 'سقراط' },
+    'math-arabic': { he: 'الخوارزمي', ar: 'الخوارزمي' },
     'hebrew-grammar': { he: 'המורה', ar: 'המורה' },
     'arabic-grammar': { he: 'אל-מותנבי', ar: 'المتنبي' },
     'hebrew-second-language': { he: 'המורה', ar: 'المعلّم' },
@@ -393,7 +394,7 @@
     inputBar.classList.add('show');
     topicChip.classList.add('show');
     // דקדוק ערבי - ההוראה תמיד בערבית, בלי קשר לטוגל השפה בממשק
-    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang;
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     const topicDisplay = effectiveLang === 'ar' && t.ar ? t.ar : t.name;
     topicChip.textContent = '📚 ' + topicDisplay;
     changeTopicBtn.classList.add('show');
@@ -512,7 +513,7 @@
       formData.append('studentId', studentProfile.id);
       formData.append('grade', grade);
       formData.append('topicId', topic.id);
-      formData.append('lang', (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang);
+      formData.append('lang', (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang);
       formData.append('history', JSON.stringify(history.slice(-10)));
       if(imageToSend) formData.append('image', imageToSend);
 

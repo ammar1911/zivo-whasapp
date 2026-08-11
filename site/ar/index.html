@@ -47,11 +47,17 @@
     display:flex;align-items:center;justify-content:space-between;
     padding:18px 20px;max-width:1080px;margin:0 auto;
   }
-  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:17px;}
-  .brand .mark{flex-shrink:0;display:block;}
+  .brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:17px;}
+  .brand .mark{flex-shrink:0;display:block;width:56px;height:56px;}
   .brand-text{display:flex;flex-direction:column;line-height:1.15;gap:2px;}
+  .brand .ai-pill{
+    font-family:'Heebo',sans-serif;font-weight:700;font-size:10px;color:var(--teal-dark);
+    background:var(--teal-tint);border:1px solid var(--mustard);border-radius:999px;
+    padding:2px 8px;letter-spacing:0.3px;flex-shrink:0;
+  }
   .brand .wordmark{
-    font-family:'Poppins','Heebo',sans-serif;font-weight:800;font-size:24px;color:var(--teal);letter-spacing:0.3px;
+    display:flex;align-items:center;gap:8px;
+    font-family:'Poppins','Heebo',sans-serif;font-weight:800;font-size:30px;color:var(--teal);letter-spacing:0.3px;
   }
   .brand .tagline{
     font-family:'Heebo',sans-serif;font-weight:600;font-size:10.5px;color:var(--muted);letter-spacing:0.2px;
@@ -68,12 +74,20 @@
 
   /* HERO */
   .hero{
+    position:relative;overflow:hidden;
     background:
       repeating-linear-gradient(0deg, rgba(30,42,68,0.04) 0px, rgba(30,42,68,0.04) 1px, transparent 1px, transparent 26px),
       repeating-linear-gradient(90deg, rgba(30,42,68,0.04) 0px, rgba(30,42,68,0.04) 1px, transparent 1px, transparent 26px);
     padding:56px 20px 70px;
     text-align:center;
   }
+  .hero::before{
+    content:"Z";
+    position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+    font-family:'Poppins',sans-serif;font-weight:800;font-size:420px;line-height:1;
+    color:var(--mustard);opacity:0.08;pointer-events:none;z-index:0;
+  }
+  .hero > *{position:relative;z-index:1;}
   .badge{
     display:inline-block;background:var(--teal-tint);color:var(--teal-dark);
     font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:18px;
@@ -122,7 +136,7 @@
     padding:14px 28px;border-radius:12px;font-weight:700;font-size:15px;
     cursor:pointer;border:none;text-decoration:none;
   }
-  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 8px 20px -8px rgba(47,111,94,0.6);}
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 8px 20px -8px rgba(47,111,94,0.6);border-bottom:3px solid var(--mustard);}
   .btn:disabled{opacity:0.45;cursor:not-allowed;box-shadow:none;}
   .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line);}
 
@@ -205,6 +219,9 @@
     text-align:center;padding:30px 20px;color:var(--muted);font-size:12.5px;
   }
   .footer-copyright{ margin-top:6px; font-size:11px; opacity:0.7; }
+  .footer-links{ margin-top:10px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .footer-links a{ color:var(--muted); font-size:11.5px; text-decoration:underline; }
+  .footer-links a:hover{ color:var(--teal); }
 
   /* CURRICULUM PROOF SECTION */
   #curriculum-proof{background:#fff;border-top:1px solid var(--line);}
@@ -354,7 +371,7 @@
 <text fill="#FBF7EE" font-family="Poppins,Arial" font-size="46" font-weight="800" text-anchor="middle" x="60" y="80">d<tspan fill="url(#navGoldGrad)">Z</tspan></text>
 </svg>
 <div class="brand-text">
-<span class="wordmark" data-i18n="brand">dai<span style="color:#C6923A">Z</span></span>
+<span class="wordmark"><span data-i18n="brand">dai<span style="color:#C6923A">Z</span></span><span class="ai-pill">AI</span></span>
 <span class="tagline" data-i18n="tagline">كل يوم، بجانبك</span>
 </div>
 </div>
@@ -365,9 +382,9 @@
 </nav>
 <section class="hero">
 <div class="badge" data-i18n="badge">تعلّم شخصي · للاعدادي والثانوي</div>
-<h1 data-i18n="heroTitle">معلّم خاص <span class="accent">عبر واتساب</span>، على مدار 24 ساعة</h1>
+<h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة</h1>
 <p class="sub" data-i18n="heroSub">ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً — يشرح, يرافقك خطوة بخطوة، ويتكيّف مع مستواك.</p>
-<div class="ai-note" data-i18n="aiNote">🤖 <span><b>مهم أن تعرف:</b> المعلّم الخاص هو وكيل ذكاء اصطناعي، يعلّم فقط وفق المواد الرسمية لوزارة التربية والتعليم، بحسب الصف والمنهاج المختارين.</span></div>
+<div class="ai-note" data-i18n="aiNote">🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم فقط وفق المواد الرسمية لوزارة التربية والتعليم، بحسب الصف والمنهاج المختارين.</span></div>
 <div class="chat-mock">
 <div class="chat-mock-header">
 <svg class="avatar" height="26" style="border-radius:50%;background:#2F6F5E;flex-shrink:0;" viewbox="0 0 150 150" width="26" xmlns="http://www.w3.org/2000/svg">
@@ -598,6 +615,9 @@
 <option data-i18n="grade7">الصف السابع</option>
 <option data-i18n="grade8">الصف الثامن</option>
 <option data-i18n="grade9">الصف التاسع</option>
+<option data-i18n="grade10">الصف العاشر</option>
+<option data-i18n="grade11">الصف الحادي عشر</option>
+<option data-i18n="grade12">الصف الثاني عشر</option>
 </select>
 </div>
 <div class="field">
@@ -656,7 +676,7 @@
 <label data-i18n="labelChildPhone">رقم واتساب الطالب</label>
 <input id="childPhoneInput" placeholder="050-1234567" required="" type="tel"/>
 </div>
-<div class="channel-note" data-i18n="channelNoteWebsite" id="channelNoteWebsite" style="display:none">رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل.</div>
+<div class="channel-note" data-i18n="channelNoteWebsite" id="channelNoteWebsite" style="display:none">رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.</div>
 <div class="field">
 <label data-i18n="labelParentPhone">رقم هاتف أحد الوالدين</label>
 <input placeholder="050-1234567" required="" type="tel"/>
@@ -720,6 +740,10 @@
 </section>
 <footer>
 <div data-i18n="footer">daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية</div>
+<div class="footer-links">
+<a href="/terms.html" data-i18n="footerTerms">شروط الاستخدام</a>
+<a href="/privacy.html" data-i18n="footerPrivacy">سياسة الخصوصية</a>
+</div>
 <div class="footer-copyright" data-i18n="footerCopyright">© 2026 daiZ. جميع الحقوق محفوظة.</div>
 </footer>
 <a aria-label="أسئلة عبر واتساب" class="whatsapp-fab" href="https://wa.me/972500000000?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%9C%D7%A4%D7%A0%D7%99%20%D7%A9%D7%90%D7%A0%D7%A8%D7%A9%D7%9D" rel="noopener" target="_blank">
@@ -735,7 +759,7 @@
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"כל יום, לצידך",
       badge:"לימוד אישי · חטיבה ותיכון",
-      heroTitle:'מורה פרטי <span class="accent">בוואטסאפ</span>, 24 שעות ביממה',
+      heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ, 24 שעות ביממה',
       heroSub:"התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד, מסביר, ומתרגל איתו/ה שלב אחרי שלב.",
       chatOnline:"מקוון עכשיו",
       chatMsg1:"שלום! אני המורה הפרטי שלך. אני כאן כדי לעזור לך להתקדם ולהגיע לציון שתמיד רצית 💪",
@@ -757,13 +781,13 @@
       priceLabel:"מנוי חודשי, לתלמיד/ה אחד/ת",
       perMonth:"לחודש · ניתן לבטל בכל עת",
       perk1:"שיחה פתוחה 24/7 בוואטסאפ",
-      perk2:"מותאם לתוכנית הלימודים בעברית או בערבית",
+      perk2:"מותאם לתוכנית הלימודים",
       perk3:"דוח התקדמות שבועי להורה",
       priceBtn:"הצטרפות עכשיו",
       formTitle:"בואו נתחיל",
       formSub:"מילוי הטופס לוקח פחות מדקה",
       labelChildName:"שם התלמיד/ה",
-      aiNote:'🤖 <span><b>חשוב לדעת:</b> המורה הפרטי הוא סוכן בינה מלאכותית, שמלמד אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
+      aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
@@ -807,7 +831,7 @@
       channelWhatsappHint:"הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ",
       channelWebsite:"צ'אט באתר",
       channelWebsiteHint:"הילד/ה יקבל/תקבל קישור אישי לחדר הלמידה באתר",
-      channelNoteWebsite:"קישור אישי לחדר הלמידה יישלח למספר ההורה מיד לאחר ההרשמה.",
+      channelNoteWebsite:"קישור אישי לחדר הלמידה יישלח למספר ההורה מיד לאחר ההרשמה. 💻 טיפ: מומלץ ללמוד דרך מחשב ולא דרך טלפון - נוח יותר לקרוא ולהקליד.",
       labelChildPhone:"מספר וואטסאפ של התלמיד/ה",
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
@@ -824,14 +848,14 @@
       contactWa:"וואטסאפ",
       aboutName:"צוות daiZ",
       feelingsTitle:"מה באמת משתנה",
-      feel1Title:"חוויית ה\"אהה!\"",
-      feel1Body:"כשהילד/ה שלכם אומר/ת \"הבנתי!\" בעצמו/ה — לא רק שינן/ה תשובה, אלא באמת הבין/ה איך מגיעים אליה.",
+      feel1Title:"הרגע שמצאת",
+      feel1Body:"כשהבן שלך אומר \"הבנתי!\" בעצמו — לא רק שינן תשובה..",
       feel2Title:"התקדמות שרואים",
-      feel2Body:"תרגול עקבי, שבוע אחרי שבוע, שמתבטא בציונים לאורך זמן.",
-      feel3Title:"הורה שסוף-סוף יכול/ה לנשום",
-      feel3Body:"לדעת שיש לילד/ה שלכם מורה פרטי זמין 24 שעות ביממה, שעוזר לו/לה להגיע להצלחה.",
+      feel2Body:"תרגול מתמיד שמשתקף בציונים יום אחרי יום.",
+      feel3Title:"הורים שסוף-סוף יכולים לנשום",
+      feel3Body:"יודעים שיש מורה פרטי לבן שלך, 24 שעות ביממה, שמלווה אותו בדרך להצלחה.",
       feel4Title:"ביטחון עצמי, לא רק ציון",
-      feel4Body:"ילד/ה שמאמין/ה שהוא/היא מסוגל/ת להתמודד עם בעיה קשה — הרבה מעבר למה שקורה בבחינה עצמה.",
+      feel4Body:"התלמיד מאמין שהוא מסוגל להתמודד עם בעיה קשה.",
       trustTitle:"בטיחות ושקיפות קודם כל",
       trustSub:"אנחנו מבינים שמדובר בילד/ה שלכם — הנה בדיוק מה שקורה מאחורי הקלעים",
       trust1Title:"רק חומר רשמי",
@@ -844,25 +868,27 @@
       trust4Body:"ניתן לעצור, להשהות או לבטל את המנוי בכל רגע, בלי שאלות ובלי התחייבות.",
       faqTitle:"שאלות נפוצות",
       faq1Q:"האם זה מחליף שיעורים פרטיים או עזרה מהמורה בבית הספר?",
-      faq1A:"לא בהכרח — זה משלים. daiZ נותן/ת מענה זמין 24/7 לתרגול ולשאלות שוטפות, אבל לא מחליף קשר אנושי כשצריך.",
+      faq1A:"לא בהכרח — זה משלים. daiZ נותן מענה זמין 24/7 לתרגול ולשאלות שוטפות, אבל לא מחליף קשר אנושי כשצריך.",
       faq2Q:"מה קורה אם הילד/ה שלי מתקדם/ת בקצב שונה מהממוצע?",
-      faq2A:"הסוכן מתאים את עצמו לקצב של כל תלמיד/ה באופן אישי — אין \"ממוצע כיתה\", יש רק הקצב של הילד/ה שלכם.",
+      faq2A:"הסוכן מתאים את עצמו לקצב של כל תלמיד באופן אישי — אין \"ממוצע כיתה\", יש רק הקצב של הילד שלכם.",
       faq3Q:"איך מבטלים את המנוי?",
       faq3A:"בהודעה פשוטה בוואטסאפ, בכל רגע נתון — בלי טפסים, בלי שיחות טלפון, בלי תקופת התחייבות.",
       faq4Q:"מה קורה אם הסוכן לא יודע לענות על שאלה מסוימת?",
-      faq4A:"הוא יגיד זאת בכנות, ויכוון את התלמיד/ה למקום הנכון (מורה, הורה) במקום לנחש תשובה.",
+      faq4A:"הוא יגיד זאת בכנות, ויכוון את התלמיד למקום הנכון (מורה, הורה) במקום לנחש תשובה.",
       faq5Q:"האם המידע של הילד/ה שלי בטוח?",
       faq5A:"השיחות משמשות רק לצורך ההוראה. אין מכירה או שיתוף מידע עם גורמי צד שלישי לצרכי פרסום.",
       floatingCtaText:"מוכנים להתחיל?",
       floatingCtaBtn:"הרשמה",
       footer:"daiZ · המורה הפרטי שלך בוואטסאפ · עברית וערבית",
+      footerTerms:"תנאי שימוש",
+      footerPrivacy:"מדיניות פרטיות",
       footerCopyright:"© 2026 daiZ. כל הזכויות שמורות.",
     },
     ar: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"كل يوم، بجانبك",
       badge:"تعلّم شخصي · للاعدادي والثانوي",
-      heroTitle:'معلّم خاص <span class="accent">عبر واتساب</span>، على مدار 24 ساعة',
+      heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة',
       heroSub:"ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً — يشرح, يرافقك خطوة بخطوة، ويتكيّف مع مستواك.",
       chatOnline:"متصل الآن",
       chatMsg1:"أهلاً بك! أنا معلّمك الخاص، وأنا هنا لمساعدتك على التقدّم والوصول إلى العلامة التي حلمت بها دائماً 💪",
@@ -890,7 +916,7 @@
       formTitle:"لنبدأ",
       formSub:"تعبئة النموذج تستغرق أقل من دقيقة",
       labelChildName:"اسم الطالب",
-      aiNote:'🤖 <span><b>مهم أن تعرف:</b> المعلّم الخاص هو وكيل ذكاء اصطناعي، يعلّم فقط وفق المواد الرسمية لوزارة التربية والتعليم، بحسب الصف والمنهاج المختارين.</span>',
+      aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم فقط وفق المواد الرسمية لوزارة التربية والتعليم، بحسب الصف والمنهاج المختارين.</span>',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",
@@ -934,7 +960,7 @@
       channelWhatsappHint:"بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب",
       channelWebsite:"محادثة عبر الموقع",
       channelWebsiteHint:"يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع",
-      channelNoteWebsite:"رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل.",
+      channelNoteWebsite:"رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.",
       labelChildPhone:"رقم واتساب الطالب",
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
@@ -983,6 +1009,8 @@
       floatingCtaText:"جاهزين تبدأوا؟",
       floatingCtaBtn:"سجّل الآن",
       footer:"daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية",
+      footerTerms:"شروط الاستخدام",
+      footerPrivacy:"سياسة الخصوصية",
       footerCopyright:"© 2026 daiZ. جميع الحقوق محفوظة.",
     }
   };

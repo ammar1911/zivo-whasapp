@@ -51,9 +51,21 @@
 
   .picker-wrap{ flex:1; overflow-y:auto; padding:32px 20px; display:flex; flex-direction:column; align-items:center; }
   .picker-title{ font-family:'Poppins','Heebo',sans-serif; font-weight:800; font-size:18px; margin-bottom:20px; text-align:center; }
-  .grade-grid{ display:flex; gap:12px; }
+  .device-note{
+    display:none; background:var(--teal-tint,#E4EFEA); border:1px solid var(--line,#e2e2e2);
+    border-radius:12px; padding:10px 16px; font-size:12.5px; color:var(--muted,#667);
+    max-width:420px; margin:0 auto 18px; line-height:1.6; text-align:center;
+  }
+  @media (max-width: 640px){
+    .device-note{ display:block; }
+  }
+  .grade-grid{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
   .grade-btn{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 30px; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:22px; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px rgba(30,42,68,0.06); }
   .grade-btn:hover{ border-color:var(--teal); }
+  @media (max-width: 640px){
+    .grade-grid{ flex-direction:column; align-items:stretch; }
+    .grade-btn{ width:100%; padding:16px 20px; font-size:19px; }
+  }
   .topic-list{ display:flex; flex-direction:column; gap:10px; width:100%; max-width:460px; }
   .topic-btn{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-align:start; cursor:pointer; box-shadow:0 2px 6px rgba(30,42,68,0.05); font-family:inherit; }
   .topic-btn:hover{ border-color:var(--teal); }
@@ -132,6 +144,7 @@
 </div>
 
 <div class="picker-wrap" id="pickerWrap">
+  <div class="device-note" id="deviceNote">💻 טיפ: הלמידה כאן נוחה יותר במחשב מאשר בטלפון - מסך גדול יותר עוזר בכתיבת תרגילים ובקריאת הסברים.</div>
   <div id="subjectStep">
     <div class="picker-title" id="pickSubjectTitle">באיזה מקצוע נתרגל היום?</div>
     <div class="topic-list" id="subjectList" style="max-width:420px; margin:0 auto;"></div>
@@ -176,8 +189,8 @@
   const API_BASE = 'https://zivo-whatsapp.onrender.com';
 
   const STR = {
-    he: { pickGrade:'באיזו כיתה אתה/את?', pickTopic:'באיזה נושא נתרגל היום?', back:'← חזרה', changeTopic:'החלף נושא', placeholder:'כתוב/י כאן...', imgReady:'התמונה תישלח עם ההודעה הבאה', pickSubject:'באיזה מקצוע נתרגל היום?', soon:'בקרוב', loading:'מתחברים לשרת... זה יכול לקחת עד חצי דקה בפעם הראשונה' },
-    ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة' }
+    he: { pickGrade:'באיזו כיתה אתה/את?', pickTopic:'באיזה נושא נתרגל היום?', back:'← חזרה', changeTopic:'החלף נושא', placeholder:'כתוב/י כאן...', imgReady:'התמונה תישלח עם ההודעה הבאה', pickSubject:'באיזה מקצוע נתרגל היום?', soon:'בקרוב', loading:'מתחברים לשרת... זה יכול לקחת עד חצי דקה בפעם הראשונה', deviceNote:'💻 טיפ: הלמידה כאן נוחה יותר במחשב מאשר בטלפון - מסך גדול יותר עוזר בכתיבת תרגילים ובקריאת הסברים.' },
+    ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة', deviceNote:'💻 نصيحة: التعلّم هنا أسهل على الحاسوب منه على الهاتف - الشاشة الأكبر تساعد في كتابة التمارين وقراءة الشروحات.' }
   };
   const GRADE_LABEL = {
     he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"יא'", 'יב':"יב'" },
@@ -265,6 +278,7 @@
     changeTopicBtn.textContent = STR[l].changeTopic;
     textInput.placeholder = STR[l].placeholder;
     document.getElementById('previewText').textContent = STR[l].imgReady;
+    document.getElementById('deviceNote').textContent = STR[l].deviceNote;
     loadSubjects();
     if(grade) renderGrades(lastGrades);
     if(grade) selectGrade(grade, true);

@@ -100,11 +100,12 @@
     font-size:16px;color:var(--muted);max-width:560px;margin:0 auto 30px;line-height:1.7;
   }
   .ai-note{
-    display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
-    border-radius:12px;padding:10px 16px;font-size:12.5px;color:var(--muted);margin:0 auto 28px;
-    max-width:520px;line-height:1.6;box-shadow:0 2px 6px rgba(30,42,68,0.05);
+    display:inline-flex;align-items:center;gap:10px;background:var(--teal-tint);border:1.5px solid var(--teal);
+    border-radius:12px;padding:14px 20px;font-size:14px;color:var(--ink);margin:0 auto 28px;
+    max-width:560px;line-height:1.7;box-shadow:0 4px 14px -4px rgba(47,111,94,0.25);
   }
-  .ai-note b{color:var(--ink);}
+  .ai-note b{color:var(--teal-dark);}
+  .ai-note mark{background:none;color:var(--teal-dark);font-weight:800;text-decoration:underline;text-decoration-color:var(--mustard);text-decoration-thickness:2px;text-underline-offset:3px;}
   .chat-mock{
     max-width:320px;margin:0 auto 28px;background:#fff;border-radius:20px;
     box-shadow:0 16px 40px -16px rgba(30,42,68,0.25);overflow:hidden;
@@ -385,7 +386,7 @@
   <div class="badge" data-i18n="badge">מתמטיקה · חטיבה ותיכון</div>
   <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — מורה פרטי בוואטסאפ, 24 שעות ביממה</h1>
   <p class="sub" data-i18n="heroSub">התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד, מסביר, ומתרגל איתו/ה שלב אחרי שלב.</p>
-  <div class="ai-note" data-i18n="aiNote">🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span></div>
+  <div class="ai-note" data-i18n="aiNote">🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span></div>
   <div class="chat-mock">
     <div class="chat-mock-header">
       <svg class="avatar" width="26" height="26" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;background:#2F6F5E;flex-shrink:0;">
@@ -717,6 +718,10 @@
       <summary data-i18n="faq5Q">האם המידע של הילד/ה שלי בטוח?</summary>
       <p data-i18n="faq5A">השיחות משמשות רק לצורך ההוראה. אין מכירה או שיתוף מידע עם גורמי צד שלישי לצרכי פרסום.</p>
     </details>
+    <details class="faq-item">
+      <summary data-i18n="faq6Q">במה זה שונה מ-ChatGPT או Gemini?</summary>
+      <p data-i18n="faq6A">בשני דברים מרכזיים: daiZ מלמד אך ורק מתוך התוכן הרשמי של משרד החינוך, מותאם בדיוק לכיתה ולתוכנית הלימודים - לא ידע כללי מהאינטרנט. וגם, הוא לא נותן תשובה מוכנה מיד, אלא מלמד ברוח סוקרטס - שואל שאלות מנחות שמובילות את התלמיד להבין בעצמו.</p>
+    </details>
   </div>
 </section>
 
@@ -803,7 +808,7 @@
       formTitle:"בואו נתחיל",
       formSub:"מילוי הטופס לוקח פחות מדקה",
       labelChildName:"שם התלמיד/ה",
-      aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
+      aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
@@ -893,6 +898,8 @@
       faq4A:"הוא יגיד זאת בכנות, ויכוון את התלמיד למקום הנכון (מורה, הורה) במקום לנחש תשובה.",
       faq5Q:"האם המידע של הילד/ה שלי בטוח?",
       faq5A:"השיחות משמשות רק לצורך ההוראה. אין מכירה או שיתוף מידע עם גורמי צד שלישי לצרכי פרסום.",
+      faq6Q:"במה זה שונה מ-ChatGPT או Gemini?",
+      faq6A:"בשני דברים מרכזיים: daiZ מלמד אך ורק מתוך התוכן הרשמי של משרד החינוך, מותאם בדיוק לכיתה ולתוכנית הלימודים - לא ידע כללי מהאינטרנט. וגם, הוא לא נותן תשובה מוכנה מיד, אלא מלמד ברוח סוקרטס - שואל שאלות מנחות שמובילות את התלמיד להבין בעצמו.",
       floatingCtaText:"מוכנים להתחיל?",
       floatingCtaBtn:"הרשמה",
       footer:"daiZ · המורה הפרטי שלך בוואטסאפ · עברית וערבית",
@@ -932,7 +939,7 @@
       formTitle:"لنبدأ",
       formSub:"تعبئة النموذج تستغرق أقل من دقيقة",
       labelChildName:"اسم الطالب",
-      aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم فقط وفق المواد الرسمية لوزارة التربية والتعليم، بحسب الصف والمنهاج المختارين.</span>',
+      aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span>',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",
@@ -1022,6 +1029,8 @@
       faq4A:"رح يقول هيك بصراحة، ويوجّه الطالب/ة للمكان الصحيح (معلم، أهل) بدل ما يخمّن جواب.",
       faq5Q:"هل معلومات ابني/بنتي بأمان؟",
       faq5A:"المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهات ثالثة لأغراض إعلانية.",
+      faq6Q:"شو الفرق بينه وبين ChatGPT أو Gemini؟",
+      faq6A:"بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.",
       floatingCtaText:"جاهزين تبدأوا؟",
       floatingCtaBtn:"سجّل الآن",
       footer:"daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية",

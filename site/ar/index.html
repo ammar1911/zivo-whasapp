@@ -107,6 +107,13 @@
   }
   .ai-note b{color:var(--teal-dark);}
   .ai-note mark{background:none;color:var(--teal-dark);font-weight:800;text-decoration:underline;text-decoration-color:var(--mustard);text-decoration-thickness:2px;text-underline-offset:3px;}
+  .subjects-pills{
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 28px;max-width:560px;
+  }
+  .subjects-pills span{
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:5px 14px;font-size:12.5px;font-weight:700;color:var(--teal-dark);
+  }
   .chat-mock{
     max-width:320px;margin:0 auto 28px;background:#fff;border-radius:20px;
     box-shadow:0 16px 40px -16px rgba(30,42,68,0.25);overflow:hidden;
@@ -386,6 +393,7 @@
 <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة</h1>
 <p class="sub" data-i18n="heroSub">ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً — يشرح, يرافقك خطوة بخطوة، ويتكيّف مع مستواك.</p>
 <div class="ai-note" data-i18n="aiNote">🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span></div>
+<div class="subjects-pills" data-i18n="subjectsPills"><span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span></div>
 <div class="chat-mock">
 <div class="chat-mock-header">
 <svg class="avatar" height="26" style="border-radius:50%;background:#2F6F5E;flex-shrink:0;" viewbox="0 0 150 150" width="26" xmlns="http://www.w3.org/2000/svg">
@@ -801,6 +809,7 @@
       formSub:"מילוי הטופס לוקח פחות מדקה",
       labelChildName:"שם התלמיד/ה",
       aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
+      subjectsPills:'<span>מתמטיקה</span><span>אנגלית</span><span>דקדוק עברית</span>',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
@@ -933,6 +942,7 @@
       formSub:"تعبئة النموذج تستغرق أقل من دقيقة",
       labelChildName:"اسم الطالب",
       aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span>',
+      subjectsPills:'<span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span>',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",

@@ -108,11 +108,11 @@
   .ai-note b{color:var(--teal-dark);}
   .ai-note mark{background:none;color:var(--teal-dark);font-weight:800;text-decoration:underline;text-decoration-color:var(--mustard);text-decoration-thickness:2px;text-underline-offset:3px;}
   .subjects-pills{
-    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 28px;max-width:560px;
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:0 auto 28px;max-width:640px;
   }
   .subjects-pills span{
-    background:#fff;border:1px solid var(--line);border-radius:999px;
-    padding:5px 14px;font-size:12.5px;font-weight:700;color:var(--teal-dark);
+    background:#fff;border:1.5px solid var(--teal);border-radius:999px;
+    padding:9px 20px;font-size:15.5px;font-weight:800;color:var(--teal-dark);
   }
   .chat-mock{
     max-width:320px;margin:0 auto 28px;background:#fff;border-radius:20px;
@@ -138,6 +138,37 @@
   .bubble.bot{align-self:flex-start;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.08);border-start-start-radius:4px;}
   .bubble.user{align-self:flex-end;background:var(--teal-tint);color:var(--ink);border-end-end-radius:4px;}
 
+  #demo{padding:70px 20px 20px;max-width:720px;margin:0 auto;}
+  .demo-topics{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 22px;}
+  .demo-topic-btn{
+    background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 18px;
+    font-weight:700;font-size:14px;cursor:pointer;color:var(--ink);transition:all 0.15s ease;
+    display:flex;align-items:center;gap:6px;
+  }
+  .demo-topic-btn:hover{border-color:var(--teal);background:var(--teal-tint);}
+  .demo-topic-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .demo-window{
+    max-width:460px;margin:0 auto;background:#fff;border-radius:20px;
+    box-shadow:0 16px 40px -16px rgba(30,42,68,0.25);overflow:hidden;border:1px solid var(--line);
+  }
+  .demo-header{background:var(--teal);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .demo-header .label{font-size:12px;font-weight:700;opacity:0.9;}
+  .demo-replay{background:rgba(255,255,255,0.18);border:none;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;cursor:pointer;}
+  .demo-body{
+    min-height:260px;padding:16px;display:flex;flex-direction:column;gap:9px;
+    background:repeating-linear-gradient(0deg, rgba(30,42,68,0.035) 0px, rgba(30,42,68,0.035) 1px, transparent 1px, transparent 22px), #FBF7EE;
+  }
+  .demo-body .bubble{font-size:13px;opacity:0;transform:translateY(6px);animation:demoIn 0.35s ease forwards;}
+  @keyframes demoIn{ to{ opacity:1; transform:translateY(0); } }
+  .demo-empty{color:var(--muted);font-size:13px;text-align:center;margin:auto;}
+
+  #compare{padding:20px 20px 60px;max-width:640px;margin:0 auto;}
+  .compare-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(30,42,68,0.15);}
+  .compare-table th,.compare-table td{padding:12px 14px;text-align:start;font-size:13.5px;border-bottom:1px solid var(--line);}
+  .compare-table th{background:var(--paper);font-weight:800;font-size:13px;}
+  .compare-table th.highlight{background:var(--teal);color:#fff;}
+  .compare-table td.highlight{background:var(--teal-tint);font-weight:700;color:var(--teal-dark);}
+  .compare-table tr:last-child td{border-bottom:none;}
   .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
   .btn{
     display:inline-flex;align-items:center;gap:8px;
@@ -261,9 +292,11 @@
   }
   .example-step span.txt{font-size:13px;line-height:1.55;color:var(--muted);}
   .proof-note{
-    font-size:12.5px;color:var(--muted);text-align:center;max-width:640px;margin:36px auto 0;
-    line-height:1.7;
+    font-size:13px;color:var(--ink);text-align:center;max-width:560px;margin:0 auto;
+    line-height:1.7;background:var(--teal-tint);border:1px solid var(--line);border-radius:14px;
+    padding:16px 22px;font-weight:600;
   }
+  #curriculum-proof{padding:36px 20px;}
 
   /* ABOUT / FOUNDER SECTION */
   #about{background:var(--paper);}
@@ -394,32 +427,29 @@
 <p class="sub" data-i18n="heroSub">ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.</p>
 <div class="ai-note" data-i18n="aiNote">🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span></div>
 <div class="subjects-pills" data-i18n="subjectsPills"><span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span></div>
-<div class="chat-mock">
-<div class="chat-mock-header">
-<svg class="avatar" height="26" style="border-radius:50%;background:#2F6F5E;flex-shrink:0;" viewbox="0 0 150 150" width="26" xmlns="http://www.w3.org/2000/svg">
-<path d="M40,55 L110,55 L40,95 L110,95" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="15" transform="translate(0,10)"></path>
-<circle cx="113" cy="47" fill="#D9A441" r="10"></circle>
-</svg>
-<div>
-<div class="name" data-i18n="brand">dai<span style="color:#C6923A">Z</span></div>
-<div class="status" data-i18n="chatOnline">متصل الآن</div>
-</div>
-</div>
-<div class="chat-mock-body">
-<div class="bubble bot" data-i18n="chatMsg1">أهلاً بك! أنا معلّمك الخاص، وأنا هنا لمساعدتك على التقدّم والوصول إلى العلامة التي حلمت بها دائماً 💪</div>
-<div class="bubble bot" data-i18n="chatMsg2">أرى أنك مسجّل في الصف الثامن — في أي موضوع تحب أن نبدأ؟</div>
-<div class="bubble user" data-i18n="chatMsg3">الكسور، أجد صعوبة كبيرة فيها</div>
-<div class="bubble bot" data-i18n="chatMsg4">ممتاز، لنبدأ من هنا — سنصل إليها معاً 🙂</div>
-</div>
-</div>
 <div class="cta-row">
 <a class="btn btn-primary" data-i18n="ctaMain" href="#signup">ابدأ الاشتراك الشهري</a>
 <a class="btn btn-ghost" data-i18n="ctaSecondary" href="#how">كيف يعمل؟</a>
 </div>
 </section>
+<section id="demo">
+<h2 class="section-title" data-i18n="demoTitle">جربوا بأنفسكم: هيك بيعلّم المعلّم</h2>
+<div class="demo-topics" id="demoTopics">
+<button class="demo-topic-btn" data-topic="fractions" onclick="playDemo('fractions')">🍕 <span data-i18n="demoTopic1">كسور بمقامات مختلفة</span></button>
+<button class="demo-topic-btn" data-topic="word" onclick="playDemo('word')">📖 <span data-i18n="demoTopic2">مسائل لفظية</span></button>
+<button class="demo-topic-btn" data-topic="percent" onclick="playDemo('percent')">📊 <span data-i18n="demoTopic3">نسب مئوية</span></button>
+<button class="demo-topic-btn" data-topic="coords" onclick="playDemo('coords')">📐 <span data-i18n="demoTopic4">محاور الإحداثيات</span></button>
+</div>
+<div class="demo-window">
+<div class="demo-header">
+<span class="label" data-i18n="demoLabel">درس تجريبي - عرض توضيحي</span>
+<button class="demo-replay" id="demoReplay" style="display:none" onclick="replayDemo()" data-i18n="demoReplay">↻ مرة تانية</button>
+</div>
+<div class="demo-body" id="demoBody"><div class="demo-empty" id="demoEmpty" data-i18n="demoEmpty">اختاروا موضوع للبدء</div></div>
+</div>
+</section>
 <section id="how">
-<h2 class="section-title" data-i18n="howTitle">كيف يعمل</h2>
-<p class="section-sub" data-i18n="howSub">أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي</p>
+<h2 class="section-title" data-i18n="howSub">أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي</h2>
 <div class="steps">
 <div class="step-card">
 <div class="step-num">1</div>
@@ -449,8 +479,8 @@
 <div class="feeling-card">
 <div class="feeling-icon">💡</div>
 <div>
-<h4 data-i18n="feel1Title">لحظة وجدتها</h4>
-<p data-i18n="feel1Body">لما ابنك يقول "فهمت!" بنفسه — مش مجرد حفظ جواب..</p>
+<h4 data-i18n="feel1Title">اللحظة يلي بتنور</h4>
+<p data-i18n="feel1Body">لما ابنك يقول فجأة "فهمت!" وعيونه بتلمع — مش مجرد حفظ جواب، إنما فعلاً استوعب.</p>
 </div>
 </div>
 <div class="feeling-card">
@@ -489,95 +519,7 @@
 <a class="btn btn-primary" data-i18n="priceBtn" href="#signup">اشترك الآن</a>
 </div>
 </section>
-<section id="testimonials">
-<h2 class="section-title" data-i18n="testiTitle">طلاب جرّبوا المعلّم... وهذا ما قالوه</h2>
-<p class="section-sub" data-i18n="testiSub">أمثلة على التوصيات — مخصّصة لتُستبدل بتوصيات حقيقية من طلاب</p>
-<div class="steps">
-<div class="step-card">
-<div class="step-num">"</div>
-<p data-i18n="testi1Quote">فهمت أخيراً الكسور، من دون أن أشعر بالإحراج من تكرار السؤال.</p>
-<h3 data-i18n="testi1Name" style="margin-top:10px;">نور، الصف الخامس</h3>
-</div>
-<div class="step-card">
-<div class="step-num">"</div>
-<p data-i18n="testi2Quote">أقدر أسأل حتى الساعة عشرة ليلاً قبل الامتحان، ويردّ فوراً.</p>
-<h3 data-i18n="testi2Name" style="margin-top:10px;">عادل، الصف الثامن</h3>
-</div>
-<div class="step-card">
-<div class="step-num">"</div>
-<p data-i18n="testi3Quote">ما بيعطيني الجواب مباشرة، بل يساعدني أوصله لحالي.</p>
-<h3 data-i18n="testi3Name" style="margin-top:10px;">مايا، الصف العاشر</h3>
-</div>
-</div>
-</section>
 <section id="curriculum-proof">
-<h2 class="section-title" data-i18n="proofTitle">بالضبط حسب منهاجكم</h2>
-<p class="section-sub" data-i18n="proofSub">هكذا يبدو الدرس الحقيقي — سؤال، وحل مشروح خطوة بخطوة</p>
-<div class="proof-grid">
-<div class="books-wrap">
-<svg viewbox="0 0 630 260" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="315" cy="240" fill="rgba(30,42,68,0.08)" rx="300" ry="12"></ellipse>
-<g transform="translate(14,46) rotate(-6 44 98)">
-<rect fill="#D9A441" height="195" rx="8" width="88" x="0" y="0"></rect>
-<rect fill="none" height="195" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="88" x="0" y="0"></rect>
-<text data-i18n="book6Subject" fill="#1B2A44" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="44" y="88">رياضيات</text>
-<text data-i18n="book6Grade" fill="#1B2A44" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="44" y="111">الصف الثاني عشر</text>
-<text fill="#1B2A44" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="44" y="171">daiZ</text>
-</g>
-<g transform="translate(106,30) rotate(-3 48 106)">
-<rect fill="#2F6F5E" height="212" rx="8" width="96" x="0" y="0"></rect>
-<rect fill="none" height="212" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="96" x="0" y="0"></rect>
-<text data-i18n="book5Subject" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="48" y="95">رياضيات</text>
-<text data-i18n="book5Grade" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="48" y="121">الصف الحادي عشر</text>
-<text fill="#D9A441" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="48" y="188">daiZ</text>
-</g>
-<g transform="translate(206,16) rotate(-1 52 112)">
-<rect fill="#1B2A44" height="225" rx="8" width="104" x="0" y="0"></rect>
-<rect fill="none" height="225" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="104" x="0" y="0"></rect>
-<text data-i18n="book4Subject" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="52" y="101">رياضيات</text>
-<text data-i18n="book4Grade" fill="#D9A441" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="52" y="128">الصف العاشر</text>
-<text fill="#D9A441" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="52" y="201">daiZ</text>
-</g>
-<g transform="translate(314,16) rotate(1 52 112)">
-<rect fill="#1B2A44" height="225" rx="8" width="104" x="0" y="0"></rect>
-<rect fill="none" height="225" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="104" x="0" y="0"></rect>
-<text data-i18n="book3Subject" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="52" y="101">رياضيات</text>
-<text data-i18n="book3Grade" fill="#D9A441" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="52" y="128">الصف التاسع</text>
-<text fill="#D9A441" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="52" y="201">daiZ</text>
-</g>
-<g transform="translate(422,30) rotate(3 48 106)">
-<rect fill="#2F6F5E" height="212" rx="8" width="96" x="0" y="0"></rect>
-<rect fill="none" height="212" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="96" x="0" y="0"></rect>
-<text data-i18n="book2Subject" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="48" y="95">رياضيات</text>
-<text data-i18n="book2Grade" fill="#FBF7EE" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="48" y="121">الصف الثامن</text>
-<text fill="#D9A441" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="48" y="188">daiZ</text>
-</g>
-<g transform="translate(522,46) rotate(6 44 98)">
-<rect fill="#D9A441" height="195" rx="8" width="88" x="0" y="0"></rect>
-<rect fill="none" height="195" rx="8" stroke="rgba(27,42,68,0.15)" stroke-width="1.5" width="88" x="0" y="0"></rect>
-<text data-i18n="book1Subject" fill="#1B2A44" font-family="Heebo,sans-serif" font-size="15" font-weight="800" text-anchor="middle" x="44" y="88">رياضيات</text>
-<text data-i18n="book1Grade" fill="#1B2A44" font-family="Heebo,sans-serif" font-size="11" font-weight="700" opacity="0.85" text-anchor="middle" x="44" y="111">الصف السابع</text>
-<text fill="#1B2A44" font-family="Poppins,Heebo,sans-serif" font-size="12" font-weight="800" text-anchor="middle" x="44" y="171">daiZ</text>
-</g>
-</svg>
-</div>
-<div class="examples-col">
-<div class="example-card">
-<span class="example-tag" data-i18n="ex1Tag">الصف السابع · معادلات</span>
-<p class="example-problem">2x + 6 = 20</p>
-<div class="example-step"><span class="num">1</span><span class="txt" data-i18n="ex1Step1">نعزل حد x: نطرح <bdi dir="ltr">6</bdi> من الطرفين</span></div>
-<div class="example-step"><span class="num">2</span><span class="txt" data-i18n="ex1Step2">ينتج: <bdi dir="ltr">2x = 14</bdi></span></div>
-<div class="example-step"><span class="num">3</span><span class="txt" data-i18n="ex1Step3">نقسم على <bdi dir="ltr">2</bdi>: <bdi dir="ltr">x = 7</bdi> ✓</span></div>
-</div>
-<div class="example-card">
-<span class="example-tag" data-i18n="ex2Tag">الصف الثامن · نسبة مئوية</span>
-<p class="example-problem" data-i18n="ex2Problem">ارتفع السعر 20%، ثم انخفض 20%. ماذا حدث للسعر الأصلي؟</p>
-<div class="example-step"><span class="num">1</span><span class="txt" data-i18n="ex2Step1">السعر الابتدائي <bdi dir="ltr">100</bdi> ← بعد الارتفاع: <bdi dir="ltr">120</bdi></span></div>
-<div class="example-step"><span class="num">2</span><span class="txt" data-i18n="ex2Step2">انخفاض 20% من <bdi dir="ltr">120</bdi> (وليس من <bdi dir="ltr">100</bdi>!): <bdi dir="ltr">120-24=96</bdi></span></div>
-<div class="example-step"><span class="num">3</span><span class="txt" data-i18n="ex2Step3">النتيجة <bdi dir="ltr">96</bdi>، أقل من السعر الأصلي — الارتفاع والانخفاض بنفس النسبة لا يلغيان بعضهما</span></div>
-</div>
-</div>
-</div>
 <p class="proof-note" data-i18n="proofNote">كل وحدة تعليمية مبنية على أساس مناهج وزارة التربية والتعليم الرسمية، حسب الصف والمجال — ليتمرّن الطالب بالضبط على ما يتعلّمه في الصف، لا مواد عشوائية من الإنترنت.</p>
 </section>
 <section id="trust-safety">
@@ -597,14 +539,31 @@
 <div class="trust-card">
 <div class="trust-icon">🔒</div>
 <h4 data-i18n="trust3Title">بدون مشاركة معلومات زايدة</h4>
-<p data-i18n="trust3Body">المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع أي جهة ثالثة.</p>
+<p data-i18n="trust3Body">المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع جهة ثالثة.</p>
 </div>
 <div class="trust-card">
 <div class="trust-icon">✋</div>
 <h4 data-i18n="trust4Title">سيطرة كاملة، دايمًا</h4>
 <p data-i18n="trust4Body">يمكن إيقاف أو تعليق أو إلغاء الاشتراك بأي لحظة، بدون أسئلة وبدون التزام.</p>
 </div>
+<div class="trust-card">
+<div class="trust-icon">💰</div>
+<h4 data-i18n="trust5Title">استرجاع كامل خلال 7 أيام</h4>
+<p data-i18n="trust5Body">مش راضين؟ بترجعلكم كل المبلغ، بلا أي أسئلة.</p>
 </div>
+</div>
+</section>
+<section id="compare">
+<h2 class="section-title" data-i18n="compareTitle">كيف نقارن مقابل معلّم خصوصي عادي</h2>
+<p class="section-sub" data-i18n="compareSub">نفس جودة التعليم الصبور والشخصي - بتكلفة أقل بكثير</p>
+<table class="compare-table">
+<tbody>
+<tr><th></th><th data-i18n="compareColHuman">معلّم خصوصي عادي</th><th class="highlight" data-i18n="compareColUs">daiZ</th></tr>
+<tr><td data-i18n="compareRow1">التكلفة الشهرية</td><td>600–2,400 ₪</td><td class="highlight">120–220 ₪</td></tr>
+<tr><td data-i18n="compareRow2">التوفر</td><td data-i18n="compareRow2Human">مرة أو مرتين بالأسبوع</td><td class="highlight" data-i18n="compareRow2Us">24/7 - بأي وقت</td></tr>
+<tr><td data-i18n="compareRow3">الصبر</td><td data-i18n="compareRow3Human">يعتمد على المعلّم</td><td class="highlight" data-i18n="compareRow3Us">بلا حدود</td></tr>
+</tbody>
+</table>
 </section>
 <section id="signup">
 <h2 class="section-title" data-i18n="formTitle">لنبدأ</h2>
@@ -701,6 +660,27 @@
 <button class="btn btn-primary submit-btn" data-i18n="formSubmit" id="formSubmitBtn" type="submit">ابدأ الاشتراك — ₪120 شهرياً</button>
 <p class="form-note" data-i18n="formNote">بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.</p>
 </section>
+<section id="testimonials">
+<h2 class="section-title" data-i18n="testiTitle">طلاب جرّبوا المعلّم... وهذا ما قالوه</h2>
+<p class="section-sub" data-i18n="testiSub">أمثلة على التوصيات — مخصّصة لتُستبدل بتوصيات حقيقية من طلاب</p>
+<div class="steps">
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi1Quote">فهمت أخيراً الكسور، من دون أن أشعر بالإحراج من تكرار السؤال.</p>
+<h3 data-i18n="testi1Name" style="margin-top:10px;">نور، الصف الخامس</h3>
+</div>
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi2Quote">أقدر أسأل حتى الساعة عشرة ليلاً قبل الامتحان، ويردّ فوراً.</p>
+<h3 data-i18n="testi2Name" style="margin-top:10px;">عادل، الصف الثامن</h3>
+</div>
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi3Quote">ما بيعطيني الجواب مباشرة، بل يساعدني أوصله لحالي.</p>
+<h3 data-i18n="testi3Name" style="margin-top:10px;">مايا، الصف العاشر</h3>
+</div>
+</div>
+</section>
 <section id="faq">
 <h2 class="section-title" data-i18n="faqTitle">أسئلة شائعة</h2>
 <div class="faq-list">
@@ -722,7 +702,7 @@
 </details>
 <details class="faq-item">
 <summary data-i18n="faq5Q">هل معلومات ابني/بنتي بأمان؟</summary>
-<p data-i18n="faq5A">المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهات ثالثة لأغراض إعلانية.</p>
+<p data-i18n="faq5A">المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهة ثالثة لأغراض إعلانية.</p>
 </details>
 <details class="faq-item">
 <summary data-i18n="faq6Q">شو الفرق بينه وبين ChatGPT أو Gemini؟</summary>
@@ -789,7 +769,6 @@
       chatMsg4:"מעולה, בוא/י נתחיל משם — יחד נגיע לזה 🙂",
       ctaMain:"התחל מנוי חודשי",
       ctaSecondary:"איך זה עובד?",
-      howTitle:"איך זה עובד",
       howSub:"ארבעה שלבים פשוטים, בלי אפליקציה נוספת להוריד",
       step1Title:"נרשמים בדף אחד",
       step1Body:"בוחרים שכבת גיל ושפה, ומזינים את מספר הוואטסאפ של התלמיד/ה.",
@@ -810,6 +789,14 @@
       labelChildName:"שם התלמיד/ה",
       aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
       subjectsPills:'<span>מתמטיקה</span><span>אנגלית</span><span>דקדוק עברית</span>',
+      demoTitle:'נסו בעצמכם: ככה המורה מלמד',
+      demoTopic1:'שברים עם מכנים שונים',
+      demoTopic2:'בעיות מילוליות',
+      demoTopic3:'אחוזים',
+      demoTopic4:'מערכת צירים',
+      demoLabel:'שיעור לדוגמה — הדגמה',
+      demoReplay:'↻ שוב',
+      demoEmpty:'בחרו נושא כדי להתחיל',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
@@ -871,8 +858,8 @@
       contactWa:"וואטסאפ",
       aboutName:"צוות daiZ",
       feelingsTitle:"מה באמת משתנה",
-      feel1Title:"הרגע שמצאת",
-      feel1Body:"כשהבן שלך אומר \"הבנתי!\" בעצמו — לא רק שינן תשובה..",
+      feel1Title:"הרגע שזה נדלק",
+      feel1Body:"כשהבן שלך פתאום אומר \"הבנתי!\" בעיניים בורקות — לא רק שינן תשובה, אלא באמת קלט.",
       feel2Title:"התקדמות שרואים",
       feel2Body:"תרגול מתמיד שמשתקף בציונים יום אחרי יום.",
       feel3Title:"הורים שסוף-סוף יכולים לנשום",
@@ -889,6 +876,19 @@
       trust3Body:"השיחות משמשות רק לצורך ההוראה עצמה, ולא נמכרות או משותפות לגורם שלישי.",
       trust4Title:"שליטה מלאה, תמיד",
       trust4Body:"ניתן לעצור, להשהות או לבטל את המנוי בכל רגע, בלי שאלות ובלי התחייבות.",
+      trust5Title:"7 ימי החזר כספי מלא",
+      trust5Body:"לא מרוצים? מקבלים החזר מלא, בלי שאלות.",
+      compareTitle:"איך אנחנו משתווים מול שיעור פרטי רגיל",
+      compareSub:"אותה איכות של הוראה סבלנית ואישית - בעלות נמוכה משמעותית",
+      compareColHuman:"מורה פרטי רגיל",
+      compareColUs:"daiZ",
+      compareRow1:"עלות חודשית",
+      compareRow2:"זמינות",
+      compareRow2Human:"פעם-פעמיים בשבוע",
+      compareRow2Us:"24/7 - בכל שעה",
+      compareRow3:"סבלנות",
+      compareRow3Human:"תלויה במורה",
+      compareRow3Us:"ללא הגבלה",
       faqTitle:"שאלות נפוצות",
       faq1Q:"האם זה מחליף שיעורים פרטיים או עזרה מהמורה בבית הספר?",
       faq1A:"לא בהכרח — זה משלים. daiZ נותן מענה זמין 24/7 לתרגול ולשאלות שוטפות, אבל לא מחליף קשר אנושי כשצריך.",
@@ -922,7 +922,6 @@
       chatMsg4:"ممتاز، لنبدأ من هنا — سنصل إليها معاً 🙂",
       ctaMain:"ابدأ الاشتراك الشهري",
       ctaSecondary:"كيف يعمل؟",
-      howTitle:"كيف يعمل",
       howSub:"أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي",
       step1Title:"التسجيل في صفحة واحدة",
       step1Body:"اختيار الصف والموضوع، وإدخال رقم واتساب الطالب.",
@@ -943,6 +942,14 @@
       labelChildName:"اسم الطالب",
       aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span>',
       subjectsPills:'<span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span>',
+      demoTitle:'جربوا بأنفسكم: هيك بيعلّم المعلّم',
+      demoTopic1:'كسور بمقامات مختلفة',
+      demoTopic2:'مسائل لفظية',
+      demoTopic3:'نسب مئوية',
+      demoTopic4:'محاور الإحداثيات',
+      demoLabel:'درس تجريبي - عرض توضيحي',
+      demoReplay:'↻ مرة تانية',
+      demoEmpty:'اختاروا موضوع للبدء',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",
@@ -1004,8 +1011,8 @@
       contactWa:"واتساب",
       aboutName:"فريق daiZ",
       feelingsTitle:"شو اللي فعلاً بيتغيّر",
-      feel1Title:"لحظة وجدتها",
-      feel1Body:"لما ابنك يقول \"فهمت!\" بنفسه — مش مجرد حفظ جواب..",
+      feel1Title:"اللحظة يلي بتنور",
+      feel1Body:"لما ابنك يقول فجأة \"فهمت!\" وعيونه بتلمع — مش مجرد حفظ جواب، إنما فعلاً استوعب.",
       feel2Title:"تقدّم بتشوفه",
       feel2Body:"تمرين مستمر بينعكس على العلامات يوم بعد يوم .",
       feel3Title:"أهل بيقدروا أخيرًا ياخدوا نفس",
@@ -1019,9 +1026,22 @@
       trust2Title:"الأهل دايمًا بالصورة",
       trust2Body:"تقرير أسبوعي قصير يُرسل لرقم الأهل الخاص.",
       trust3Title:"بدون مشاركة معلومات زايدة",
-      trust3Body:"المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع أي جهة ثالثة.",
+      trust3Body:"المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع جهة ثالثة.",
       trust4Title:"سيطرة كاملة، دايمًا",
       trust4Body:"يمكن إيقاف أو تعليق أو إلغاء الاشتراك بأي لحظة، بدون أسئلة وبدون التزام.",
+      trust5Title:"استرجاع كامل خلال 7 أيام",
+      trust5Body:"مش راضين؟ بترجعلكم كل المبلغ، بلا أي أسئلة.",
+      compareTitle:"كيف نقارن مقابل معلّم خصوصي عادي",
+      compareSub:"نفس جودة التعليم الصبور والشخصي - بتكلفة أقل بكثير",
+      compareColHuman:"معلّم خصوصي عادي",
+      compareColUs:"daiZ",
+      compareRow1:"التكلفة الشهرية",
+      compareRow2:"التوفر",
+      compareRow2Human:"مرة أو مرتين بالأسبوع",
+      compareRow2Us:"24/7 - بأي وقت",
+      compareRow3:"الصبر",
+      compareRow3Human:"يعتمد على المعلّم",
+      compareRow3Us:"بلا حدود",
       faqTitle:"أسئلة شائعة",
       faq1Q:"هل هذا بديل عن دروس خصوصية أو مساعدة من معلم المدرسة؟",
       faq1A:"مش بالضرورة — هذا مكمّل. daiZ يقدّم إجابة متوفرة على مدار الساعة للتمرين والأسئلة اليومية، بس ما بيعوّض عن التواصل الإنساني عند الحاجة.",
@@ -1032,7 +1052,7 @@
       faq4Q:"شو بيصير إذا الوكيل ما بيعرف يجاوب على سؤال معيّن؟",
       faq4A:"رح يقول هيك بصراحة، ويوجّه الطالب/ة للمكان الصحيح (معلم، أهل) بدل ما يخمّن جواب.",
       faq5Q:"هل معلومات ابني/بنتي بأمان؟",
-      faq5A:"المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهات ثالثة لأغراض إعلانية.",
+      faq5A:"المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهة ثالثة لأغراض إعلانية.",
       faq6Q:"شو الفرق بينه وبين ChatGPT أو Gemini؟",
       faq6A:"بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.",
       floatingCtaText:"جاهزين تبدأوا؟",
@@ -1092,6 +1112,110 @@
     document.getElementById('childPhoneInput').required = !isWebsite;
     document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
   }
+
+  const demoData = {
+    he: {
+      fractions: ['איך פותרים 2/3 + 1/4? יש להם מכנים שונים...',
+        'שאלה טובה! קודם כל - אפשר לחבר שברים ישירות כשיש להם מכנים שונים, או שצריך משהו קודם?',
+        'צריך קודם להשוות מכנים?',
+        'בדיוק! אז מה המכנה המשותף הכי קטן בין 3 ל-4?',
+        'אני חושב... 12?',
+        'מדויק! עכשיו נהפוך כל שבר למכנה 12 - 2/3 שווה כמה שנים עשיריות?',
+        'אה, 8/12! ואז 1/4 זה 3/12',
+        'בדיוק ככה. עכשיו שיש לך מכנה משותף - מה התוצאה?',
+        '8/12 ועוד 3/12 שווה 11/12!'],
+      word: ['בחנות יש 45 עפרונות. מכרו 3/5 מהם. כמה נשארו?',
+        'בוא נתחיל מהשלב הראשון - מה זה אומר בעצם למכור 3/5 מ-45?',
+        'כמה עפרונות זה 3/5?',
+        'בדיוק השאלה הנכונה! איך מחשבים 3/5 מתוך 45?',
+        'כופלים 45 כפול 3 חלקי 5?',
+        'מעולה! וכמה יוצא?',
+        '45 כפול 3 זה 135, חלקי 5 זה 27',
+        'נכון! אז נמכרו 27. עכשיו - איך מוצאים כמה נשארו?',
+        'מחסרים! 45 פחות 27 שווה 18'],
+      percent: ['חולצה עלתה 80 שקל, ויש עליה הנחה של 25%. כמה משלמים?',
+        'קודם כל - מה זה אומר 25% מ-80 שקל?',
+        'זה 25 מתוך כל 100, כפול 80?',
+        'בדיוק! אז איך מחשבים את זה בפועל?',
+        '80 כפול 25 חלקי 100?',
+        'נכון. וכמה זה יוצא?',
+        'זה 20 שקל הנחה',
+        'מעולה! אז כמה בסוף משלמים על החולצה?',
+        '80 פחות 20 זה 60 שקל!'],
+      coords: ['מה המרחק בין הנקודות A(2,1) ל-B(6,4) על מערכת הצירים?',
+        'שאלה טובה! קודם כל - כמה יחידות מפרידות ביניהן בציר ה-X?',
+        'ב-X זה 6 פחות 2, אז 4',
+        'מדויק! ובציר ה-Y?',
+        '4 פחות 1, אז 3',
+        'יופי! עכשיו יש לך שני ניצבים של משולש ישר-זווית - 4 ו-3. איך מוצאים את הצלע השלישית, המרחק עצמו?',
+        'משפט פיתגורס?',
+        'בדיוק! אז מה יוצא?',
+        'שורש של 4 בריבוע ועוד 3 בריבוע, זה שורש של 25, שזה 5!']
+    },
+    ar: {
+      fractions: ['كيف نحل 2/3 + 1/4؟ لهما مقامان مختلفان...',
+        'سؤال ممتاز! أول شي - هل ممكن نجمع كسور مباشرة لما يكون المقام مختلف، ولا لازم شي قبل هيك؟',
+        'لازم نساوي المقامات؟',
+        'بالضبط! طيب شو أصغر مقام مشترك بين 3 و4؟',
+        'أفكر... 12؟',
+        'مضبوط! هلق منحول كل كسر لمقام 12 - كم بيصير 2/3؟',
+        'آه، 8/12! وبعدين 1/4 بيصير 3/12',
+        'بالضبط هيك. هلق يلي عندك مقام مشترك - شو النتيجة؟',
+        '8/12 زائد 3/12 بيساوي 11/12!'],
+      word: ['بالمحل في 45 قلم رصاص. باعوا 3/5 منهم. كم بقي؟',
+        'خلينا نبلش بالخطوة الأولى - شو معناها نبيع 3/5 من 45؟',
+        'كم قلم هاد 3/5؟',
+        'بالضبط هاد السؤال الصح! كيف بنحسب 3/5 من 45؟',
+        'بنضرب 45 بـ3 وبنقسم على 5؟',
+        'ممتاز! وكم بيطلع؟',
+        '45 ضرب 3 بيساوي 135، تقسيم 5 بيساوي 27',
+        'صح! يعني انباع 27. هلق كيف بنعرف كم بقي؟',
+        'بنطرح! 45 ناقص 27 بيساوي 18'],
+      percent: ['قميص سعره 80 شيكل، وفيه خصم 25%. كم رح ندفع؟',
+        'أول شي - شو معناها 25% من 80 شيكل؟',
+        'يعني 25 من كل 100، ضرب 80؟',
+        'بالضبط! طيب كيف بنحسبها بالفعل؟',
+        '80 ضرب 25 تقسيم 100؟',
+        'صح. وكم بيطلع؟',
+        'بيطلع 20 شيكل خصم',
+        'ممتاز! يعني كم رح ندفع بالآخر عالقميص؟',
+        '80 ناقص 20 بيساوي 60 شيكل!'],
+      coords: ['شو المسافة بين النقطتين A(2,1) و B(6,4) عمنظومة المحاور؟',
+        'سؤال ممتاز! أول شي - كم وحدة بتفرق بينهم بمحور X؟',
+        'بمحور X هاد 6 ناقص 2، يعني 4',
+        'مضبوط! وبمحور Y؟',
+        '4 ناقص 1، يعني 3',
+        'حلو! هلق عندك ضلعين لمثلث قائم الزاوية - 4 و3. كيف منلاقي الضلع التالت، يعني المسافة نفسها؟',
+        'نظرية فيثاغورس؟',
+        'بالضبط! طيب شو بيطلع؟',
+        'جذر 4 تربيع زائد 3 تربيع، يعني جذر 25، يعني 5!']
+    }
+  };
+  let currentDemoTopic = null;
+  let demoTimers = [];
+  window.playDemo = function(topic){
+    currentDemoTopic = topic;
+    document.querySelectorAll('.demo-topic-btn').forEach(b => b.classList.toggle('active', b.dataset.topic === topic));
+    demoTimers.forEach(t => clearTimeout(t));
+    demoTimers = [];
+    const body = document.getElementById('demoBody');
+    body.innerHTML = '';
+    const lines = demoData[currentLang][topic];
+    document.getElementById('demoReplay').style.display = 'inline-block';
+    lines.forEach((text, i) => {
+      const t = setTimeout(() => {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble ' + (i % 2 === 0 ? 'user' : 'bot');
+        bubble.textContent = text;
+        body.appendChild(bubble);
+        body.scrollTop = body.scrollHeight;
+      }, i * 850);
+      demoTimers.push(t);
+    });
+  };
+  window.replayDemo = function(){
+    if(currentDemoTopic) playDemo(currentDemoTopic);
+  };
 
   function setLang(lang){
     currentLang = lang;

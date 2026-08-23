@@ -165,9 +165,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .bubble.bot{align-self:flex-start;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.08);border-start-start-radius:4px;}
   .bubble.user{align-self:flex-end;background:var(--teal-tint);color:var(--ink);border-end-end-radius:4px;}
 
-  /* Live demo section - matches the "try it yourself" pattern: pick a
-     topic, watch the tutor lead to the answer via guiding questions
-     rather than giving it away, no signup required. */
   #demo{padding:70px 20px 20px;max-width:720px;margin:0 auto;}
   .demo-topics{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 22px;}
   .demo-topic-btn{
@@ -696,7 +693,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         <label data-i18n="labelParentPhone">מספר טלפון של ההורה <span class="hint" data-i18n="hintParentPhone">(לקבלת עדכון התקדמות שבועי בלבד)</span></label>
         <input type="tel" placeholder="050-1234567" required>
       </div>
-      <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit">התחל מנוי — ₪120 לחודש</button>
+      <div class="field" style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;">
+        <input type="checkbox" id="tosCheckbox" required style="margin-top:3px;flex-shrink:0;width:16px;height:16px;" onchange="document.getElementById('formSubmitBtn').disabled = !this.checked || document.querySelectorAll('input[name=subjects]:checked').length === 0;">
+        <label for="tosCheckbox" style="font-size:12.5px;font-weight:400;line-height:1.6;margin:0;" data-i18n="labelTosAgree">קראתי ואני מסכים/ה ל<a href="/terms.html" target="_blank" data-i18n="tosTermsLink">תנאי השימוש</a> ול<a href="/privacy.html" target="_blank" data-i18n="tosPrivacyLink">מדיניות הפרטיות</a></label>
+      </div>
+      <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit" disabled>התחל מנוי — ₪120 לחודש</button>
       <p class="form-note" data-i18n="formNote">בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.</p>
     </form>
   </div>
@@ -895,6 +896,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
       hintParentPhone:"(לקבלת עדכון התקדמות שבועי בלבד)",
+      labelTosAgree:'קראתי ואני מסכים/ה ל<a href="/terms.html" target="_blank">תנאי השימוש</a> ול<a href="/privacy.html" target="_blank">מדיניות הפרטיות</a>',
       formSubmit:"התחל מנוי — ₪120 לחודש",
       formNote:"בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.",
       aboutTitle:"מי אנחנו",
@@ -1048,6 +1050,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
       hintParentPhone:"(لتلقي تحديث التقدّم الأسبوعي فقط)",
+      labelTosAgree:'قرأت وأوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و<a href="/privacy.html" target="_blank">سياسة الخصوصية</a>',
       formSubmit:"ابدأ الاشتراك — ₪120 شهرياً",
       formNote:"بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.",
       aboutTitle:"من نحن",
@@ -1125,10 +1128,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: (price) => 'ابدأ الاشتراك — ₪' + price + ' شهرياً'
   };
 
-  // Which subject-group is relevant depends on the instruction-language
-  // selector (langPrefSelect), NOT the page's UI-display toggle (he/ar nav
-  // buttons) - a Hebrew-UI parent can still pick Arabic instruction for
-  // their child, and vice versa.
   function onLangPrefChange(){
     const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
     document.getElementById('subjectsGridHebrew').style.display = isArabicTrack ? 'none' : 'grid';
@@ -1142,14 +1141,13 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     const checked = document.querySelectorAll('#' + activeGridId + ' input[name="subjects"]:checked').length;
     const submitBtn = document.getElementById('formSubmitBtn');
     const note = document.getElementById('subjectsPriceNote');
+    const tosOk = document.getElementById('tosCheckbox').checked;
     if(checked === 0){
-      // No subject selected at all - block submission with a clear prompt
-      // instead of silently charging for a phantom "1 subject".
       note.textContent = SUBJECTS_NOTE_TEXT[currentLang][0];
       submitBtn.disabled = true;
       return;
     }
-    submitBtn.disabled = false;
+    submitBtn.disabled = !tosOk;
     const price = SUBJECT_PRICE_TABLE[checked] || SUBJECT_PRICE_TABLE[3];
     note.textContent = SUBJECTS_NOTE_TEXT[currentLang][checked] || SUBJECTS_NOTE_TEXT[currentLang][3];
     submitBtn.textContent = SUBMIT_BTN_TEXT[currentLang](price);
@@ -1162,14 +1160,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
   }
 
-  // Live "try it yourself" demo - a genuine short Socratic exchange per
-  // topic (student asks, tutor guides with a question instead of the
-  // answer, student works it out step by step). No signup, no server call -
-  // this is canned/pre-written content, played back with a staggered
-  // reveal so it reads like a live conversation.
   const demoData = {
     he: {
-      fractions: ['bot:איך פותרים 2/3 + 1/4? יש להם מכנים שונים...'.replace('bot:',''),
+      fractions: ['איך פותרים 2/3 + 1/4? יש להם מכנים שונים...',
         'שאלה טובה! קודם כל - אפשר לחבר שברים ישירות כשיש להם מכנים שונים, או שצריך משהו קודם?',
         'צריך קודם להשוות מכנים?',
         'בדיוק! אז מה המכנה המשותף הכי קטן בין 3 ל-4?',
@@ -1283,23 +1276,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         el.innerHTML = translations[lang][key];
       }
     });
-    // Keep the signup form's "language of instruction" selector in lockstep
-    // with the main he/ar toggle - this covers BOTH the initial auto-detect
-    // AND every manual click on the nav toggle afterward (previously only
-    // the initial page-load detection synced it, so manually switching the
-    // nav toggle to Arabic left the form silently stuck on the Hebrew-taught
-    // subject group). If someone opens the dropdown afterward and picks the
-    // other option on purpose, that manual choice is respected until the
-    // next nav-toggle click.
     document.getElementById('langPrefSelect').value = lang;
     onLangPrefChange();
   }
 
-  // Default UI language: prefer an explicit ?lang=ar/he URL param (useful
-  // for language-targeted ad campaigns), then fall back to the browser's
-  // language, and only default to Hebrew if neither signals Arabic - so an
-  // Arabic-speaking visitor isn't shown Hebrew first and doesn't have to
-  // find the toggle themselves.
   (function chooseInitialLang(){
     const urlLang = new URLSearchParams(window.location.search).get('lang');
     let initialLang = 'he';

@@ -53,9 +53,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     background:var(--paper); color:var(--ink);
     font-family:'Heebo', sans-serif; line-height:1.6;
     display:flex; flex-direction:column; overflow:hidden;
-    /* app-shell is pinned to the actual visible viewport (set in px by JS via
-       the visualViewport API) so the mobile keyboard slides the input bar up
-       instead of squashing/cutting the chat, matching native app behavior. */
     position:fixed; top:0; left:0; right:0; width:100%; height:100%;
   }
   body.lang-ar{ font-family:'Cairo', sans-serif; }
@@ -127,11 +124,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .send-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:11px; border:none; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:width 0.15s ease, height 0.15s ease; }
   .send-btn:disabled{ opacity:0.4; cursor:not-allowed; }
 
-  /* Compact mode: applied to body while the on-screen keyboard is open
-     (detected in JS via visualViewport height shrinking). Shrinks the
-     topbar and input-bar chrome so more of the reduced viewport goes to
-     the actual conversation, instead of unread messages being squeezed
-     into a sliver between two full-size bars. */
   body.kb-open .topbar{ padding:7px 16px; }
   body.kb-open .brand .mark{ width:24px; height:24px; }
   body.kb-open .brand{ font-size:14px; gap:7px; }
@@ -261,23 +253,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   const topicChip = document.getElementById('topicChip');
   const changeTopicBtn = document.getElementById('changeTopicBtn');
 
-  // --- Mobile keyboard fix ---------------------------------------------
-  // Mobile browsers (esp. iOS Safari / in-app webviews) don't resize the
-  // layout viewport when the on-screen keyboard opens; they resize the
-  // *visual* viewport instead, which otherwise leaves the input bar hidden
-  // behind the keyboard or the chat area visually squashed/cut. We pin the
-  // app shell's actual pixel height (and vertical offset) to
-  // window.visualViewport on every change, so the input bar always sits
-  // directly above the keyboard - the same behavior WhatsApp has.
   function syncViewportHeight(){
     const vv = window.visualViewport;
     if(vv){
       document.body.style.height = vv.height + 'px';
       document.body.style.top = vv.offsetTop + 'px';
-      // Keyboard-open detection: once we've seen the real full-height layout
-      // viewport, a visual viewport meaningfully smaller than it means the
-      // on-screen keyboard is covering that much space. Threshold (120px)
-      // avoids false positives from minor browser-chrome resizes.
       if(!syncViewportHeight.fullHeight || window.innerHeight > syncViewportHeight.fullHeight){
         syncViewportHeight.fullHeight = window.innerHeight;
       }
@@ -287,7 +267,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       document.body.style.height = window.innerHeight + 'px';
       document.body.style.top = '0px';
     }
-    // keep the latest message in view once the keyboard/layout has settled
     requestAnimationFrame(() => { chatWrap.scrollTop = chatWrap.scrollHeight; });
   }
   if(window.visualViewport){
@@ -297,9 +276,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     window.addEventListener('resize', syncViewportHeight);
   }
   syncViewportHeight();
-  // Some mobile browsers fire the keyboard-open animation slightly after
-  // focus, before visualViewport reports the new size - re-sync shortly
-  // after focus/blur as a safety net so the input never ends up hidden.
   textInput.addEventListener('focus', () => {
     setTimeout(syncViewportHeight, 50);
     setTimeout(syncViewportHeight, 350);
@@ -307,7 +283,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   textInput.addEventListener('blur', () => {
     setTimeout(syncViewportHeight, 350);
   });
-  // -----------------------------------------------------------------------
 
   window.setLang = function(l){
     lang = l;
@@ -331,7 +306,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   async function loadSubjects(){
     subjectList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
     try {
-      const res = await fetch(API_BASE + '/api/subjects?lang=' + lang);
+      const res = await fetch(API_BASE + '/api/subjects?lang=' + lang + studentIdQuery());
       const data = await res.json();
       renderSubjects(data.subjects || []);
     } catch(e){
@@ -370,7 +345,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   async function loadGrades(){
     gradeGrid.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
     try {
-      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject));
+      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + studentIdQuery());
       const data = await res.json();
       lastGrades = data.grades || ['ז','ח','ט'];
       renderGrades(lastGrades);
@@ -400,7 +375,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     }
     topicList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
     try {
-      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(g) + '&lang=' + effectiveLang);
+      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(g) + '&lang=' + effectiveLang + studentIdQuery());
       const data = await res.json();
       allTopics = data.topics || [];
     } catch(e){
@@ -443,7 +418,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     'hebrew-grammar': { he: 'המורה', ar: 'המורה' },
     'arabic-grammar': { he: 'אל-מותנבי', ar: 'المتنبي' },
     'hebrew-second-language': { he: 'המורה', ar: 'المعلّم' },
-    english: { he: 'המורה', ar: 'المعلّم' },
+    english: { he: 'טומאס', ar: 'توماس' },
   };
 
   function selectTopic(t){
@@ -452,7 +427,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     chatWrap.classList.add('show');
     inputBar.classList.add('show');
     topicChip.classList.add('show');
-    // דקדוק ערבי - ההוראה תמיד בערבית, בלי קשר לטוגל השפה בממשק
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     const topicDisplay = effectiveLang === 'ar' && t.ar ? t.ar : t.name;
     topicChip.textContent = '📚 ' + topicDisplay;
@@ -538,14 +512,29 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   });
   sendBtn.addEventListener('click', sendMessage);
 
+  // Personal-link student ID: if the URL carries ?studentId=<key> (the
+  // format used by registered-student links, see STUDENTS in
+  // chat-route.js), that ID is the one that must reach the server on
+  // every request - a randomly generated one would never match a real
+  // registration and would always be treated as an unregistered visitor.
+  // Persist it to localStorage so it survives a page reload without the
+  // query string (e.g. a bookmark) once it's been seen once.
+  const urlStudentId = new URLSearchParams(window.location.search).get('studentId');
   let studentProfile = null;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if(saved) studentProfile = JSON.parse(saved);
   } catch(e){}
-  if(!studentProfile){
+  if(urlStudentId){
+    studentProfile = { id: urlStudentId };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(studentProfile)); } catch(e){}
+  } else if(!studentProfile){
     studentProfile = { id: 'stu_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36) };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(studentProfile)); } catch(e){}
+  }
+
+  function studentIdQuery(){
+    return '&studentId=' + encodeURIComponent(studentProfile.id);
   }
 
   async function sendMessage(){

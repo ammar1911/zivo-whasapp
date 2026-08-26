@@ -220,8 +220,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة', deviceNote:'💻 نصيحة: التعلّم هنا أسهل على الكمبيوتر منه على الهاتف' }
   };
   const GRADE_LABEL = {
-    he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"י\"א", 'יב':"י\"ב" },
-    ar: { 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع', 'י':'الصف العاشر', 'יא':'الصف الحادي عشر', 'יב':'الصف الثاني عشر' }
+    he: { 'ד':"ד'", 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"י\"א", 'יב':"י\"ב" },
+    ar: { 'ד':'صف رابع', 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع', 'י':'الصف العاشر', 'יא':'الصف الحادي عشر', 'יב':'الصف الثاني عشر' }
   };
 
   let lang = 'he';
@@ -357,6 +357,12 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   function renderGrades(grades){
     gradeGrid.innerHTML = '';
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
+    // The grade title must follow the same forced-language rule as the grade
+    // buttons themselves - otherwise a subject that forces Arabic teaching
+    // (like math-arabic) ends up with an Arabic-labeled grid under a
+    // Hebrew-only title when the interface toggle itself is set to Hebrew.
+    document.getElementById('pickGradeTitle').textContent = STR[effectiveLang].pickGrade;
+    document.getElementById('backLinkGrade').textContent = STR[effectiveLang].back;
     grades.forEach(g => {
       const btn = document.createElement('button');
       btn.className = 'grade-btn';
@@ -386,6 +392,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
   function renderTopics(){
     topicList.innerHTML = '';
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
+    document.getElementById('pickTopicTitle').textContent = STR[effectiveLang].pickTopic;
+    document.getElementById('backLink').textContent = STR[effectiveLang].back;
+    document.getElementById('backLinkGrade').textContent = STR[effectiveLang].back;
     allTopics.forEach(t => {
       const btn = document.createElement('button');
       btn.className = 'topic-btn';

@@ -85,6 +85,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .grade-btn:hover{ border-color:var(--teal); }
   .topic-list{ display:flex; flex-direction:column; gap:10px; width:100%; max-width:460px; }
   .topic-btn{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-align:start; cursor:pointer; box-shadow:0 2px 6px rgba(30,42,68,0.05); font-family:inherit; }
+  .topic-btn.general-chat-btn{ background:var(--teal-tint); border-color:var(--teal); }
+  .topic-btn.general-chat-btn .tname{ color:var(--teal-dark); }
   .topic-btn:hover{ border-color:var(--teal); }
   .topic-btn .tname{ font-size:14px; font-weight:700; color:var(--ink); }
   .topic-btn .tdomain{ font-size:11.5px; color:var(--muted); margin-top:3px; }
@@ -398,7 +400,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     document.getElementById('backLinkGrade').textContent = STR[effectiveLang].back;
     allTopics.forEach(t => {
       const btn = document.createElement('button');
-      btn.className = 'topic-btn';
+      btn.className = 'topic-btn' + (t.id === 'general-chat' ? ' general-chat-btn' : '');
       btn.innerHTML = '<div class="tname">' + (t.name || '') + '</div><div class="tdomain">' + (t.domain || '') + '</div>';
       btn.onclick = () => selectTopic(t);
       topicList.appendChild(btn);
@@ -439,14 +441,18 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     topicChip.classList.add('show');
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     const topicDisplay = effectiveLang === 'ar' && t.ar ? t.ar : t.name;
-    topicChip.textContent = '📚 ' + topicDisplay;
+    topicChip.textContent = (t.id === 'general-chat' ? '💬 ' : '📚 ') + topicDisplay;
     changeTopicBtn.classList.add('show');
     chatInner.innerHTML = '';
     history = [];
     const personaName = (PERSONA_NAME[subject] && PERSONA_NAME[subject][effectiveLang]) || (effectiveLang === 'ar' ? 'سقراط' : 'סוקרטס');
-    const welcome = effectiveLang === 'ar'
-      ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. سنتدرّب اليوم على: ' + topicDisplay + '. من وين تحب تبدأ، أو عندك سؤال محدد؟'
-      : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. נתרגל היום את הנושא: ' + topicDisplay + '. מאיפה תרצה/י להתחיל, או שיש לך שאלה ספציפית?';
+    const welcome = t.id === 'general-chat'
+      ? (effectiveLang === 'ar'
+          ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. اسألني عن أي شي متعلق بالمادة - حتى لو كان موضوع جديد تعلمتوه أخيراً بالصف.'
+          : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. שאל/י אותי על כל דבר שקשור למקצוע - גם אם זה נושא חדש שלמדתם לאחרונה בכיתה.')
+      : (effectiveLang === 'ar'
+          ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. سنتدرّب اليوم على: ' + topicDisplay + '. من وين تحب تبدأ، أو عندك سؤال محدد؟'
+          : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. נתרגל היום את הנושא: ' + topicDisplay + '. מאיפה תרצה/י להתחיל, או שיש לך שאלה ספציפית?');
     appendBubble('assistant', welcome);
     textInput.focus();
   }
@@ -571,6 +577,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       formData.append('studentId', studentProfile.id);
       formData.append('grade', grade);
       formData.append('topicId', topic.id);
+      formData.append('subject', subject);
       formData.append('lang', (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang);
       formData.append('history', JSON.stringify(history.slice(-10)));
       if(imageToSend) formData.append('image', imageToSend);

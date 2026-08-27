@@ -7694,6 +7694,72 @@ ${diagramInstruction}${examSuggestionInstruction ? '\n' + examSuggestionInstruct
 }
 
 // ---------------------------------------------------------------
+// General-chat system prompt: used when the student picks "שיחה כללית"
+// instead of one specific pre-built topic. Unlike buildSystemPrompt
+// (which locks the model to exactly one unit's JSON as its only source),
+// this gives the model the full list of topic names we already have for
+// this subject+grade as a reference/anchor, but explicitly permits it to
+// help with material at the same subject+grade level that isn't in that
+// list yet (e.g. something the class just covered that hasn't been
+// turned into a KB unit) - the whole point of this mode per the business
+// decision behind it.
+// ---------------------------------------------------------------
+function buildGeneralSystemPrompt(subjectId, grade, lang) {
+  const subjectMeta = SUBJECTS.find(s => s.id === subjectId) || SUBJECTS[0];
+  const kbSubject = subjectMeta.kb_subject;
+  const effectiveLang = (kbSubject === 'ערבית' || kbSubject === 'עברית כשפה שנייה' || kbSubject === 'الرياضيات') ? 'ar' : lang;
+  const langName = effectiveLang === 'ar' ? 'ערבית (Arabic)' : 'עברית (Hebrew)';
+  const rawPersona = PERSONAS[kbSubject] || PERSONAS['מתמטיקה'];
+  const persona = (rawPersona.he || rawPersona.ar) ? (rawPersona[effectiveLang] || rawPersona.he) : rawPersona;
+  const isMath = kbSubject === 'מתמטיקה' || kbSubject === 'الرياضيات';
+
+  // Reference list of topic names we already have prepared for this exact
+  // subject+grade, so the model can recognize and use one of them directly
+  // when relevant, instead of treating every question as entirely new.
+  const availableTopicNames = TOPICS
+    .filter(t => { const u = KB.math_units[t.id]; return u && u.subject === kbSubject && t.grade === grade; })
+    .map(t => (effectiveLang === 'ar' ? t.ar : t.he))
+    .filter(Boolean);
+  const topicListText = availableTopicNames.length
+    ? availableTopicNames.map(n => `- ${n}`).join('\n')
+    : '(אין עדיין נושאים מוכנים ספציפית לצירוף הזה של מקצוע וכיתה)';
+
+  const diagramInstruction = isMath
+    ? `- חובה לצייר דיאגרמה בכל פעם שמסבירים או נותנים דוגמה על נושא גיאומטרי - כתוב קוד SVG פשוט ותקין, עטוף בדיוק כך:
+[DIAGRAM_START]
+<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">...</svg>
+[DIAGRAM_END]
+כללים לציור: viewBox="0 0 300 220" תמיד. שימוש ב-stroke="#2F6F5E" לקווי הצורה, stroke-width="2", fill="none" לצורות. טקסט/תוויות עם <text> ו-font-size="14".`
+    : `- אם עץ תחביר, טבלת נטייה, או דיאגרמה פשוטה יעזרו להבין - אפשר לצייר אותם באותו פורמט SVG.`;
+
+  return `אתה ${persona.name}, ${persona.role}, שמלמד תלמיד/ה אחד-על-אחד בשיחת וואטסאפ/צ'אט.
+
+כיתה: ${grade}'
+
+התלמיד/ה בחר/ה ב"שיחה כללית" - כלומר לא בחר/ה נושא ספציפי מוכן מראש, אלא רוצה לשוחח חופשי ולשאול על מה שהוא/היא צריך/ה, כולל דברים שלמדו לאחרונה בכיתה ועדיין אין לנו עליהם יחידה מוכנה.
+
+הנה רשימת הנושאים שכבר מוכנים לנו במיוחד לכיתה ${grade}' במקצוע הזה - אם שאלת התלמיד/ה מתאימה לאחד מהם, תעדיף/י להתבסס על הידע התוכני שאתה יודע שמתאים לתוכנית הלימודים הרשמית באותו נושא בדיוק:
+${topicListText}
+
+אם התלמיד/ה שואל/ת על נושא שלא ברשימה למעלה (כולל חומר חדש שנלמד השבוע ועדיין אין לנו עליו יחידה) - עדיין עזור/י, אבל תוך הקפדה מיוחדת: הישאר/י בגבולות מה שבאמת מתאים לרמת כיתה ${grade}' בתוכנית הלימודים הרשמית של משרד החינוך במקצוע הזה, ואל תלמד/י חומר מכיתה גבוהה משמעותית או ממקצוע אחר לגמרי.
+
+הנחיות התנהגות:
+- ענה תמיד ב${langName}, גם אם התלמיד/ה כתב/ה בשפה אחרת. זה חל על כל השיחה, לא רק ההודעה הראשונה.
+- זו שיטת הוראה סוקרטית, לא שאלה-ותשובות: נסה להבין איפה התלמיד/ה תקוע/ה, שאל שאלה מנחה קצרה אחת, ורק אם עדיין תקוע/ה - תן את הצעד הבא.
+- אל תשתמש בכוכביות (**) או בכל סימון markdown אחר להדגשת טקסט - הצ'אט מציג טקסט רגיל בלבד.
+- זהירות קריטית עם ערבוב כתבים: מותר לשלב מילים שלמות משתי השפות באותו משפט, אבל אסור בהחלט לערבב אותיות עבריות וערביות בתוך אותה מילה בודדת. בדוק לפני שליחה שכל מילה בודדת בנויה כולה מאותו כתב.
+- אל תתן פתרון מלא מיד, גם אם מתבקשים. פרק לצעדים קטנים.
+- כשמסבירים פתרון מדורג עם כמה שלבים ממוספרים (1. 2. 3.), חובה להשאיר שורה ריקה בין כל שלב לשלב הבא.
+- טון: חם, מעודד, סבלני. אף פעם לא מתנשא או ביקורתי על טעויות.
+- הודעות קצרות, מתאים לצ'אט וואטסאפ.
+- אם התלמיד/ה עונה נכון - לחזק בקצרה ולעבור הלאה.
+${diagramInstruction}
+
+בסוף כל תגובה שלך, הוסף שורה נסתרת (התלמיד לא רואה אותה, השרת מסיר אותה):
+[TOPIC: <שם הנושא שבו התלמיד/ה עוסק/ת כרגע, בקצרה>]`;
+}
+
+// ---------------------------------------------------------------
 // GET /api/topics?grade=ז
 // מחזיר את רשימת הנושאים הזמינים לכיתה נתונה (לתפריט הבחירה בצ'אט)
 // ---------------------------------------------------------------
@@ -7786,7 +7852,18 @@ router.get('/topics', (req, res) => {
       subject: unit ? unit.subject : null,
     };
   }).filter(t => t.id && (!subject.kb_subject || t.subject === subject.kb_subject));
-  res.json({ grades: GRADES, topics });
+
+  // Pinned first entry: free-form conversation with the tutor instead of
+  // one specific pre-built topic - see buildGeneralSystemPrompt. The
+  // special id 'general-chat' is never a real topic_id, so the client and
+  // /api/chat can both recognize it unambiguously.
+  const generalEntry = {
+    id: 'general-chat',
+    name: lang === 'ar' ? 'محادثة عامة مع المعلّم' : 'שיחה כללית עם המורה',
+    domain: lang === 'ar' ? 'اسأل عن أي موضوع' : 'שאל/י על כל נושא',
+    subject: subject.kb_subject,
+  };
+  res.json({ grades: GRADES, topics: [generalEntry, ...topics] });
 });
 
 // ---------------------------------------------------------------
@@ -7823,14 +7900,23 @@ router.post('/chat', upload.single('image'), async (req, res) => {
       history = [];
     }
 
-    const unit = findUnitById(topicId) || {};
+    // 'general-chat' is the pinned free-form option added in /api/topics -
+    // it never matches a real KB unit, so it's handled as its own branch
+    // throughout rather than falling through findUnitById into an empty {}.
+    const isGeneralChat = topicId === 'general-chat';
+    const unit = isGeneralChat ? {} : (findUnitById(topicId) || {});
 
     const student = studentId ? STUDENTS[studentId] : null;
     // PAYWALL NOT YET ENFORCED (pilot/testing phase - by request): no
     // studentId, or one that isn't recognized, still goes through - see
     // the matching comment in /api/subjects above for why.
     if (student && !student.owner) {
-      const matchedSubject = SUBJECTS.find(s => s.kb_subject === unit.subject);
+      // General-chat mode has no unit to derive the subject from, so it
+      // uses the subject id sent directly by the client instead of
+      // unit.subject (which topic-based mode relies on).
+      const matchedSubject = isGeneralChat
+        ? SUBJECTS.find(s => s.id === subject)
+        : SUBJECTS.find(s => s.kb_subject === unit.subject);
       const subjectOk = matchedSubject && student.subjects.includes(matchedSubject.id);
       const gradeOk = grade && grade === student.grade;
       if (!subjectOk || !gradeOk) {
@@ -7868,7 +7954,9 @@ router.post('/chat', upload.single('image'), async (req, res) => {
       system: [
         {
           type: 'text',
-          text: buildSystemPrompt(unit, lang, grade || 'ז'),
+          text: isGeneralChat
+            ? buildGeneralSystemPrompt(subject, grade || 'ז', lang)
+            : buildSystemPrompt(unit, lang, grade || 'ז'),
           cache_control: { type: 'ephemeral' },
         },
       ],

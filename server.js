@@ -215,6 +215,54 @@ ${JSON.stringify(unit, null, 1)}
 - אם התלמיד עונה נכון - חזק בקצרה ועבור הלאה.`;
 }
 
+// General-chat mode (the "0. שיחה כללית" pinned menu option below) has no
+// single KB unit to lock onto, so it needs its own prompt - mirrors
+// chat-route.js's buildGeneralSystemPrompt (used by the website) so the
+// two channels behave the same way: draw on the topics already prepared
+// for this subject+grade as a reference, but don't refuse material that
+// isn't in that list yet, as long as it's genuinely at this grade/subject
+// level - that's the whole point of offering this mode over a locked topic.
+function buildGeneralSystemPrompt(subjectId, grade, lang) {
+  const subjectMeta = SUBJECTS.find(s => s.id === subjectId) || SUBJECTS[0];
+  const kbSubject = subjectMeta.kb_subject;
+  const persona = resolvePersona(kbSubject, lang);
+  const effectiveLang = (kbSubject === 'ערבית' || kbSubject === 'עברית כשפה שנייה' || kbSubject === 'الرياضيات') ? 'ar' : lang;
+  const langName = effectiveLang === "he" ? "עברית (Hebrew)" : "العربية (Arabic)";
+  const availableTopicNames = chatRouter.TOPICS
+    .filter(t => { const u = chatRouter.KB.math_units[t.id]; return u && u.subject === kbSubject && t.grade === grade; })
+    .map(t => (effectiveLang === 'ar' ? t.ar : t.he))
+    .filter(Boolean);
+  const topicListText = availableTopicNames.length
+    ? availableTopicNames.map(n => `- ${n}`).join('\n')
+    : (effectiveLang === 'ar' ? '(لا توجد بعد مواضيع محضّرة خصيصاً لهذا المزيج من المادة والصف)' : '(אין עדיין נושאים מוכנים ספציפית לצירוף הזה של מקצוע וכיתה)');
+
+  const topicsTitle = effectiveLang === 'ar'
+    ? 'هذه المواضيع جاهزة خصيصاً لصفك في هذه المادة - إذا كان سؤال الطالب يتوافق مع أحدها، استند إليه:'
+    : 'הנה הנושאים שכבר מוכנים במיוחד לכיתה הזו במקצוע הזה - אם שאלת התלמיד/ה מתאימה לאחד מהם, תעדיף/י להתבסס עליו:';
+  const flexibilityNote = effectiveLang === 'ar'
+    ? 'إذا سأل الطالب عن موضوع ليس في القائمة أعلاه (بما في ذلك مادة جديدة تعلّموها هذا الأسبوع) - ساعد/ي مع ذلك، لكن ابق/ي ضمن حدود ما يناسب فعلاً هذا الصف بالمنهج الرسمي، ولا تعلّم/ي مادة من صف أعلى بكثير أو من مادة أخرى تماماً.'
+    : 'אם התלמיד/ה שואל/ת על נושא שלא ברשימה למעלה (כולל חומר חדש שנלמד השבוע) - עדיין עזור/י, אבל הישאר/י בגבולות מה שבאמת מתאים לכיתה הזו בתוכנית הלימודים הרשמית, ואל תלמד/י חומר מכיתה גבוהה משמעותית או ממקצוע אחר לגמרי.';
+
+  return `אתה ${persona.name}, ${persona.role} מבית daiZ (שירות הוראה פרטית בוואטסאפ, בעברית ובערבית, תחת הסלוגן "כל יום, לצידך"), שמלמד תלמיד/ה אחד-על-אחד בשיחת וואטסאפ.
+
+כיתה: ${grade}'
+
+התלמיד/ה בחר/ה "שיחה כללית" - לא נושא ספציפי מוכן מראש, אלא שיחה חופשית על מה שהוא/היא צריך/ה.
+
+${topicsTitle}
+${topicListText}
+
+${flexibilityNote}
+
+הנחיות התנהגות:
+- ענה תמיד ב${langName}, גם אם התלמיד/ה כתב/ה בשפה אחרת.
+- זו שיטת הוראה, לא שאלות ותשובות: נסה להבין איפה התלמיד/ה תקוע/ה, תן/י הנחיה קצרה אחת, ורק אם עדיין תקוע/ה - תן/י את הצעד הבא.
+- אל תיתן/י פתרון מלא מיד, גם אם מתבקש. פרק/י לצעדים קטנים.
+- כשמסבירים פתרון מדורג, מספר/י כל שלב (1. 2. 3.) בשורה נפרדת.
+- טון: חם, מעודד, סבלני. הודעות קצרות המתאימות לצ'אט וואטסאפ.
+- אם התלמיד/ה עונה נכון - חזק/י בקצרה ועבור/י הלאה.`;
+}
+
 const SMART_MODEL = "claude-sonnet-4-6";
 const CHEAP_MODEL = "claude-haiku-4-5-20251001";
 
@@ -531,7 +579,8 @@ app.post("/whatsapp-webhook", async (req, res) => {
         if (!student.owner) {
           session.grade = student.grade;
           const topicsForGrade = topicsForSubjectGrade(chosenSubject, session.grade);
-          const list = topicsForGrade
+          const generalLabel = session.lang === "he" ? "שיחה כללית עם המורה" : "محادثة عامة مع المعلّم";
+          const list = "0. " + generalLabel + "\n" + topicsForGrade
             .map((t, i) => `${i + 1}. ${session.lang === "he" ? t.he : t.ar}`)
             .join("\n");
           const msg =
@@ -569,7 +618,8 @@ app.post("/whatsapp-webhook", async (req, res) => {
       } else {
         session.grade = g;
         const topicsForGrade = topicsForSubjectGrade(subjectObj, g);
-        const list = topicsForGrade
+        const generalLabel = session.lang === "he" ? "שיחה כללית עם המורה" : "محادثة عامة مع المعلّم";
+        const list = "0. " + generalLabel + "\n" + topicsForGrade
           .map((t, i) => `${i + 1}. ${session.lang === "he" ? t.he : t.ar}`)
           .join("\n");
         const msg =
@@ -582,32 +632,47 @@ app.post("/whatsapp-webhook", async (req, res) => {
     } else if (session.stage === "wait_topic") {
       const subjectObj = SUBJECTS.find(s => s.id === session.subject);
       const topicsForGrade = topicsForSubjectGrade(subjectObj, session.grade);
-      const idx = parseInt(body, 10) - 1;
-      const chosen = topicsForGrade[idx];
+      const isGeneralChatChoice = body.trim() === "0";
+      const chosen = isGeneralChatChoice
+        ? { id: "general-chat", he: "שיחה כללית עם המורה", ar: "محادثة عامة مع المعلّم" }
+        : topicsForGrade[parseInt(body, 10) - 1];
 
       if (!chosen) {
         const msg =
           session.lang === "he"
-            ? `זה לא אחד המספרים ברשימה 🙏 תשיב/י מספר בין 1 ל-${topicsForGrade.length}`
-            : `هذا ليس رقمًا من القائمة 🙏 أجب برقم بين 1 و ${topicsForGrade.length}`;
+            ? `זה לא אחד המספרים ברשימה 🙏 תשיב/י מספר בין 0 ל-${topicsForGrade.length}`
+            : `هذا ليس رقمًا من القائمة 🙏 أجب برقم بين 0 و ${topicsForGrade.length}`;
         await sendWhatsApp(from, msg);
       } else {
         session.topic = chosen;
-        const unit = findUnit(chosen);
-        const persona = resolvePersona(unit ? unit.subject : session.subject, session.lang);
+        const unit = isGeneralChatChoice ? null : findUnit(chosen);
+        const persona = isGeneralChatChoice
+          ? resolvePersona((SUBJECTS.find(s => s.id === session.subject) || {}).kb_subject, session.lang)
+          : resolvePersona(unit ? unit.subject : session.subject, session.lang);
         // Hebrew grammar has no proper name (persona.name is just "the
         // teacher") - for that one case, skip the name+role phrasing (which
         // would read as "I am the teacher, your private teacher...") and
         // use the plain "hello, I'm your teacher" the persona implies.
         const isGenericPersona = persona.name === "המורה" || persona.name === "المعلّم";
-        const welcome =
-          session.lang === "he"
-            ? (isGenericPersona
-                ? `שלום! אני המורה שלך מבית daiZ. היום נתמקד ב"${chosen.he}". יש לך תרגיל שאתה תקוע עליו, או שנעבור על העקרונות מההתחלה?`
-                : `שלום! אני ${persona.name}, המורה הפרטי שלך מבית daiZ. היום נתמקד ב"${chosen.he}". יש לך תרגיל שאתה תקוע עליו, או שנעבור על העקרונות מההתחלה?`)
-            : (isGenericPersona
-                ? `أهلاً! أنا معلّمك من daiZ. اليوم سنركّز على "${chosen.ar}". عندك تمرين عالق فيه، ولا نبدأ من الأساسيات؟`
-                : `أهلاً! أنا ${persona.name}، معلّمك الخاص من daiZ. اليوم سنركّز على "${chosen.ar}". عندك تمرين عالق فيه، ولا نبدأ من الأساسيات؟`);
+        // General-chat mode gets its own natural greeting - the normal
+        // "today we'll focus on <topic>" phrasing would be redundant when
+        // the topic itself IS "general conversation" (mirrors chat.html's
+        // selectTopic on the website for the same reason).
+        const welcome = isGeneralChatChoice
+          ? (session.lang === "he"
+              ? (isGenericPersona
+                  ? `שלום! אני המורה שלך מבית daiZ. שאל/י אותי על כל דבר שקשור למקצוע - גם אם זה נושא חדש שלמדתם לאחרונה בכיתה.`
+                  : `שלום! אני ${persona.name}, המורה הפרטי שלך מבית daiZ. שאל/י אותי על כל דבר שקשור למקצוע - גם אם זה נושא חדש שלמדתם לאחרונה בכיתה.`)
+              : (isGenericPersona
+                  ? `أهلاً! أنا معلّمك من daiZ. اسألني عن أي شي متعلق بالمادة - حتى لو كان موضوع جديد تعلمتوه أخيراً بالصف.`
+                  : `أهلاً! أنا ${persona.name}، معلّمك الخاص من daiZ. اسألني عن أي شي متعلق بالمادة - حتى لو كان موضوع جديد تعلمتوه أخيراً بالصف.`))
+          : (session.lang === "he"
+              ? (isGenericPersona
+                  ? `שלום! אני המורה שלך מבית daiZ. היום נתמקד ב"${chosen.he}". יש לך תרגיל שאתה תקוע עליו, או שנעבור על העקרונות מההתחלה?`
+                  : `שלום! אני ${persona.name}, המורה הפרטי שלך מבית daiZ. היום נתמקד ב"${chosen.he}". יש לך תרגיל שאתה תקוע עליו, או שנעבור על העקרונות מההתחלה?`)
+              : (isGenericPersona
+                  ? `أهلاً! أنا معلّمك من daiZ. اليوم سنركّز على "${chosen.ar}". عندك تمرين عالق فيه، ولا نبدأ من الأساسيات؟`
+                  : `أهلاً! أنا ${persona.name}، معلّمك الخاص من daiZ. اليوم سنركّز على "${chosen.ar}". عندك تمرين عالق فيه، ولا نبدأ من الأساسيات؟`));
         session.history.push({ role: "assistant", content: welcome });
         await sendWhatsApp(from, welcome);
         session.stage = "tutoring";
@@ -647,10 +712,13 @@ app.post("/whatsapp-webhook", async (req, res) => {
         if (session.history.length > 20) {
           session.history = session.history.slice(-20);
         }
-        const unit = findUnit(session.topic);
+        const isGeneralChat = session.topic && session.topic.id === "general-chat";
+        const unit = isGeneralChat ? null : findUnit(session.topic);
         const topicDisplayName = session.lang === "ar" ? session.topic.ar : session.topic.he;
         const weeklyContext = buildWeeklyContextBlock(session, session.lang);
-        const systemPrompt = buildSystemPrompt(unit, session.lang) + weeklyContext;
+        const systemPrompt = (isGeneralChat
+          ? buildGeneralSystemPrompt(session.subject, session.grade, session.lang)
+          : buildSystemPrompt(unit, session.lang)) + weeklyContext;
         // Route: a short routine reply ("thanks", "ok") goes to the cheap
         // model - anything with actual content (an answer, a question, a
         // number) stays on the smart one. See the comment above askClaude

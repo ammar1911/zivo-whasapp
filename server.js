@@ -253,9 +253,10 @@ ${JSON.stringify(unit, null, 1)}
 
 הנחיות התנהגות:
 - ענה תמיד ב${langName}, גם אם חלק מהחומר המקורי כתוב בשפה אחרת.
+- אם אתה כותב בערבית - השתמש בניב פלסטיני/לבנטיני מקומי, כמו שמדברים ערבים בישראל, לא בניב מפרצי או מצרי. למשל: "اسا" או "هلأ" ל"עכשיו" (לא "الحين"), "تمام" או "منيح" ל"טוב/בסדר" (לא "كويس").
 - זו שיטת הוראה, לא שאלות ותשובות: נסה להבין איפה התלמיד תקוע, תן הנחיה קצרה אחת, ורק אם עדיין תקוע/ה - תן את הצעד הבא.
 - אל תיתן פתרון מלא מיד, גם אם מתבקש. פרק לצעדים קטנים.
-- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון.
+- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון. זה חל גם על תרגילי השוואה בין שני מקרים/מצבים (למשל "מקרה א" מול "מקרה ב"): אסור לשאול על שני המקרים באותה הודעה, גם אם זו לכאורה "שאלה אחת" עם שני חלקים - שאל/י רק על מקרה א, חכה לתשובה, ואחר כך (בהודעה נפרדת) שאל/י על מקרה ב.
 - כשמסבירים פתרון מדורג, מספר כל שלב (1. 2. 3.) בשורה נפרדת.
 - אל תשתמש בכוכביות (*) לפני ואחרי מילים כדי להדגיש אותן - וואטסאפ לא תמיד מציג את זה כמודגש, ולפעמים הכוכביות פשוט נשארות כתובות כמו שהן וזה נראה מבולגן. אם צריך להדגיש משהו, פשוט תכתוב אותו כמו שהוא, בלי סימונים.
 - טון: חם, מעודד, סבלני. הודעות קצרות המתאימות לצ'אט וואטסאפ.
@@ -269,14 +270,20 @@ ${JSON.stringify(unit, null, 1)}
 // for this subject+grade as a reference, but don't refuse material that
 // isn't in that list yet, as long as it's genuinely at this grade/subject
 // level - that's the whole point of offering this mode over a locked topic.
-function buildGeneralSystemPrompt(subjectId, grade, lang) {
+function buildGeneralSystemPrompt(subjectId, grade, lang, level) {
   const subjectMeta = SUBJECTS.find(s => s.id === subjectId) || SUBJECTS[0];
   const kbSubject = subjectMeta.kb_subject;
   const persona = resolvePersona(kbSubject, lang);
   const effectiveLang = (kbSubject === 'ערבית' || kbSubject === 'עברית כשפה שנייה' || kbSubject === 'الرياضيات') ? 'ar' : lang;
   const langName = effectiveLang === "he" ? "עברית (Hebrew)" : "العربية (Arabic)";
+  // High-school math also splits by study-unit level in general-chat mode -
+  // without this, the "already prepared" reference list below would mix
+  // topics from all three levels together, which is actively misleading
+  // for a student who's only ever seeing their own level everywhere else.
+  const isLeveled = level != null && isLeveledMathSubject(kbSubject) && MATH_LEVEL_GRADES.includes(grade);
   const availableTopicNames = chatRouter.TOPICS
     .filter(t => { const u = chatRouter.KB.math_units[t.id]; return u && u.subject === kbSubject && t.grade === grade; })
+    .filter(t => { if (!isLeveled) return true; const u = chatRouter.KB.math_units[t.id]; return inferMathLevel(u.domain_official) === level; })
     .map(t => (effectiveLang === 'ar' ? t.ar : t.he))
     .filter(Boolean);
   const topicListText = availableTopicNames.length
@@ -303,9 +310,10 @@ ${flexibilityNote}
 
 הנחיות התנהגות:
 - ענה תמיד ב${langName}, גם אם התלמיד/ה כתב/ה בשפה אחרת.
+- אם אתה כותב בערבית - השתמש בניב פלסטיני/לבנטיני מקומי, כמו שמדברים ערבים בישראל, לא בניב מפרצי או מצרי. למשל: "اسا" או "هلأ" ל"עכשיו" (לא "الحين"), "تمام" או "منيح" ל"טוב/בסדר" (לא "كويس").
 - זו שיטת הוראה, לא שאלות ותשובות: נסה להבין איפה התלמיד/ה תקוע/ה, תן/י הנחיה קצרה אחת, ורק אם עדיין תקוע/ה - תן/י את הצעד הבא.
 - אל תיתן/י פתרון מלא מיד, גם אם מתבקש. פרק/י לצעדים קטנים.
-- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון.
+- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון. זה חל גם על תרגילי השוואה בין שני מקרים/מצבים (למשל "מקרה א" מול "מקרה ב"): אסור לשאול על שני המקרים באותה הודעה, גם אם זו לכאורה "שאלה אחת" עם שני חלקים - שאל/י רק על מקרה א, חכה לתשובה, ואחר כך (בהודעה נפרדת) שאל/י על מקרה ב.
 - כשמסבירים פתרון מדורג, מספר/י כל שלב (1. 2. 3.) בשורה נפרדת.
 - אל תשתמש/י בכוכביות (*) לפני ואחרי מילים כדי להדגיש אותן - וואטסאפ לא תמיד מציג את זה כמודגש, ולפעמים הכוכביות פשוט נשארות כתובות כמו שהן וזה נראה מבולגן. אם צריך להדגיש משהו, פשוט תכתוב/י אותו כמו שהוא, בלי סימונים.
 - טון: חם, מעודד, סבלני. הודעות קצרות המתאימות לצ'אט וואטסאפ.
@@ -598,23 +606,34 @@ app.post("/whatsapp-webhook", async (req, res) => {
       session.stage = "wait_lang";
     } else if (session.stage === "wait_lang") {
       session.lang = body === "2" ? "ar" : "he";
-      let subjects = subjectsForLang(session.lang);
-      // A registered (non-owner) student only sees the subjects they paid
-      // for. Owner (student.owner) and the not-yet-registered-check above
-      // having already passed means `student` here is always a real entry.
-      if (!student.owner) {
-        subjects = subjects.filter(s => student.subjects.includes(s.id));
+      // Same shortcut as the menu command below: a registered student with
+      // only one subject has nothing to pick at this step either - skip
+      // straight past subject selection to grade/level/topics instead of
+      // making them confirm the one option they already have.
+      if (!student.owner && student.subjects.length === 1) {
+        const onlySubject = SUBJECTS.find(s => s.id === student.subjects[0]);
+        session.subject = onlySubject.id;
+        session.grade = student.grade;
+        await sendTopicListOrAskLevel(from, session, onlySubject, student);
+      } else {
+        let subjects = subjectsForLang(session.lang);
+        // A registered (non-owner) student only sees the subjects they paid
+        // for. Owner (student.owner) and the not-yet-registered-check above
+        // having already passed means `student` here is always a real entry.
+        if (!student.owner) {
+          subjects = subjects.filter(s => student.subjects.includes(s.id));
+        }
+        session.availableSubjects = subjects; // remember the filtered list for the next stage
+        const list = subjects
+          .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
+          .join("\n");
+        const msg =
+          session.lang === "he"
+            ? `מעולה! באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.`
+            : `ممتاز! في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
+        await sendWhatsApp(from, msg);
+        session.stage = "wait_subject";
       }
-      session.availableSubjects = subjects; // remember the filtered list for the next stage
-      const list = subjects
-        .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
-        .join("\n");
-      const msg =
-        session.lang === "he"
-          ? `מעולה! באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.`
-          : `ممتاز! في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
-      await sendWhatsApp(from, msg);
-      session.stage = "wait_subject";
     } else if (session.stage === "wait_subject") {
       const subjects = session.availableSubjects || subjectsForLang(session.lang);
       const idx = parseInt(body, 10) - 1;
@@ -784,7 +803,7 @@ app.post("/whatsapp-webhook", async (req, res) => {
         const topicDisplayName = session.lang === "ar" ? session.topic.ar : session.topic.he;
         const weeklyContext = buildWeeklyContextBlock(session, session.lang);
         const systemPrompt = (isGeneralChat
-          ? buildGeneralSystemPrompt(session.subject, session.grade, session.lang)
+          ? buildGeneralSystemPrompt(session.subject, session.grade, session.lang, session.mathLevel)
           : buildSystemPrompt(unit, session.lang)) + weeklyContext;
         // Route: a short routine reply ("thanks", "ok") goes to the cheap
         // model - anything with actual content (an answer, a question, a

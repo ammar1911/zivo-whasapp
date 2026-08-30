@@ -7601,6 +7601,31 @@ function subjectLabel(subj, lang) {
   return lang === "ar" ? subj.ar : subj.he;
 }
 
+// High-school math (grades י'-יב', both the Hebrew and Arabic tracks) is
+// taught at three separate difficulty levels - 3, 4, or 5 study units
+// (יחידות לימוד / وحدات) - with meaningfully different content, not just
+// a harder version of the same material. Rather than adding a level field
+// to every one of these units by hand, the level is inferred from the
+// existing domain_official text, which already names it explicitly for
+// 4/5-unit content ("4 יח\"ל" / "مسار 4 وحدات" etc.) - the only units
+// without an explicit number are the newer "אשכול"/"أشكول"/"مجموعة"
+// cluster-named topics, which belong to the applied-track curriculum
+// reform that replaced the old 3-unit track for many students, so those
+// are treated as level 3. Verified against every grade-י/יא/יב unit in
+// the KB (both tracks) with zero unclassified results.
+function inferMathLevel(domainOfficial) {
+  if (/5\s*יח["']ל|5\s*وحدات/.test(domainOfficial)) return 5;
+  if (/4\s*יח["']ל|4\s*وحدات/.test(domainOfficial)) return 4;
+  if (/3\s*יח["']ל/.test(domainOfficial)) return 3;
+  if (/^אשכול|^أشكول|^מجموعة|^مجموعة|^المجموعة|^الأشكول/.test(domainOfficial)) return 3;
+  return null;
+}
+// Grades where math is split by level at all - earlier grades (elementary
+// through ט') are taught as one track with no level split.
+const MATH_LEVEL_GRADES = ["י", "יא", "יב"];
+function isLeveledMathSubject(kbSubject) {
+  return kbSubject === "מתמטיקה" || kbSubject === "الرياضيات";
+}
 
 function topicsForGrade(grade) {
   return KB.math_units.filter(u => u.grade === grade || u.grade === "ט-י");
@@ -7848,6 +7873,27 @@ router.get('/topics', (req, res) => {
     return res.json({ grades: gradesForSubject, topics: [] });
   }
 
+  // High-school math (grades י'-יב', both tracks) splits by study-unit
+  // level (3/4/5 יח"ל) - see inferMathLevel above for why this is derived
+  // from domain_official rather than a stored field. A registered student
+  // has their level fixed at registration (student.mathLevel), matching
+  // how their grade is already fixed - they never see this as a choice.
+  // An owner/tester, or anyone without a level pinned yet, gets a
+  // needsLevel response instead of topics until they pick one.
+  const isLeveled = isLeveledMathSubject(subject.kb_subject) && MATH_LEVEL_GRADES.includes(grade);
+  let level = null;
+  if (isLeveled) {
+    if (student && !student.owner && student.mathLevel) {
+      level = student.mathLevel;
+    } else if (req.query.level && [3, 4, 5].includes(Number(req.query.level))) {
+      level = Number(req.query.level);
+    } else {
+      // Level not yet known - tell the client to ask for it instead of
+      // silently guessing or dumping all three levels' topics together.
+      return res.json({ grades: gradesForSubject, topics: [], needsLevel: true, levels: [3, 4, 5] });
+    }
+  }
+
   const topics = TOPICS.filter(t => t.grade === grade).map(t => {
     const unit = KB.math_units[t.id];
     return {
@@ -7855,8 +7901,11 @@ router.get('/topics', (req, res) => {
       name: lang === 'ar' ? t.ar : t.he,
       domain: lang === 'ar' ? (DOMAIN_AR[t.domain_he] || t.domain_he) : t.domain_he,
       subject: unit ? unit.subject : null,
+      domain_official: unit ? unit.domain_official : null,
     };
-  }).filter(t => t.id && (!subject.kb_subject || t.subject === subject.kb_subject));
+  }).filter(t => t.id && (!subject.kb_subject || t.subject === subject.kb_subject))
+    .filter(t => !isLeveled || inferMathLevel(t.domain_official) === level)
+    .map(({ domain_official, ...rest }) => rest); // internal-only field, not sent to the client
 
   // Pinned first entry: free-form conversation with the tutor instead of
   // one specific pre-built topic - see buildGeneralSystemPrompt. The
@@ -8022,5 +8071,8 @@ router.DOMAIN_AR = DOMAIN_AR;
 router.STUDENTS = STUDENTS;
 router.subjectLabel = subjectLabel;
 router.findUnitById = findUnitById;
+router.inferMathLevel = inferMathLevel;
+router.isLeveledMathSubject = isLeveledMathSubject;
+router.MATH_LEVEL_GRADES = MATH_LEVEL_GRADES;
 
 module.exports = router;

@@ -183,8 +183,13 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     <div class="picker-title" id="pickGradeTitle">באיזו כיתה אתה/את?</div>
     <div class="grade-grid" id="gradeGrid"></div>
   </div>
+  <div id="levelStep" style="display:none;">
+    <button class="back-link" onclick="showGradeStep()" id="backLinkLevel">← חזרה</button>
+    <div class="picker-title" id="pickLevelTitle">כמה יחידות לימוד?</div>
+    <div class="grade-grid" id="levelGrid"></div>
+  </div>
   <div id="topicStep" style="display:none; width:100%; max-width:460px;">
-    <button class="back-link" onclick="showGradeStep()" id="backLink">← חזרה</button>
+    <button class="back-link" onclick="showLevelOrGradeStep()" id="backLink">← חזרה</button>
     <div class="picker-title" id="pickTopicTitle">באיזה נושא נתרגל היום?</div>
     <div class="topic-list" id="topicList"></div>
   </div>
@@ -229,6 +234,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   let lang = 'he';
   let subject = null;
   let grade = null;
+  // Set only when the current subject+grade actually needed a level pick
+  // (high-school math) - used so the topic step's back button returns to
+  // the level picker instead of the grade picker for that specific flow.
+  let mathLevel = null;
+  let cameFromLevelStep = false;
   let topic = null;
   let history = [];
   let pendingImage = null;
@@ -241,6 +251,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   const topicList = document.getElementById('topicList');
   const gradeStep = document.getElementById('gradeStep');
   const topicStep = document.getElementById('topicStep');
+  const levelStep = document.getElementById('levelStep');
+  const levelGrid = document.getElementById('levelGrid');
   const pickerWrap = document.getElementById('pickerWrap');
   const chatWrap = document.getElementById('chatWrap');
   const chatInner = document.getElementById('chatInner');
@@ -334,6 +346,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   window.showSubjectStep = function(){
     subjectStep.style.display = 'block';
     gradeStep.style.display = 'none';
+    levelStep.style.display = 'none';
     topicStep.style.display = 'none';
   };
 
@@ -376,6 +389,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
   async function selectGrade(g, keepStep){
     grade = g;
+    mathLevel = null;
+    cameFromLevelStep = false;
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     if(!keepStep){
       gradeStep.style.display = 'none';
@@ -385,12 +400,61 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     try {
       const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(g) + '&lang=' + effectiveLang + studentIdQuery());
       const data = await res.json();
+      if (data.needsLevel) {
+        // High-school math splits by study-unit level (3/4/5 יח"ל) - show
+        // the level picker instead of topics until one is chosen.
+        topicStep.style.display = 'none';
+        gradeStep.style.display = 'none';
+        levelStep.style.display = 'block';
+        renderLevels(data.levels || [3, 4, 5]);
+        return;
+      }
       allTopics = data.topics || [];
     } catch(e){
       allTopics = [];
     }
     renderTopics();
   }
+
+  function renderLevels(levels){
+    levelGrid.innerHTML = '';
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
+    document.getElementById('pickLevelTitle').textContent = effectiveLang === 'ar' ? 'كم وحدة دراسة؟' : 'כמה יחידות לימוד?';
+    document.getElementById('backLinkLevel').textContent = STR[effectiveLang].back;
+    levels.forEach(lvl => {
+      const btn = document.createElement('button');
+      btn.className = 'grade-btn';
+      btn.textContent = effectiveLang === 'ar' ? (lvl + ' وحدات') : (lvl + ' יח"ל');
+      btn.onclick = () => selectLevel(lvl);
+      levelGrid.appendChild(btn);
+    });
+  }
+
+  async function selectLevel(lvl){
+    mathLevel = lvl;
+    cameFromLevelStep = true;
+    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
+    levelStep.style.display = 'none';
+    topicStep.style.display = 'block';
+    topicList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
+    try {
+      const res = await fetch(API_BASE + '/api/topics?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(grade) + '&level=' + lvl + '&lang=' + effectiveLang + studentIdQuery());
+      const data = await res.json();
+      allTopics = data.topics || [];
+    } catch(e){
+      allTopics = [];
+    }
+    renderTopics();
+  }
+
+  window.showLevelOrGradeStep = function(){
+    if (cameFromLevelStep) {
+      topicStep.style.display = 'none';
+      levelStep.style.display = 'block';
+    } else {
+      showGradeStep();
+    }
+  };
 
   function renderTopics(){
     topicList.innerHTML = '';
@@ -409,11 +473,14 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
   window.showGradeStep = function(){
     gradeStep.style.display = 'block';
+    levelStep.style.display = 'none';
     topicStep.style.display = 'none';
   };
 
   window.resetToPicker = function(){
     topic = null;
+    mathLevel = null;
+    cameFromLevelStep = false;
     history = [];
     chatInner.innerHTML = '';
     chatWrap.classList.remove('show');

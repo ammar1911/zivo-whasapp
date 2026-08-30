@@ -47,6 +47,9 @@ const GRADES = chatRouter.GRADES;
 const DOMAIN_AR = chatRouter.DOMAIN_AR;
 const STUDENTS = chatRouter.STUDENTS;
 const findUnitById = chatRouter.findUnitById;
+const inferMathLevel = chatRouter.inferMathLevel;
+const isLeveledMathSubject = chatRouter.isLeveledMathSubject;
+const MATH_LEVEL_GRADES = chatRouter.MATH_LEVEL_GRADES;
 
 function findUnit(topicMeta) {
   const idx = TOPICS.indexOf(topicMeta);
@@ -74,11 +77,50 @@ function gradesForSubject(subjectObj) {
   )].sort((a, b) => GRADES.indexOf(a) - GRADES.indexOf(b));
 }
 
-function topicsForSubjectGrade(subjectObj, grade) {
+function topicsForSubjectGrade(subjectObj, grade, level) {
+  const isLeveled = level != null && isLeveledMathSubject(subjectObj.kb_subject) && MATH_LEVEL_GRADES.includes(grade);
   return TOPICS.filter(t => {
     const u = KB.math_units[t.id];
-    return u && u.subject === subjectObj.kb_subject && t.grade === grade;
+    if (!u || u.subject !== subjectObj.kb_subject || t.grade !== grade) return false;
+    if (isLeveled && inferMathLevel(u.domain_official) !== level) return false;
+    return true;
   });
+}
+
+// Shared by both places that need to show the topic list after a
+// grade is known (registered-student fast path, and the owner's
+// separate grade-selection stage) - handles the high-school math
+// study-unit-level split (see inferMathLevel) so that logic exists
+// in exactly one place rather than being duplicated at each call site.
+async function sendTopicListOrAskLevel(from, session, subjectObj, student) {
+  const isLeveled = isLeveledMathSubject(subjectObj.kb_subject) && MATH_LEVEL_GRADES.includes(session.grade);
+  if (isLeveled && !session.mathLevel) {
+    // A registered student's level is fixed at registration, same as
+    // their grade - only owners/testers (or a student missing the field)
+    // actually get asked.
+    if (!student.owner && student.mathLevel) {
+      session.mathLevel = student.mathLevel;
+    } else {
+      const msg =
+        session.lang === "he"
+          ? `כמה יחידות לימוד? השיבו: 3, 4, או 5`
+          : `كم وحدة دراسة؟ أجب: 3، 4، أو 5`;
+      await sendWhatsApp(from, msg);
+      session.stage = "wait_level";
+      return;
+    }
+  }
+  const topicsForGrade = topicsForSubjectGrade(subjectObj, session.grade, session.mathLevel);
+  const generalLabel = session.lang === "he" ? "שיחה כללית עם המורה" : "محادثة عامة مع المعلّم";
+  const list = "0. " + generalLabel + "\n" + topicsForGrade
+    .map((t, i) => `${i + 1}. ${session.lang === "he" ? t.he : t.ar}`)
+    .join("\n");
+  const msg =
+    session.lang === "he"
+      ? `באיזה נושא נתרגל היום?\n${list}\n\nהשיבו במספר.`
+      : `في أي موضوع نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
+  await sendWhatsApp(from, msg);
+  session.stage = "wait_topic";
 }
 
 // ---- Abuse protection: message length cap + simple in-memory rate limit ----
@@ -118,7 +160,10 @@ function newSession() {
   // see the menu-command handler below) so a student can ask "what did we
   // cover earlier this week" even after moving between several topics,
   // which matters most right when it matters most: exam week.
-  return { stage: "ask_lang", lang: null, subject: null, grade: null, topic: null, history: [], weeklyLog: [] };
+  // mathLevel: the study-unit level (3/4/5 יח"ל) for high-school math -
+  // see topicsForSubjectGrade / inferMathLevel. null for every other
+  // subject+grade combination, which don't split by level at all.
+  return { stage: "ask_lang", lang: null, subject: null, grade: null, mathLevel: null, topic: null, history: [], weeklyLog: [] };
 }
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -210,9 +255,11 @@ ${JSON.stringify(unit, null, 1)}
 - ענה תמיד ב${langName}, גם אם חלק מהחומר המקורי כתוב בשפה אחרת.
 - זו שיטת הוראה, לא שאלות ותשובות: נסה להבין איפה התלמיד תקוע, תן הנחיה קצרה אחת, ורק אם עדיין תקוע/ה - תן את הצעד הבא.
 - אל תיתן פתרון מלא מיד, גם אם מתבקש. פרק לצעדים קטנים.
+- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון.
 - כשמסבירים פתרון מדורג, מספר כל שלב (1. 2. 3.) בשורה נפרדת.
+- אל תשתמש בכוכביות (*) לפני ואחרי מילים כדי להדגיש אותן - וואטסאפ לא תמיד מציג את זה כמודגש, ולפעמים הכוכביות פשוט נשארות כתובות כמו שהן וזה נראה מבולגן. אם צריך להדגיש משהו, פשוט תכתוב אותו כמו שהוא, בלי סימונים.
 - טון: חם, מעודד, סבלני. הודעות קצרות המתאימות לצ'אט וואטסאפ.
-- אם התלמיד עונה נכון - חזק בקצרה ועבור הלאה.`;
+- אם התלמיד עונה נכון - חזק בקצרה ועבור הלאה (עדיין רק צעד אחד קדימה, לא יותר).`;
 }
 
 // General-chat mode (the "0. שיחה כללית" pinned menu option below) has no
@@ -258,9 +305,11 @@ ${flexibilityNote}
 - ענה תמיד ב${langName}, גם אם התלמיד/ה כתב/ה בשפה אחרת.
 - זו שיטת הוראה, לא שאלות ותשובות: נסה להבין איפה התלמיד/ה תקוע/ה, תן/י הנחיה קצרה אחת, ורק אם עדיין תקוע/ה - תן/י את הצעד הבא.
 - אל תיתן/י פתרון מלא מיד, גם אם מתבקש. פרק/י לצעדים קטנים.
+- חוק ברזל: כל הודעה שלך מטפלת בצעד אחד קטן בלבד - שלב אחד בפתרון, או שאלה אחת - ואז אתה עוצר ומחכה לתשובת התלמיד/ה. אסור בשום מקרה, גם אם התלמיד/ה מבקש/ת את התשובה או אומר/ת "לא יודע/ת": לפתור בהודעה אחת יותר משלב אחד, לעבור לשאלה הבאה באותה הודעה, לתת ציון/אישור ואז מיד להמשיך לדבר נוסף, או להוסיף הערה על דפוס ההתנהגות של התלמיד/ה ואז לצרף עוד תרגיל. כל אחד מאלה הוא הודעה נפרדת משלו, שנשלחת רק אחרי שהתלמיד/ה הגיב/ה. אם התלמיד/ה לא יודע/ת, תן/י רמז אחד קטן וקצר לצעד הנוכחי בלבד - לא את כל הפתרון.
 - כשמסבירים פתרון מדורג, מספר/י כל שלב (1. 2. 3.) בשורה נפרדת.
+- אל תשתמש/י בכוכביות (*) לפני ואחרי מילים כדי להדגיש אותן - וואטסאפ לא תמיד מציג את זה כמודגש, ולפעמים הכוכביות פשוט נשארות כתובות כמו שהן וזה נראה מבולגן. אם צריך להדגיש משהו, פשוט תכתוב/י אותו כמו שהוא, בלי סימונים.
 - טון: חם, מעודד, סבלני. הודעות קצרות המתאימות לצ'אט וואטסאפ.
-- אם התלמיד/ה עונה נכון - חזק/י בקצרה ועבור/י הלאה.`;
+- אם התלמיד/ה עונה נכון - חזק/י בקצרה ועבור/י הלאה (עדיין רק צעד אחד קדימה, לא יותר).`;
 }
 
 const SMART_MODEL = "claude-sonnet-4-6";
@@ -293,7 +342,12 @@ function isRoutineReply(text) {
 async function askClaude(systemPrompt, history, model) {
   const response = await anthropic.messages.create({
     model: model || SMART_MODEL,
-    max_tokens: 800,
+    // Kept tight on purpose: a single WhatsApp turn should be one step or
+    // one question, never a full multi-part solution bundled with extra
+    // commentary. This is a backstop alongside the "one step, then stop"
+    // instruction in the system prompt - together they make it both
+    // instructed against and physically hard to do.
+    max_tokens: 400,
     system: systemPrompt,
     messages: history.map((m) => ({ role: m.role, content: m.content })),
   });
@@ -575,20 +629,11 @@ app.post("/whatsapp-webhook", async (req, res) => {
       } else {
         session.subject = chosenSubject.id;
         // A registered (non-owner) student's grade is already fixed by
-        // their registration - skip asking and go straight to topics.
+        // their registration - skip asking and go straight to topics
+        // (or the level step, for high-school math - see the helper).
         if (!student.owner) {
           session.grade = student.grade;
-          const topicsForGrade = topicsForSubjectGrade(chosenSubject, session.grade);
-          const generalLabel = session.lang === "he" ? "שיחה כללית עם המורה" : "محادثة عامة مع المعلّم";
-          const list = "0. " + generalLabel + "\n" + topicsForGrade
-            .map((t, i) => `${i + 1}. ${session.lang === "he" ? t.he : t.ar}`)
-            .join("\n");
-          const msg =
-            session.lang === "he"
-              ? `באיזה נושא נתרגל היום?\n${list}\n\nהשיבו במספר.`
-              : `في أي موضوع نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
-          await sendWhatsApp(from, msg);
-          session.stage = "wait_topic";
+          await sendTopicListOrAskLevel(from, session, chosenSubject, student);
         } else {
           const grades = gradesForSubject(chosenSubject);
           const msg =
@@ -617,21 +662,25 @@ app.post("/whatsapp-webhook", async (req, res) => {
         await sendWhatsApp(from, msg);
       } else {
         session.grade = g;
-        const topicsForGrade = topicsForSubjectGrade(subjectObj, g);
-        const generalLabel = session.lang === "he" ? "שיחה כללית עם המורה" : "محادثة عامة مع المعلّم";
-        const list = "0. " + generalLabel + "\n" + topicsForGrade
-          .map((t, i) => `${i + 1}. ${session.lang === "he" ? t.he : t.ar}`)
-          .join("\n");
+        await sendTopicListOrAskLevel(from, session, subjectObj, student);
+      }
+    } else if (session.stage === "wait_level") {
+      const levelMatch = body.match(/[345]/);
+      const lvl = levelMatch ? Number(levelMatch[0]) : null;
+      if (!lvl) {
         const msg =
           session.lang === "he"
-            ? `באיזה נושא נתרגל היום?\n${list}\n\nהשיבו במספר.`
-            : `في أي موضوع نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
+            ? `זה לא אחת מהאפשרויות 🙏 תשיב/י 3, 4, או 5`
+            : `هذا ليس من الخيارات 🙏 أجب 3، 4، أو 5`;
         await sendWhatsApp(from, msg);
-        session.stage = "wait_topic";
+      } else {
+        session.mathLevel = lvl;
+        const subjectObj = SUBJECTS.find(s => s.id === session.subject);
+        await sendTopicListOrAskLevel(from, session, subjectObj, student);
       }
     } else if (session.stage === "wait_topic") {
       const subjectObj = SUBJECTS.find(s => s.id === session.subject);
-      const topicsForGrade = topicsForSubjectGrade(subjectObj, session.grade);
+      const topicsForGrade = topicsForSubjectGrade(subjectObj, session.grade, session.mathLevel);
       const isGeneralChatChoice = body.trim() === "0";
       const chosen = isGeneralChatChoice
         ? { id: "general-chat", he: "שיחה כללית עם המורה", ar: "محادثة عامة مع المعلّم" }
@@ -687,24 +736,42 @@ app.post("/whatsapp-webhook", async (req, res) => {
             : 'daiZ 🎓 — "كل يوم، بجانبك". معلّم خاص رقمي عبر واتساب، بالعبرية والعربية، يعلّم بالضبط حسب المنهاج الرسمي لوزارة التربية والتعليم — مش "مساعد دراسي" عشوائي من الإنترنت. تفاصيل أكثر: daiz.co.il\n\nبدك تكمل التمرين؟ فقط اكتب/ي سؤالك التالي 🙂';
         await sendWhatsApp(from, aboutMsg);
       } else if (["תפריט", "menu", "القائمة", "החלף נושא", "עזרה", "help", "مساعدة"].includes(bodyLower)) {
-        session.stage = "wait_subject";
-        session.subject = null;
-        session.grade = null;
         session.topic = null;
+        // Reset here (not carried over from a previous subject/grade) -
+        // sendTopicListOrAskLevel below will re-derive or re-ask it fresh
+        // for whatever subject+grade is chosen next.
+        session.mathLevel = null;
         // Only the current topic's live conversation resets here -
         // weeklyLog is intentionally left untouched so a student can still
         // ask about something from earlier this week after switching.
         session.history = [];
-        let subjects = subjectsForLang(session.lang);
-        if (!student.owner) {
-          subjects = subjects.filter(s => student.subjects.includes(s.id));
+        // A registered (non-owner) student with only one subject has
+        // nothing to actually choose at the subject step - re-asking it
+        // was a redundant extra tap for the overwhelming majority of real
+        // students, who are only ever registered for one subject. Skip
+        // straight to the topic list for that (already-known) subject and
+        // grade instead. Owners, and the rare student registered for more
+        // than one subject, still get the subject list as before.
+        if (!student.owner && student.subjects.length === 1) {
+          const onlySubject = SUBJECTS.find(s => s.id === student.subjects[0]);
+          session.subject = onlySubject.id;
+          session.grade = student.grade;
+          await sendTopicListOrAskLevel(from, session, onlySubject, student);
+        } else {
+          session.subject = null;
+          session.grade = null;
+          let subjects = subjectsForLang(session.lang);
+          if (!student.owner) {
+            subjects = subjects.filter(s => student.subjects.includes(s.id));
+          }
+          session.availableSubjects = subjects;
+          const list = subjects
+            .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
+            .join("\n");
+          const msg = session.lang === "he" ? `בטח! 🙂 בוא/י נבחר נושא חדש. באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.` : `أكيد! 🙂 يلا نختار موضوع جديد. في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
+          await sendWhatsApp(from, msg);
+          session.stage = "wait_subject";
         }
-        session.availableSubjects = subjects;
-        const list = subjects
-          .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
-          .join("\n");
-        const msg = session.lang === "he" ? `בטח! 🙂 בוא/י נבחר נושא חדש. באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.` : `أكيد! 🙂 يلا نختار موضوع جديد. في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
-        await sendWhatsApp(from, msg);
       } else {
         session.history.push({ role: "user", content: body });
         // Cap history so long conversations don't grow the API payload (and cost) forever —

@@ -7587,8 +7587,8 @@ const SUBJECTS = [
 // ---------------------------------------------------------------
 const STUDENTS = {
   "owner-full-access": { owner: true },
+  "whatsapp:+972525775253": { owner: true }, // Ammar's own number, for testing the full flow
   // "example-student-1": { subjects: ["math", "english"], grade: "ח", lang: "he" },
-  // "whatsapp:+972501234567": { owner: true }, // your own WhatsApp number, for testing
   // "whatsapp:+972529876543": { subjects: ["math"], grade: "ז", lang: "he" }, // example paying WhatsApp student
   // lang ("he" or "ar") is required for the weekly motivational message
   // (server.js) to know which day to send on - Hebrew-track schools start

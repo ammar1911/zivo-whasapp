@@ -53,6 +53,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     background:var(--paper); color:var(--ink);
     font-family:'Heebo', sans-serif; line-height:1.6;
     display:flex; flex-direction:column; overflow:hidden;
+    /* app-shell is pinned to the actual visible viewport (set in px by JS via
+       the visualViewport API) so the mobile keyboard slides the input bar up
+       instead of squashing/cutting the chat, matching native app behavior. */
     position:fixed; top:0; left:0; right:0; width:100%; height:100%;
   }
   body.lang-ar{ font-family:'Cairo', sans-serif; }
@@ -85,8 +88,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .grade-btn:hover{ border-color:var(--teal); }
   .topic-list{ display:flex; flex-direction:column; gap:10px; width:100%; max-width:460px; }
   .topic-btn{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-align:start; cursor:pointer; box-shadow:0 2px 6px rgba(30,42,68,0.05); font-family:inherit; }
-  .topic-btn.general-chat-btn{ background:var(--teal-tint); border-color:var(--teal); }
-  .topic-btn.general-chat-btn .tname{ color:var(--teal-dark); }
   .topic-btn:hover{ border-color:var(--teal); }
   .topic-btn .tname{ font-size:14px; font-weight:700; color:var(--ink); }
   .topic-btn .tdomain{ font-size:11.5px; color:var(--muted); margin-top:3px; }
@@ -94,6 +95,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .subject-btn{ position:relative; }
   .subject-btn.disabled{ opacity:0.55; cursor:not-allowed; }
   .soon-badge{ display:inline-block; background:var(--mustard-tint); color:#8a6417; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; margin-inline-start:8px; }
+  .whatsapp-badge{ display:inline-flex; align-items:center; gap:4px; background:var(--teal-tint); color:var(--teal-dark); font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px; text-decoration:none; margin-inline-start:8px; white-space:nowrap; }
+  .whatsapp-badge:hover{ background:var(--teal); color:#fff; }
+  @media (max-width:520px){ .whatsapp-badge span{ display:none; } .whatsapp-badge{ padding:6px; } }
 
   .chat-wrap{ flex:1; overflow-y:auto; padding:20px; flex-direction:column; gap:4px; display:none; }
   .chat-wrap.show{ display:flex; }
@@ -126,6 +130,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .send-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:11px; border:none; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:width 0.15s ease, height 0.15s ease; }
   .send-btn:disabled{ opacity:0.4; cursor:not-allowed; }
 
+  /* Compact mode: applied to body while the on-screen keyboard is open
+     (detected in JS via visualViewport height shrinking). Shrinks the
+     topbar and input-bar chrome so more of the reduced viewport goes to
+     the actual conversation, instead of unread messages being squeezed
+     into a sliver between two full-size bars. */
   body.kb-open .topbar{ padding:7px 16px; }
   body.kb-open .brand .mark{ width:24px; height:24px; }
   body.kb-open .brand{ font-size:14px; gap:7px; }
@@ -161,6 +170,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       <text x="60" y="80" text-anchor="middle" font-family="Poppins,Arial" font-weight="800" font-size="46" fill="#FBF7EE">d<tspan fill="url(#topbarGoldGrad)">Z</tspan></text>
     </svg>
     <div>daiZ<span class="sub">חדר הלמידה</span></div>
+    <a class="whatsapp-badge" id="whatsappBadge" href="https://wa.me/972553301316" target="_blank" rel="noopener" title="גם בוואטסאפ">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.8 1h.03a7.94 7.94 0 0 0 5.6-13.58zM12.05 18.53h-.02a6.57 6.57 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.43-.16-.25a6.6 6.6 0 0 1 10.35-8.16 6.55 6.55 0 0 1 1.94 4.67 6.62 6.62 0 0 1-6.68 6.58zm3.62-4.93c-.2-.1-1.17-.58-1.35-.64-.18-.07-.32-.1-.45.1-.13.19-.51.64-.63.78-.12.13-.23.15-.43.05-.2-.1-.83-.31-1.58-.98-.58-.52-.98-1.16-1.09-1.36-.11-.19-.01-.3.09-.4.09-.09.2-.23.3-.35.1-.12.13-.2.2-.33.06-.13.03-.25-.02-.35-.05-.1-.45-1.08-.61-1.48-.16-.39-.33-.33-.45-.34-.12-.01-.25-.01-.38-.01-.13 0-.35.05-.53.25-.18.19-.7.69-.7 1.67 0 .98.72 1.93.82 2.06.1.13 1.42 2.17 3.44 3.04.48.21.86.33 1.15.42.48.15.92.13 1.27.08.39-.06 1.17-.48 1.34-.94.16-.46.16-.86.11-.94-.05-.08-.18-.13-.38-.23z"/></svg>
+      <span id="whatsappBadgeText">גם בוואטסאפ</span>
+    </a>
   </div>
   <div class="topbar-right">
     <span class="topic-chip" id="topicChip"></span>
@@ -223,12 +236,12 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   const API_BASE = 'https://zivo-whatsapp.onrender.com';
 
   const STR = {
-    he: { pickGrade:'באיזו כיתה אתה/את?', pickTopic:'באיזה נושא נתרגל היום?', back:'← חזרה', changeTopic:'החלף נושא', placeholder:'כתוב/י כאן...', imgReady:'התמונה תישלח עם ההודעה הבאה', pickSubject:'באיזה מקצוע נתרגל היום?', soon:'בקרוב', loading:'מתחברים לשרת... זה יכול לקחת עד חצי דקה בפעם הראשונה', deviceNote:'💻 טיפ: הלמידה כאן נוחה יותר במחשב מאשר בטלפון' },
-    ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة', deviceNote:'💻 نصيحة: التعلّم هنا أسهل على الكمبيوتر منه على الهاتف' }
+    he: { pickGrade:'באיזו כיתה אתה/את?', pickTopic:'באיזה נושא נתרגל היום?', back:'← חזרה', changeTopic:'החלף נושא', placeholder:'כתוב/י כאן...', imgReady:'התמונה תישלח עם ההודעה הבאה', pickSubject:'באיזה מקצוע נתרגל היום?', soon:'בקרוב', loading:'מתחברים לשרת... זה יכול לקחת עד חצי דקה בפעם הראשונה', deviceNote:'💻 טיפ: הלמידה כאן נוחה יותר במחשב מאשר בטלפון', whatsappBadge:'גם בוואטסאפ' },
+    ar: { pickGrade:'في أي صف أنت؟', pickTopic:'في أي موضوع نتدرّب اليوم؟', back:'← رجوع', changeTopic:'تغيير الموضوع', placeholder:'اكتب هنا...', imgReady:'سيتم إرسال الصورة مع الرسالة التالية', pickSubject:'في أي مادة نتدرّب اليوم؟', soon:'قريباً', loading:'جارٍ الاتصال بالخادم... قد يستغرق حتى نصف دقيقة أول مرة', deviceNote:'💻 نصيحة: التعلّم هنا أسهل على الكمبيوتر منه على الهاتف', whatsappBadge:'أيضاً على واتساب' }
   };
   const GRADE_LABEL = {
-    he: { 'ד':"ד'", 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"י\"א", 'יב':"י\"ב" },
-    ar: { 'ד':'صف رابع', 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع', 'י':'الصف العاشر', 'יא':'الصف الحادي عشر', 'יב':'الصف الثاني عشر' }
+    he: { 'ה':"ה'", 'ו':"ו'", 'ז':"ז'", 'ח':"ח'", 'ט':"ט'", 'י':"י'", 'יא':"י\"א", 'יב':"י\"ב" },
+    ar: { 'ה':'صف خامس', 'ו':'صف سادس', 'ז':'صف سابع', 'ח':'صف ثامن', 'ט':'صف تاسع', 'י':'الصف العاشر', 'יא':'الصف الحادي عشر', 'יב':'الصف الثاني عشر' }
   };
 
   let lang = 'he';
@@ -267,11 +280,23 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   const topicChip = document.getElementById('topicChip');
   const changeTopicBtn = document.getElementById('changeTopicBtn');
 
+  // --- Mobile keyboard fix ---------------------------------------------
+  // Mobile browsers (esp. iOS Safari / in-app webviews) don't resize the
+  // layout viewport when the on-screen keyboard opens; they resize the
+  // *visual* viewport instead, which otherwise leaves the input bar hidden
+  // behind the keyboard or the chat area visually squashed/cut. We pin the
+  // app shell's actual pixel height (and vertical offset) to
+  // window.visualViewport on every change, so the input bar always sits
+  // directly above the keyboard - the same behavior WhatsApp has.
   function syncViewportHeight(){
     const vv = window.visualViewport;
     if(vv){
       document.body.style.height = vv.height + 'px';
       document.body.style.top = vv.offsetTop + 'px';
+      // Keyboard-open detection: once we've seen the real full-height layout
+      // viewport, a visual viewport meaningfully smaller than it means the
+      // on-screen keyboard is covering that much space. Threshold (120px)
+      // avoids false positives from minor browser-chrome resizes.
       if(!syncViewportHeight.fullHeight || window.innerHeight > syncViewportHeight.fullHeight){
         syncViewportHeight.fullHeight = window.innerHeight;
       }
@@ -281,6 +306,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       document.body.style.height = window.innerHeight + 'px';
       document.body.style.top = '0px';
     }
+    // keep the latest message in view once the keyboard/layout has settled
     requestAnimationFrame(() => { chatWrap.scrollTop = chatWrap.scrollHeight; });
   }
   if(window.visualViewport){
@@ -290,6 +316,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     window.addEventListener('resize', syncViewportHeight);
   }
   syncViewportHeight();
+  // Some mobile browsers fire the keyboard-open animation slightly after
+  // focus, before visualViewport reports the new size - re-sync shortly
+  // after focus/blur as a safety net so the input never ends up hidden.
   textInput.addEventListener('focus', () => {
     setTimeout(syncViewportHeight, 50);
     setTimeout(syncViewportHeight, 350);
@@ -297,6 +326,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   textInput.addEventListener('blur', () => {
     setTimeout(syncViewportHeight, 350);
   });
+  // -----------------------------------------------------------------------
 
   window.setLang = function(l){
     lang = l;
@@ -312,10 +342,15 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     changeTopicBtn.textContent = STR[l].changeTopic;
     textInput.placeholder = STR[l].placeholder;
     document.getElementById('previewText').textContent = STR[l].imgReady;
+    document.getElementById('whatsappBadgeText').textContent = STR[l].whatsappBadge;
     loadSubjects();
     if(grade) renderGrades(lastGrades);
     if(grade) selectGrade(grade, true);
   };
+
+  function studentIdQuery(){
+    return '&studentId=' + encodeURIComponent(studentProfile.id);
+  }
 
   async function loadSubjects(){
     subjectList.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div><div class="loading-text">' + STR[lang].loading + '</div></div>';
@@ -372,12 +407,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   function renderGrades(grades){
     gradeGrid.innerHTML = '';
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
-    // The grade title must follow the same forced-language rule as the grade
-    // buttons themselves - otherwise a subject that forces Arabic teaching
-    // (like math-arabic) ends up with an Arabic-labeled grid under a
-    // Hebrew-only title when the interface toggle itself is set to Hebrew.
-    document.getElementById('pickGradeTitle').textContent = STR[effectiveLang].pickGrade;
-    document.getElementById('backLinkGrade').textContent = STR[effectiveLang].back;
     grades.forEach(g => {
       const btn = document.createElement('button');
       btn.className = 'grade-btn';
@@ -458,13 +487,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
   function renderTopics(){
     topicList.innerHTML = '';
-    const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
-    document.getElementById('pickTopicTitle').textContent = STR[effectiveLang].pickTopic;
-    document.getElementById('backLink').textContent = STR[effectiveLang].back;
-    document.getElementById('backLinkGrade').textContent = STR[effectiveLang].back;
     allTopics.forEach(t => {
       const btn = document.createElement('button');
-      btn.className = 'topic-btn' + (t.id === 'general-chat' ? ' general-chat-btn' : '');
+      btn.className = 'topic-btn';
       btn.innerHTML = '<div class="tname">' + (t.name || '') + '</div><div class="tdomain">' + (t.domain || '') + '</div>';
       btn.onclick = () => selectTopic(t);
       topicList.appendChild(btn);
@@ -497,7 +522,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     'hebrew-grammar': { he: 'המורה', ar: 'המורה' },
     'arabic-grammar': { he: 'אל-מותנבי', ar: 'المتنبي' },
     'hebrew-second-language': { he: 'המורה', ar: 'المعلّم' },
-    english: { he: 'טומאס', ar: 'توماس' },
+    english: { he: 'המורה', ar: 'المعلّم' },
   };
 
   function selectTopic(t){
@@ -506,20 +531,17 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     chatWrap.classList.add('show');
     inputBar.classList.add('show');
     topicChip.classList.add('show');
+    // דקדוק ערבי - ההוראה תמיד בערבית, בלי קשר לטוגל השפה בממשק
     const effectiveLang = (subject === 'arabic-grammar' || subject === 'hebrew-second-language' || subject === 'math-arabic') ? 'ar' : lang;
     const topicDisplay = effectiveLang === 'ar' && t.ar ? t.ar : t.name;
-    topicChip.textContent = (t.id === 'general-chat' ? '💬 ' : '📚 ') + topicDisplay;
+    topicChip.textContent = '📚 ' + topicDisplay;
     changeTopicBtn.classList.add('show');
     chatInner.innerHTML = '';
     history = [];
     const personaName = (PERSONA_NAME[subject] && PERSONA_NAME[subject][effectiveLang]) || (effectiveLang === 'ar' ? 'سقراط' : 'סוקרטס');
-    const welcome = t.id === 'general-chat'
-      ? (effectiveLang === 'ar'
-          ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. اسألني عن أي شي متعلق بالمادة - حتى لو كان موضوع جديد تعلمتوه أخيراً بالصف.'
-          : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. שאל/י אותי על כל דבר שקשור למקצוע - גם אם זה נושא חדש שלמדתם לאחרונה בכיתה.')
-      : (effectiveLang === 'ar'
-          ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. سنتدرّب اليوم على: ' + topicDisplay + '. من وين تحب تبدأ، أو عندك سؤال محدد؟'
-          : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. נתרגל היום את הנושא: ' + topicDisplay + '. מאיפה תרצה/י להתחיל, או שיש לך שאלה ספציפית?');
+    const welcome = effectiveLang === 'ar'
+      ? 'أهلاً! أنا ' + personaName + '، معلّمك الخاص. سنتدرّب اليوم على: ' + topicDisplay + '. من وين تحب تبدأ، أو عندك سؤال محدد؟'
+      : 'שלום! אני ' + personaName + ', המורה הפרטי שלך. נתרגל היום את הנושא: ' + topicDisplay + '. מאיפה תרצה/י להתחיל, או שיש לך שאלה ספציפית?';
     appendBubble('assistant', welcome);
     textInput.focus();
   }
@@ -595,29 +617,24 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   });
   sendBtn.addEventListener('click', sendMessage);
 
-  // Personal-link student ID: if the URL carries ?studentId=<key> (the
-  // format used by registered-student links, see STUDENTS in
-  // chat-route.js), that ID is the one that must reach the server on
-  // every request - a randomly generated one would never match a real
-  // registration and would always be treated as an unregistered visitor.
-  // Persist it to localStorage so it survives a page reload without the
-  // query string (e.g. a bookmark) once it's been seen once.
-  const urlStudentId = new URLSearchParams(window.location.search).get('studentId');
   let studentProfile = null;
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved) studentProfile = JSON.parse(saved);
-  } catch(e){}
+  // Personal-link student ID: if the URL carries ?studentId=<key> (the
+  // family's personal link), use that instead of a random local ID, so a
+  // registered student's paid subjects/grade/level are recognized on this
+  // device too, matching WhatsApp's identity.
+  const urlStudentId = new URLSearchParams(window.location.search).get('studentId');
   if(urlStudentId){
     studentProfile = { id: urlStudentId };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(studentProfile)); } catch(e){}
-  } else if(!studentProfile){
+  } else {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(saved) studentProfile = JSON.parse(saved);
+    } catch(e){}
+  }
+  if(!studentProfile){
     studentProfile = { id: 'stu_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36) };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(studentProfile)); } catch(e){}
-  }
-
-  function studentIdQuery(){
-    return '&studentId=' + encodeURIComponent(studentProfile.id);
   }
 
   async function sendMessage(){
@@ -644,7 +661,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       formData.append('studentId', studentProfile.id);
       formData.append('grade', grade);
       formData.append('topicId', topic.id);
-      formData.append('subject', subject);
       formData.append('lang', (subject === 'arabic-grammar' || subject === 'hebrew-second-language') ? 'ar' : lang);
       formData.append('history', JSON.stringify(history.slice(-10)));
       if(imageToSend) formData.append('image', imageToSend);

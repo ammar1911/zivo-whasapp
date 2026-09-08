@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>daiZ - המורה הפרטי שלך בוואטסאפ</title>
+<title>daiZ - המורה הפרטי שלך, בוואטסאפ ובאתר</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X6JEDRV775"></script>
 <script>
@@ -32,8 +32,8 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-<meta name="description" content="daiZ - המורה הפרטי שלך בוואטסאפ. הסבר סבלני שמבוסס אך ורק על מה שנלמד בכיתה, בעברית ובערבית.">
-<meta property="og:title" content="daiZ - המורה הפרטי שלך בוואטסאפ">
+<meta name="description" content="daiZ - המורה הפרטי שלך, בוואטסאפ ובאתר. הסבר סבלני שמבוסס אך ורק על מה שנלמד בכיתה, בעברית ובערבית.">
+<meta property="og:title" content="daiZ - המורה הפרטי שלך, בוואטסאפ ובאתר">
 <meta property="og:description" content="הסבר סבלני שמבוסס אך ורק על מה שנלמד בכיתה, בעברית ובערבית. זמין בכל שעה.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://daiz.co.il">
@@ -43,7 +43,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 <meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=Poppins:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=Caveat:wght@600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=Poppins:wght@700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
   :root{
     --ink:#1B2A44;
@@ -165,6 +165,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .bubble.bot{align-self:flex-start;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.08);border-start-start-radius:4px;}
   .bubble.user{align-self:flex-end;background:var(--teal-tint);color:var(--ink);border-end-end-radius:4px;}
 
+  /* Live demo section - matches the "try it yourself" pattern: pick a
+     topic, watch the tutor lead to the answer via guiding questions
+     rather than giving it away, no signup required. */
   #demo{padding:70px 20px 20px;max-width:720px;margin:0 auto;}
   .demo-topics{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 22px;}
   .demo-topic-btn{
@@ -188,46 +191,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .demo-body .bubble{font-size:13px;opacity:0;transform:translateY(6px);animation:demoIn 0.35s ease forwards;}
   @keyframes demoIn{ to{ opacity:1; transform:translateY(0); } }
   .demo-empty{color:var(--muted);font-size:13px;text-align:center;margin:auto;}
-
-  /* Homework-photo section: shows the image-upload path specifically -
-     "stuck on homework? just photograph the question" - separate from
-     the text-based interactive demo above, since sending a photo is a
-     distinct and important capability worth its own visual proof. */
-  #homework{padding:20px 20px 60px;max-width:1000px;margin:0 auto;}
-  .hw-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
-  @media (max-width:820px){ .hw-grid{grid-template-columns:1fr;gap:28px;} }
-  .hw-steps{display:flex;flex-direction:column;gap:18px;}
-  .hw-step{display:flex;gap:14px;align-items:flex-start;}
-  .hw-step .icon{font-size:26px;flex-shrink:0;line-height:1;margin-top:2px;}
-  .hw-step h4{font-size:15px;margin:0 0 4px;color:var(--ink);}
-  .hw-step p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
-  .hw-mock{
-    max-width:340px;margin:0 auto;background:#fff;border-radius:20px;
-    box-shadow:0 16px 40px -16px rgba(30,42,68,0.25);overflow:hidden;border:1px solid var(--line);
-  }
-  .hw-mock-header{background:var(--teal);color:#fff;padding:10px 14px;font-size:12px;font-weight:700;opacity:0.9;}
-  .hw-mock-body{
-    padding:16px;display:flex;flex-direction:column;gap:10px;min-height:200px;
-    background:repeating-linear-gradient(0deg, rgba(30,42,68,0.035) 0px, rgba(30,42,68,0.035) 1px, transparent 1px, transparent 22px), #FBF7EE;
-  }
-  .hw-photo-bubble{
-    align-self:flex-end;max-width:78%;border-radius:14px;border-end-end-radius:4px;overflow:hidden;
-    background:var(--teal-tint);box-shadow:0 1px 3px rgba(0,0,0,0.08);
-  }
-  .hw-photo-bubble .photo-frame{
-    padding:10px;background:#dcd6c8;
-  }
-  .hw-photo-bubble .photo-paper{
-    background:#fdfaf0;border-radius:3px;padding:18px 16px 20px;transform:rotate(-1.2deg);
-    box-shadow:0 3px 10px rgba(0,0,0,0.18);
-    background-image:repeating-linear-gradient(#fdfaf0 0px, #fdfaf0 27px, #cdd8e0 28px);
-  }
-  .hw-photo-bubble .photo-paper .eq{
-    font-family:'Caveat',cursive;font-size:30px;font-weight:600;color:#20324a;
-    direction:ltr;text-align:center;line-height:28px;padding-top:2px;
-  }
-  .hw-photo-bubble .caption{padding:8px 13px;font-size:12.5px;color:var(--ink);}
-  .hw-mock-body .bubble{font-size:13px;}
 
   #compare{padding:20px 20px 60px;max-width:640px;margin:0 auto;}
   .compare-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(30,42,68,0.15);}
@@ -262,10 +225,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     width:32px;height:32px;border-radius:50%;background:var(--mustard);color:var(--ink);
     font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;
     display:flex;align-items:center;justify-content:center;margin-bottom:14px;
-  }
-  .testi-icon{
-    width:44px;height:44px;border-radius:50%;background:var(--teal);
-    font-size:20px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;
   }
   .step-card h3{font-size:15.5px;margin:0 0 6px;font-weight:800;}
   .step-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
@@ -468,6 +427,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .whatsapp-fab:hover{ transform:scale(1.07); }
   .whatsapp-fab svg{ width:22px; height:22px; }
   @media (min-width:901px){ .whatsapp-fab{ bottom:24px; } }
+
+  /* MATH STUDY-UNIT LEVEL FIELD (3/4/5 יח"ל) */
+  #mathLevelField{ display:none; }
 </style>
 </head>
 <body>
@@ -496,8 +458,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </nav>
 
 <section class="hero">
-  <div class="badge" data-i18n="badge">מתמטיקה · יסודי, חטיבה ותיכון</div>
-  <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — מורה פרטי בוואטסאפ, 24 שעות ביממה</h1>
+  <div class="badge" data-i18n="badge">מתמטיקה · חטיבה ותיכון</div>
+  <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — מורה פרטי בוואטסאפ ובאתר, 24 שעות ביממה</h1>
   <p class="sub" data-i18n="heroSub">התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.</p>
   <div class="ai-note" data-i18n="aiNote">🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span></div>
   <div class="subjects-pills" data-i18n="subjectsPills"><span>מתמטיקה</span><span>אנגלית</span><span>דקדוק עברית</span></div>
@@ -521,48 +483,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       <button class="demo-replay" id="demoReplay" style="display:none" onclick="replayDemo()" data-i18n="demoReplay">↻ שוב</button>
     </div>
     <div class="demo-body" id="demoBody"><div class="demo-empty" id="demoEmpty" data-i18n="demoEmpty">בחרו נושא כדי להתחיל</div></div>
-  </div>
-</section>
-
-<section id="homework">
-  <h2 class="section-title" data-i18n="hwTitle">תקוע בשיעורי בית? פשוט תצלם את השאלה</h2>
-  <p class="section-sub" data-i18n="hwSub">בלי להקליד את כל התרגיל - התלמיד מצלם את השאלה מהמחברת, והמורה מנתח ועוזר לפתור, צעד אחרי צעד</p>
-  <div class="hw-grid">
-    <div class="hw-steps">
-      <div class="hw-step">
-        <div class="icon">📸</div>
-        <div>
-          <h4 data-i18n="hwStep1Title">מצלמים את השאלה</h4>
-          <p data-i18n="hwStep1Body">גם תרגיל בכתב יד, גם עמוד שלם מהמחברת או מהספר - אין צורך להקליד כלום</p>
-        </div>
-      </div>
-      <div class="hw-step">
-        <div class="icon">🧠</div>
-        <div>
-          <h4 data-i18n="hwStep2Title">המורה מנתח ומבין</h4>
-          <p data-i18n="hwStep2Body">קורא את השאלה מהתמונה בדיוק כמו שהיא כתובה, כולל נוסחאות וציורים</p>
-        </div>
-      </div>
-      <div class="hw-step">
-        <div class="icon">💬</div>
-        <div>
-          <h4 data-i18n="hwStep3Title">פתרון מודרך, לא מוכן</h4>
-          <p data-i18n="hwStep3Body">בדיוק כמו בטקסט - שאלות מנחות שמובילות להבנה, לא תשובה מוכנה שמעתיקים</p>
-        </div>
-      </div>
-    </div>
-    <div class="hw-mock">
-      <div class="hw-mock-header" data-i18n="hwMockLabel">שיחה לדוגמה</div>
-      <div class="hw-mock-body">
-        <div class="hw-photo-bubble">
-          <div class="photo-frame">
-            <div class="photo-paper"><div class="eq">2x + 6 = 20</div></div>
-          </div>
-          <div class="caption" data-i18n="hwChatCaption">עזרה בבקשה 🙏</div>
-        </div>
-        <div class="bubble bot" data-i18n="hwChatBot">רואה! זו משוואה עם x. קודם כל - מה השלב הראשון כדי לבודד את x?</div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -698,27 +618,27 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         <label data-i18n="labelChildName">שם התלמיד/ה</label>
         <input type="text" required>
       </div>
-      <div class="field">
-        <label data-i18n="labelGrade">כיתה <span class="hint" data-i18n="hintGrade">(כדי לדעת מאיזה ספר ללמד)</span></label>
-        <select>
-          <option data-i18n="grade4">כיתה ד'</option>
-          <option data-i18n="grade5">כיתה ה'</option>
-          <option data-i18n="grade6">כיתה ו'</option>
-          <option data-i18n="grade7">כיתה ז'</option>
-          <option data-i18n="grade8">כיתה ח'</option>
-          <option data-i18n="grade9">כיתה ט'</option>
-          <option data-i18n="grade10">כיתה י'</option>
-          <option data-i18n="grade11">כיתה י"א</option>
-          <option data-i18n="grade12">כיתה י"ב</option>
-        </select>
-      </div>
-      <div class="field" style="display:none">
-        <label data-i18n="labelLangPref">שפת השיעורים</label>
-        <select id="langPrefSelect" onchange="onLangPrefChange()">
-          <option value="he">עברית</option>
-          <option value="ar">العربية</option>
-        </select>
-      </div>
+      <div class="two-col">
+        <div class="field">
+          <label data-i18n="labelGrade">כיתה <span class="hint" data-i18n="hintGrade">(כדי לדעת מאיזה ספר ללמד)</span></label>
+          <select id="gradeSelect" onchange="onGradeChange()">
+            <option data-i18n="grade5" value="ה">כיתה ה'</option>
+            <option data-i18n="grade6" value="ו">כיתה ו'</option>
+            <option data-i18n="grade7" value="ז">כיתה ז'</option>
+            <option data-i18n="grade8" value="ח">כיתה ח'</option>
+            <option data-i18n="grade9" value="ט">כיתה ט'</option>
+            <option data-i18n="grade10" value="י">כיתה י'</option>
+            <option data-i18n="grade11" value="יא">כיתה י"א</option>
+            <option data-i18n="grade12" value="יב">כיתה י"ב</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="labelLangPref">שפת השיעורים</label>
+          <select id="langPrefSelect" onchange="onLangPrefChange()">
+            <option value="he">עברית</option>
+            <option value="ar">العربية</option>
+          </select>
+        </div>
       </div>
       <div class="field">
         <label data-i18n="labelSubjects">אילו מקצועות התלמיד/ה ילמד/תלמד?</label>
@@ -756,6 +676,14 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         </div>
         <div class="subjects-note" id="subjectsPriceNote"></div>
       </div>
+      <div class="field" id="mathLevelField">
+        <label data-i18n="labelMathLevel">כמה יחידות לימוד במתמטיקה? <span class="hint" data-i18n="hintMathLevel">(רלוונטי מכיתה י' ומעלה)</span></label>
+        <select id="mathLevelSelect">
+          <option value="3" data-i18n="mathLevel3">3 יח"ל</option>
+          <option value="4" data-i18n="mathLevel4">4 יח"ל</option>
+          <option value="5" data-i18n="mathLevel5">5 יח"ל</option>
+        </select>
+      </div>
       <div class="field">
         <label data-i18n="labelChannel">איך התלמיד/ה ילמד/תלמד?</label>
         <div class="channel-grid">
@@ -780,11 +708,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         <label data-i18n="labelParentPhone">מספר טלפון של ההורה <span class="hint" data-i18n="hintParentPhone">(לקבלת עדכון התקדמות שבועי בלבד)</span></label>
         <input type="tel" placeholder="050-1234567" required>
       </div>
-      <div class="field" style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;">
-        <input type="checkbox" id="tosCheckbox" required style="margin-top:3px;flex-shrink:0;width:16px;height:16px;" onchange="document.getElementById('formSubmitBtn').disabled = !this.checked || document.querySelectorAll('input[name=subjects]:checked').length === 0;">
-        <label for="tosCheckbox" style="font-size:12.5px;font-weight:400;line-height:1.6;margin:0;" data-i18n="labelTosAgree">קראתי ואני מסכים/ה ל<a href="/terms.html" target="_blank" data-i18n="tosTermsLink">תנאי השימוש</a> ול<a href="/privacy.html" target="_blank" data-i18n="tosPrivacyLink">מדיניות הפרטיות</a></label>
-      </div>
-      <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit" disabled>התחל מנוי — ₪120 לחודש</button>
+      <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit">התחל מנוי — ₪120 לחודש</button>
       <p class="form-note" data-i18n="formNote">בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.</p>
     </form>
   </div>
@@ -792,27 +716,22 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
 <section id="testimonials">
   <h2 class="section-title" data-i18n="testiTitle">מה אומרים תלמידים שכבר ניסו</h2>
-  <p class="section-sub" data-i18n="testiSub">תלמידים שכבר לומדים עם daiZ, בעצמם</p>
+  <p class="section-sub" data-i18n="testiSub">דוגמאות להמלצות — מיועד להחלפה בהמלצות אמיתיות מתלמידים</p>
   <div class="steps">
     <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi1Quote">כשעברתי לחטיבה הכל הפך להיות בהרבה יותר קשה ומהיר. מול המורה בכיתה פחדתי לשאול שוב ושוב כדי לא לצאת "חופר", אבל עם daiZ שאלתי אותו איזה חמש פעמים את אותה שאלה עד שהבנתי. הוא הסביר לי את זה ממש כמו חבר ובלי לשפוט.</p>
-      <h3 data-i18n="testi1Name" style="margin-top:10px;">נועם, כיתה ז'</h3>
+      <div class="step-num">"</div>
+      <p data-i18n="testi1Quote">הבנתי סוף סוף שברים, בלי שהרגשתי מביך שאני שואל שוב ושוב.</p>
+      <h3 data-i18n="testi1Name" style="margin-top:10px;">נועה, כיתה ה'</h3>
     </div>
     <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi2Quote">תמיד כשאני יושב על שיעורי בית בערב אני נתקע ומאבד סבלנות. daiZ לא סתם זורק לי את התשובה הסופית כדי שאעתיק, אלא ממש מסביר לי שלב אחרי שלב איך לפתור בעצמי. פתאום לעשות שיעורים פחות מרגיש כמו סיוט.</p>
-      <h3 data-i18n="testi2Name" style="margin-top:10px;">עמית, כיתה ט'</h3>
+      <div class="step-num">"</div>
+      <p data-i18n="testi2Quote">אפשר לשאול גם בעשר בלילה לפני מבחן, וזה עונה מיד.</p>
+      <h3 data-i18n="testi2Name" style="margin-top:10px;">עאדל, כיתה ח'</h3>
     </div>
     <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi3Quote">העומס של הבגרויות בכיתה י"א הוא מטורף. היו לי לילות לפני מתכונות שישבתי ב-11 בלילה ולא היה לי את מי לשאול. daiZ פשוט זמין 24/7, עונה בשנייה ומפשט אפילו את החומר הכי מסובך. הוא פשוט הציל אותי בבגרויות.</p>
-      <h3 data-i18n="testi3Name" style="margin-top:10px;">שירה, כיתה י"א</h3>
-    </div>
-    <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi4Quote">מה שמגניב זה שהוא קולט איך הכי נוח לי ללמוד. ביקשתי ממנו להסביר לי תרגיל קשה בעזרת דוגמה מעולם הכדורגל והוא אשכרה עשה את זה וזה עבד! זה מרגיש כאילו יש לי מורה פרטי שמבין אותי בול.</p>
-      <h3 data-i18n="testi4Name" style="margin-top:10px;">רועי, כיתה י'</h3>
+      <div class="step-num">"</div>
+      <p data-i18n="testi3Quote">זה לא נותן לי את התשובה ישר, אלא עוזר לי להגיע אליה לבד.</p>
+      <h3 data-i18n="testi3Name" style="margin-top:10px;">מאיה, כיתה י'</h3>
     </div>
   </div>
 </section>
@@ -866,7 +785,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   <div class="contact-block">
     <h3 data-i18n="contactTitle">רוצים לדבר איתנו?</h3>
     <div class="contact-actions">
-      <a class="contact-btn whatsapp" href="https://wa.me/972500000000?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94" target="_blank" rel="noopener">
+      <a class="contact-btn whatsapp" href="https://wa.me/972553301316?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"/></svg>
         <span data-i18n="contactWa">וואטסאפ</span>
       </a>
@@ -879,7 +798,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </section>
 
 <footer>
-  <div data-i18n="footer">daiZ · המורה הפרטי שלך בוואטסאפ · עברית וערבית</div>
+  <div data-i18n="footer">daiZ · המורה הפרטי שלך, בוואטסאפ ובאתר · עברית וערבית</div>
   <div class="footer-links">
     <a href="/terms.html" data-i18n="footerTerms">תנאי שימוש</a>
     <a href="/privacy.html" data-i18n="footerPrivacy">מדיניות פרטיות</a>
@@ -887,7 +806,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   <div class="footer-copyright" data-i18n="footerCopyright">© 2026 daiZ. כל הזכויות שמורות.</div>
 </footer>
 
-<a class="whatsapp-fab" href="https://wa.me/972500000000?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%9C%D7%A4%D7%A0%D7%99%20%D7%A9%D7%90%D7%A0%D7%A8%D7%A9%D7%9D" target="_blank" rel="noopener" aria-label="שאלות בוואטסאפ">
+<a class="whatsapp-fab" href="https://wa.me/972553301316?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%9C%D7%A4%D7%A0%D7%99%20%D7%A9%D7%90%D7%A0%D7%A8%D7%A9%D7%9D" target="_blank" rel="noopener" aria-label="שאלות בוואטסאפ">
   <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"/></svg>
 </a>
 
@@ -901,8 +820,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     he: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"כל יום, לצידך",
-      badge:"לימוד אישי · יסודי, חטיבה ותיכון",
-      heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ, 24 שעות ביממה',
+      badge:"לימוד אישי · חטיבה ותיכון",
+      heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ ובאתר, 24 שעות ביממה',
       heroSub:"התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.",
       chatOnline:"מקוון עכשיו",
       chatMsg1:"שלום! אני המורה הפרטי שלך. אני כאן כדי לעזור לך להתקדם ולהגיע לציון שתמיד רצית 💪",
@@ -939,32 +858,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       demoLabel:'שיעור לדוגמה — הדגמה',
       demoReplay:'↻ שוב',
       demoEmpty:'בחרו נושא כדי להתחיל',
-      hwTitle:'תקוע בשיעורי בית? פשוט תצלם את השאלה',
-      hwSub:'בלי להקליד את כל התרגיל - התלמיד מצלם את השאלה מהמחברת, והמורה מנתח ועוזר לפתור, צעד אחרי צעד',
-      hwStep1Title:'מצלמים את השאלה',
-      hwStep1Body:'גם תרגיל בכתב יד, גם עמוד שלם מהמחברת או מהספר - אין צורך להקליד כלום',
-      hwStep2Title:'המורה מנתח ומבין',
-      hwStep2Body:'קורא את השאלה מהתמונה בדיוק כמו שהיא כתובה, כולל נוסחאות וציורים',
-      hwStep3Title:'פתרון מודרך, לא מוכן',
-      hwStep3Body:'בדיוק כמו בטקסט - שאלות מנחות שמובילות להבנה, לא תשובה מוכנה שמעתיקים',
-      hwMockLabel:'שיחה לדוגמה',
-      hwChatCaption:'עזרה בבקשה 🙏',
-      hwChatBot:'רואה! זו משוואה עם x. קודם כל - מה השלב הראשון כדי לבודד את x?',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
       grade5:"כיתה ה'", grade6:"כיתה ו'", grade7:"כיתה ז'", grade8:"כיתה ח'",
       grade9:"כיתה ט'", grade10:"כיתה י'", grade11:'כיתה י"א', grade12:'כיתה י"ב',
       testiTitle:"מה אומרים תלמידים שכבר ניסו",
-      testiSub:"תלמידים שכבר לומדים עם daiZ, בעצמם",
-      testi1Quote:"כשעברתי לחטיבה הכל הפך להיות בהרבה יותר קשה ומהיר. מול המורה בכיתה פחדתי לשאול שוב ושוב כדי לא לצאת \"חופר\", אבל עם daiZ שאלתי אותו איזה חמש פעמים את אותה שאלה עד שהבנתי. הוא הסביר לי את זה ממש כמו חבר ובלי לשפוט.",
-      testi1Name:"נועם, כיתה ז'",
-      testi2Quote:"תמיד כשאני יושב על שיעורי בית בערב אני נתקע ומאבד סבלנות. daiZ לא סתם זורק לי את התשובה הסופית כדי שאעתיק, אלא ממש מסביר לי שלב אחרי שלב איך לפתור בעצמי. פתאום לעשות שיעורים פחות מרגיש כמו סיוט.",
-      testi2Name:"עמית, כיתה ט'",
-      testi3Quote:"העומס של הבגרויות בכיתה י\"א הוא מטורף. היו לי לילות לפני מתכונות שישבתי ב-11 בלילה ולא היה לי את מי לשאול. daiZ פשוט זמין 24/7, עונה בשנייה ומפשט אפילו את החומר הכי מסובך. הוא פשוט הציל אותי בבגרויות.",
-      testi3Name:"שירה, כיתה י\"א",
-      testi4Quote:"מה שמגניב זה שהוא קולט איך הכי נוח לי ללמוד. ביקשתי ממנו להסביר לי תרגיל קשה בעזרת דוגמה מעולם הכדורגל והוא אשכרה עשה את זה וזה עבד! זה מרגיש כאילו יש לי מורה פרטי שמבין אותי בול.",
-      testi4Name:"רועי, כיתה י'",
+      testiSub:"דוגמאות להמלצות — מיועד להחלפה בהמלצות אמיתיות מתלמידים",
+      testi1Quote:"הבנתי סוף סוף שברים, בלי שהרגשתי מביך שאני שואל שוב ושוב.",
+      testi1Name:"נועה, כיתה ה'",
+      testi2Quote:"אפשר לשאול גם בעשר בלילה לפני מבחן, וזה עונה מיד.",
+      testi2Name:"עאדל, כיתה ח'",
+      testi3Quote:"זה לא נותן לי את התשובה ישר, אלא עוזר לי להגיע אליה לבד.",
+      testi3Name:"מאיה, כיתה י'",
       proofTitle:"בדיוק לפי הספר שלכם",
       proofSub:"ככה נראה שיעור אמיתי — שאלה, ופתרון מוסבר צעד-אחר-צעד",
       ex1Tag:"כיתה ז' · משוואות",
@@ -991,6 +897,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       subjMathArabic:"מתמטיקה (בערבית)",
       subjArabicGrammar:"قواعد اللغة العربية",
       subjHebrewL2:"העברית",
+      labelMathLevel:'כמה יחידות לימוד במתמטיקה?',
+      hintMathLevel:"(רלוונטי מכיתה י' ומעלה)",
+      mathLevel3:'3 יח"ל',
+      mathLevel4:'4 יח"ל',
+      mathLevel5:'5 יח"ל',
       labelChannel:"איך התלמיד/ה ילמד/תלמד?",
       channelWhatsapp:"וואטסאפ",
       channelWhatsappHint:"הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ",
@@ -1001,7 +912,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
       hintParentPhone:"(לקבלת עדכון התקדמות שבועי בלבד)",
-      labelTosAgree:'קראתי ואני מסכים/ה ל<a href="/terms.html" target="_blank">תנאי השימוש</a> ול<a href="/privacy.html" target="_blank">מדיניות הפרטיות</a>',
       formSubmit:"התחל מנוי — ₪120 לחודש",
       formNote:"בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.",
       aboutTitle:"מי אנחנו",
@@ -1060,7 +970,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       faq6A:"בשני דברים מרכזיים: daiZ מלמד אך ורק מתוך התוכן הרשמי של משרד החינוך, מותאם בדיוק לכיתה ולתוכנית הלימודים - לא ידע כללי מהאינטרנט. וגם, הוא לא נותן תשובה מוכנה מיד, אלא מלמד ברוח סוקרטס - שואל שאלות מנחות שמובילות את התלמיד להבין בעצמו.",
       floatingCtaText:"מוכנים להתחיל?",
       floatingCtaBtn:"הרשמה",
-      footer:"daiZ · המורה הפרטי שלך בוואטסאפ · עברית וערבית",
+      footer:"daiZ · המורה הפרטי שלך, בוואטסאפ ובאתר · עברית וערבית",
       footerTerms:"תנאי שימוש",
       footerPrivacy:"מדיניות פרטיות",
       footerCopyright:"© 2026 daiZ. כל הזכויות שמורות.",
@@ -1068,8 +978,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"كل يوم، بجانبك",
-      badge:"تعلّم شخصي · للابتدائي للاعدادي والثانوي",
-      heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة',
+      badge:"تعلّم شخصي · للاعدادي والثانوي",
+      heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب وعبر الموقع، على مدار 24 ساعة',
       heroSub:"ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.",
       chatOnline:"متصل الآن",
       chatMsg1:"أهلاً بك! أنا معلّمك الخاص، وأنا هنا لمساعدتك على التقدّم والوصول إلى العلامة التي حلمت بها دائماً 💪",
@@ -1106,32 +1016,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       demoLabel:'درس تجريبي - عرض توضيحي',
       demoReplay:'↻ مرة تانية',
       demoEmpty:'اختاروا موضوع للبدء',
-      hwTitle:'الوظيفة صعبة عليك؟ الحل بصورة وحدة',
-      hwSub:'بدون كتابة التمرين كامل - الطالب يصوّر السؤال من الدفتر، والمعلّم يحلّل ويساعد في الحل، خطوة بخطوة',
-      hwStep1Title:'صوّروا السؤال',
-      hwStep1Body:'حتى تمرين مكتوب بخط اليد، أو صفحة كاملة من الدفتر أو الكتاب - بلا حاجة لكتابة أي شي',
-      hwStep2Title:'المعلّم يحلّل ويفهم',
-      hwStep2Body:'يقرأ السؤال من الصورة بالضبط متل ما هو مكتوب، بما فيها المعادلات والرسومات',
-      hwStep3Title:'حل موجّه، مش جاهز',
-      hwStep3Body:'بالضبط متل النص - أسئلة موجّهة بتوصّل للفهم، مش جواب جاهز بينسخ',
-      hwMockLabel:'محادثة تجريبية',
-      hwChatCaption:'مساعدة لو سمحت 🙏',
-      hwChatBot:'شايف! هاي معادلة فيها x. أول شي - شو الخطوة الأولى لعزل x؟',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",
       grade5:"الصف الخامس", grade6:"الصف السادس", grade7:"الصف السابع", grade8:"الصف الثامن",
       grade9:"الصف التاسع", grade10:"الصف العاشر", grade11:"الصف الحادي عشر", grade12:"الصف الثاني عشر",
       testiTitle:"طلاب جرّبوا المعلّم... وهذا ما قالوه",
-      testiSub:"طلاب يتعلّمون فعلاً مع daiZ، بكلماتهم",
-      testi1Quote:"كل عمرها الرياضيات كانت تعمل لي توتر، خصوصاً لما المسألة تكون معقدة. daiZ بيعرف كيف يجزّئ السؤال لأجزاء صغيرة ويفهمني إياها حبة حبة. لأول مرة بفوت على امتحان وأنا حاسس حالي جاهز ومطمئن.",
-      testi1Name:"كريم - الصف الثامن",
-      testi2Quote:"أحلى إشي إنه ما بتفرق معه قديش الوقت متأخر أو كم مرة عدت السؤال. لما كنت أستحي أسأل بالصف عشان ما يبين إني مش فاهمة، daiZ كان يرجع يشرح لي بالوقت والطريقة اللي بتناسبني أنا.",
-      testi2Name:"ليلى - الصف العاشر",
-      testi3Quote:"في البجروت الوقت ضيق والمواد كثيرة. بدل ما أضيع ساعات وأنا أدور على شرح أو حل بالإنترنت، بسأله وبحصل على إجابة دقيقة ومباشرة بتوفر عليّ وقت وجهد خرافي.",
-      testi3Name:"يوسف - الصف الحادي عشر",
-      testi4Quote:"مش بس بيعطيني الشرح، كمان بيعمل لي اختبارات صغيرة ومراجعة عشان يتأكد إن المعلومة ثبتت بعقلي. طريقة الشرح تبعته خلتني أحب مواد كنت أعتبرها ممله وصعبة.",
-      testi4Name:"رزان - الصف الثاني عشر",
+      testiSub:"أمثلة على التوصيات — مخصّصة لتُستبدل بتوصيات حقيقية من طلاب",
+      testi1Quote:"فهمت أخيراً الكسور، من دون أن أشعر بالإحراج من تكرار السؤال.",
+      testi1Name:"نور، الصف الخامس",
+      testi2Quote:"أقدر أسأل حتى الساعة عشرة ليلاً قبل الامتحان، ويردّ فوراً.",
+      testi2Name:"عادل، الصف الثامن",
+      testi3Quote:"ما بيعطيني الجواب مباشرة، بل يساعدني أوصله لحالي.",
+      testi3Name:"مايا، الصف العاشر",
       proofTitle:"بالضبط حسب منهاجكم",
       proofSub:"هكذا يبدو الدرس الحقيقي — سؤال، وحل مشروح خطوة بخطوة",
       ex1Tag:"الصف السابع · معادلات",
@@ -1158,6 +1055,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       subjMathArabic:"الرياضيات",
       subjArabicGrammar:"قواعد اللغة العربية",
       subjHebrewL2:"العبرية",
+      labelMathLevel:'كم وحدة دراسة بالرياضيات؟',
+      hintMathLevel:"(يخص الصف العاشر فما فوق)",
+      mathLevel3:'3 وحدات',
+      mathLevel4:'4 وحدات',
+      mathLevel5:'5 وحدات',
       labelChannel:"كيف بدو الطالب/ة يتعلّم/تتعلّم؟",
       channelWhatsapp:"واتساب",
       channelWhatsappHint:"بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب",
@@ -1168,7 +1070,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
       hintParentPhone:"(لتلقي تحديث التقدّم الأسبوعي فقط)",
-      labelTosAgree:'قرأت وأوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و<a href="/privacy.html" target="_blank">سياسة الخصوصية</a>',
       formSubmit:"ابدأ الاشتراك — ₪120 شهرياً",
       formNote:"بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.",
       aboutTitle:"من نحن",
@@ -1227,7 +1128,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       faq6A:"بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.",
       floatingCtaText:"جاهزين تبدأوا؟",
       floatingCtaBtn:"سجّل الآن",
-      footer:"daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية",
+      footer:"daiZ · معلّمك الخاص عبر واتساب وعبر الموقع · عبرية وعربية",
       footerTerms:"شروط الاستخدام",
       footerPrivacy:"سياسة الخصوصية",
       footerCopyright:"© 2026 daiZ. جميع الحقوق محفوظة.",
@@ -1246,6 +1147,30 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: (price) => 'ابدأ الاشتراك — ₪' + price + ' شهرياً'
   };
 
+  // Study-unit level (3/4/5 יח"ל) is only relevant for MATH, and only from
+  // grade י' up (matches the same split built into the tutor itself) - the
+  // field stays hidden otherwise so it never confuses a parent registering
+  // for, say, grade ז' or for English/grammar only.
+  const MATH_LEVEL_GRADES = ['י', 'יא', 'יב'];
+  function isMathChecked(){
+    const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
+    const mathValue = isArabicTrack ? 'math-arabic' : 'math';
+    const box = document.querySelector('input[name="subjects"][value="' + mathValue + '"]');
+    return !!(box && box.checked);
+  }
+  function updateMathLevelVisibility(){
+    const grade = document.getElementById('gradeSelect').value;
+    const show = isMathChecked() && MATH_LEVEL_GRADES.includes(grade);
+    document.getElementById('mathLevelField').style.display = show ? 'block' : 'none';
+  }
+  function onGradeChange(){
+    updateMathLevelVisibility();
+  }
+
+  // Which subject-group is relevant depends on the instruction-language
+  // selector (langPrefSelect), NOT the page's UI-display toggle (he/ar nav
+  // buttons) - a Hebrew-UI parent can still pick Arabic instruction for
+  // their child, and vice versa.
   function onLangPrefChange(){
     const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
     document.getElementById('subjectsGridHebrew').style.display = isArabicTrack ? 'none' : 'grid';
@@ -1259,13 +1184,15 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     const checked = document.querySelectorAll('#' + activeGridId + ' input[name="subjects"]:checked').length;
     const submitBtn = document.getElementById('formSubmitBtn');
     const note = document.getElementById('subjectsPriceNote');
-    const tosOk = document.getElementById('tosCheckbox').checked;
+    updateMathLevelVisibility();
     if(checked === 0){
+      // No subject selected at all - block submission with a clear prompt
+      // instead of silently charging for a phantom "1 subject".
       note.textContent = SUBJECTS_NOTE_TEXT[currentLang][0];
       submitBtn.disabled = true;
       return;
     }
-    submitBtn.disabled = !tosOk;
+    submitBtn.disabled = false;
     const price = SUBJECT_PRICE_TABLE[checked] || SUBJECT_PRICE_TABLE[3];
     note.textContent = SUBJECTS_NOTE_TEXT[currentLang][checked] || SUBJECTS_NOTE_TEXT[currentLang][3];
     submitBtn.textContent = SUBMIT_BTN_TEXT[currentLang](price);
@@ -1278,9 +1205,14 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
   }
 
+  // Live "try it yourself" demo - a genuine short Socratic exchange per
+  // topic (student asks, tutor guides with a question instead of the
+  // answer, student works it out step by step). No signup, no server call -
+  // this is canned/pre-written content, played back with a staggered
+  // reveal so it reads like a live conversation.
   const demoData = {
     he: {
-      fractions: ['איך פותרים 2/3 + 1/4? יש להם מכנים שונים...',
+      fractions: ['bot:איך פותרים 2/3 + 1/4? יש להם מכנים שונים...'.replace('bot:',''),
         'שאלה טובה! קודם כל - אפשר לחבר שברים ישירות כשיש להם מכנים שונים, או שצריך משהו קודם?',
         'צריך קודם להשוות מכנים?',
         'בדיוק! אז מה המכנה המשותף הכי קטן בין 3 ל-4?',
@@ -1394,10 +1326,23 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         el.innerHTML = translations[lang][key];
       }
     });
+    // Keep the signup form's "language of instruction" selector in lockstep
+    // with the main he/ar toggle - this covers BOTH the initial auto-detect
+    // AND every manual click on the nav toggle afterward (previously only
+    // the initial page-load detection synced it, so manually switching the
+    // nav toggle to Arabic left the form silently stuck on the Hebrew-taught
+    // subject group). If someone opens the dropdown afterward and picks the
+    // other option on purpose, that manual choice is respected until the
+    // next nav-toggle click.
     document.getElementById('langPrefSelect').value = lang;
     onLangPrefChange();
   }
 
+  // Default UI language: prefer an explicit ?lang=ar/he URL param (useful
+  // for language-targeted ad campaigns), then fall back to the browser's
+  // language, and only default to Hebrew if neither signals Arabic - so an
+  // Arabic-speaking visitor isn't shown Hebrew first and doesn't have to
+  // find the toggle themselves.
   (function chooseInitialLang(){
     const urlLang = new URLSearchParams(window.location.search).get('lang');
     let initialLang = 'he';

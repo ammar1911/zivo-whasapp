@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>daiZ - معلّمك الخاص عبر واتساب</title>
+<title>daiZ - معلّمك الخاص، عبر واتساب وعبر الموقع</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X6JEDRV775"></script>
 <script>
@@ -32,18 +33,18 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-<meta content="daiZ - معلّمك الخاص عبر واتساب. شرح صبور مبني فقط على ما يُدرَّس في الصف، بالعربية والعبرية." name="description">
-<meta content="daiZ - معلّمك الخاص عبر واتساب" property="og:title">
-<meta content="شرح صبور مبني فقط على ما يُدرَّس في الصف، بالعربية والعبرية. متاح على مدار الساعة." property="og:description">
-<meta property="og:type" content="website">
-<meta content="https://daiz.co.il/ar/" property="og:url">
-<meta property="og:image" content="https://daiz.co.il/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta content="ar_IL" property="og:locale">
-<meta name="twitter:card" content="summary_large_image">
+<meta content="daiZ - معلّمك الخاص، عبر واتساب وعبر الموقع. شرح صبور مبني فقط على ما يُدرَّس في الصف، بالعربية والعبرية." name="description"/>
+<meta content="daiZ - معلّمك الخاص، عبر واتساب وعبر الموقع" property="og:title"/>
+<meta content="شرح صبور مبني فقط على ما يُدرَّس في الصف، بالعربية والعبرية. متاح على مدار الساعة." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://daiz.co.il/ar/" property="og:url"/>
+<meta content="https://daiz.co.il/og-image.png" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="ar_IL" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=Poppins:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=Caveat:wght@600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=Poppins:wght@700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
   :root{
     --ink:#1B2A44;
@@ -77,17 +78,17 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:17px;}
   .brand .mark{flex-shrink:0;display:block;width:56px;height:56px;}
   .brand-text{display:flex;flex-direction:column;line-height:1.15;gap:2px;}
-  .brand .wordmark{
-    font-family:'Poppins','Heebo',sans-serif;font-weight:800;font-size:30px;color:var(--teal);letter-spacing:0.3px;
-    display:flex;align-items:center;gap:8px;
-  }
   .brand .ai-pill{
     font-family:'Heebo',sans-serif;font-weight:700;font-size:10px;color:var(--teal-dark);
     background:var(--teal-tint);border:1px solid var(--mustard);border-radius:999px;
     padding:2px 8px;letter-spacing:0.3px;flex-shrink:0;
   }
+  .brand .wordmark{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Poppins','Heebo',sans-serif;font-weight:800;font-size:30px;color:var(--teal);letter-spacing:0.3px;
+  }
   .brand .tagline{
-    font-family:'Heebo',sans-serif;font-weight:600;font-size:11px;color:var(--muted);letter-spacing:0.2px;
+    font-family:'Heebo',sans-serif;font-weight:600;font-size:10.5px;color:var(--muted);letter-spacing:0.2px;
   }
   .lang-toggle{
     display:flex;gap:4px;background:#fff;border-radius:999px;padding:3px;
@@ -189,42 +190,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   @keyframes demoIn{ to{ opacity:1; transform:translateY(0); } }
   .demo-empty{color:var(--muted);font-size:13px;text-align:center;margin:auto;}
 
-  #homework{padding:20px 20px 60px;max-width:1000px;margin:0 auto;}
-  .hw-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
-  @media (max-width:820px){ .hw-grid{grid-template-columns:1fr;gap:28px;} }
-  .hw-steps{display:flex;flex-direction:column;gap:18px;}
-  .hw-step{display:flex;gap:14px;align-items:flex-start;}
-  .hw-step .icon{font-size:26px;flex-shrink:0;line-height:1;margin-top:2px;}
-  .hw-step h4{font-size:15px;margin:0 0 4px;color:var(--ink);}
-  .hw-step p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
-  .hw-mock{
-    max-width:340px;margin:0 auto;background:#fff;border-radius:20px;
-    box-shadow:0 16px 40px -16px rgba(30,42,68,0.25);overflow:hidden;border:1px solid var(--line);
-  }
-  .hw-mock-header{background:var(--teal);color:#fff;padding:10px 14px;font-size:12px;font-weight:700;opacity:0.9;}
-  .hw-mock-body{
-    padding:16px;display:flex;flex-direction:column;gap:10px;min-height:200px;
-    background:repeating-linear-gradient(0deg, rgba(30,42,68,0.035) 0px, rgba(30,42,68,0.035) 1px, transparent 1px, transparent 22px), #FBF7EE;
-  }
-  .hw-photo-bubble{
-    align-self:flex-end;max-width:78%;border-radius:14px;border-end-end-radius:4px;overflow:hidden;
-    background:var(--teal-tint);box-shadow:0 1px 3px rgba(0,0,0,0.08);
-  }
-  .hw-photo-bubble .photo-frame{
-    padding:10px;background:#dcd6c8;
-  }
-  .hw-photo-bubble .photo-paper{
-    background:#fdfaf0;border-radius:3px;padding:18px 16px 20px;transform:rotate(-1.2deg);
-    box-shadow:0 3px 10px rgba(0,0,0,0.18);
-    background-image:repeating-linear-gradient(#fdfaf0 0px, #fdfaf0 27px, #cdd8e0 28px);
-  }
-  .hw-photo-bubble .photo-paper .eq{
-    font-family:'Caveat',cursive;font-size:30px;font-weight:600;color:#20324a;
-    direction:ltr;text-align:center;line-height:28px;padding-top:2px;
-  }
-  .hw-photo-bubble .caption{padding:8px 13px;font-size:12.5px;color:var(--ink);}
-  .hw-mock-body .bubble{font-size:13px;}
-
   #compare{padding:20px 20px 60px;max-width:640px;margin:0 auto;}
   .compare-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(30,42,68,0.15);}
   .compare-table th,.compare-table td{padding:12px 14px;text-align:start;font-size:13.5px;border-bottom:1px solid var(--line);}
@@ -232,7 +197,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .compare-table th.highlight{background:var(--teal);color:#fff;}
   .compare-table td.highlight{background:var(--teal-tint);font-weight:700;color:var(--teal-dark);}
   .compare-table tr:last-child td{border-bottom:none;}
-
   .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
   .btn{
     display:inline-flex;align-items:center;gap:8px;
@@ -258,10 +222,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     width:32px;height:32px;border-radius:50%;background:var(--mustard);color:var(--ink);
     font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;
     display:flex;align-items:center;justify-content:center;margin-bottom:14px;
-  }
-  .testi-icon{
-    width:44px;height:44px;border-radius:50%;background:var(--teal);
-    font-size:20px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;
   }
   .step-card h3{font-size:15.5px;margin:0 0 6px;font-weight:800;}
   .step-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
@@ -464,446 +424,383 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   .whatsapp-fab:hover{ transform:scale(1.07); }
   .whatsapp-fab svg{ width:22px; height:22px; }
   @media (min-width:901px){ .whatsapp-fab{ bottom:24px; } }
+
+  /* MATH STUDY-UNIT LEVEL FIELD (3/4/5 وحدات) */
+  #mathLevelField{ display:none; }
 </style>
-<link rel="canonical" href="https://daiz.co.il/ar/">
-<link rel="alternate" hreflang="he" href="https://daiz.co.il/">
-<link rel="alternate" hreflang="ar" href="https://daiz.co.il/ar/">
-<link rel="alternate" hreflang="x-default" href="https://daiz.co.il/">
-</head>
+<link href="https://daiz.co.il/ar/" rel="canonical"/><link href="https://daiz.co.il/" hreflang="he" rel="alternate"/><link href="https://daiz.co.il/ar/" hreflang="ar" rel="alternate"/><link href="https://daiz.co.il/" hreflang="x-default" rel="alternate"/></head>
 <body>
-
 <nav>
-  <div class="brand">
-    <svg class="mark" width="44" height="44" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="navGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F0C670"/>
-          <stop offset="100%" stop-color="#C6923A"/>
-        </linearGradient>
-      </defs>
-      <rect width="120" height="120" rx="27" fill="#2F6F5E"/>
-      <text x="60" y="80" text-anchor="middle" font-family="Poppins,Arial" font-weight="800" font-size="46" fill="#FBF7EE">d<tspan fill="url(#navGoldGrad)">Z</tspan></text>
-    </svg>
-    <div class="brand-text">
-      <span class="wordmark"><span data-i18n="brand">dai<span style="color:#C6923A">Z</span></span><span class="ai-pill">AI</span></span>
-      <span data-i18n="tagline" class="tagline">كل يوم، بجانبك</span>
-    </div>
-  </div>
-  <div class="lang-toggle">
-    <a id="btn-he" href="/">עברית</a>
-    <a id="btn-ar" class="active" href="/ar/" onclick="setLang('ar'); return false;">العربية</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="badge" data-i18n="badge">تعلّم شخصي · للابتدائي للاعدادي والثانوي</div>
-  <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة</h1>
-  <p class="sub" data-i18n="heroSub">ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.</p>
-  <div class="ai-note" data-i18n="aiNote">🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span></div>
-  <div class="subjects-pills" data-i18n="subjectsPills"><span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span></div>
-  <div class="cta-row">
-    <a href="#signup" class="btn btn-primary" data-i18n="ctaMain">ابدأ الاشتراك الشهري</a>
-    <a href="#how" class="btn btn-ghost" data-i18n="ctaSecondary">كيف يعمل؟</a>
-  </div>
-</section>
-
-<section id="demo">
-  <h2 class="section-title" data-i18n="demoTitle">جربوا بأنفسكم: هيك بيعلّم المعلّم</h2>
-  <div class="demo-topics" id="demoTopics">
-    <button class="demo-topic-btn" data-topic="fractions" onclick="playDemo('fractions')">🍕 <span data-i18n="demoTopic1">كسور بمقامات مختلفة</span></button>
-    <button class="demo-topic-btn" data-topic="word" onclick="playDemo('word')">📖 <span data-i18n="demoTopic2">مسائل لفظية</span></button>
-    <button class="demo-topic-btn" data-topic="percent" onclick="playDemo('percent')">📊 <span data-i18n="demoTopic3">نسب مئوية</span></button>
-    <button class="demo-topic-btn" data-topic="coords" onclick="playDemo('coords')">📐 <span data-i18n="demoTopic4">محاور الإحداثيات</span></button>
-  </div>
-  <div class="demo-window">
-    <div class="demo-header">
-      <span class="label" data-i18n="demoLabel">درس تجريبي - عرض توضيحي</span>
-      <button class="demo-replay" id="demoReplay" style="display:none" onclick="replayDemo()" data-i18n="demoReplay">↻ مرة تانية</button>
-    </div>
-    <div class="demo-body" id="demoBody"><div class="demo-empty" id="demoEmpty" data-i18n="demoEmpty">اختاروا موضوع للبدء</div></div>
-  </div>
-</section>
-
-<section id="homework">
-  <h2 class="section-title" data-i18n="hwTitle">الوظيفة صعبة عليك؟ الحل بصورة وحدة</h2>
-  <p class="section-sub" data-i18n="hwSub">بدون كتابة التمرين كامل - الطالب يصوّر السؤال من الدفتر، والمعلّم يحلّل ويساعد في الحل، خطوة بخطوة</p>
-  <div class="hw-grid">
-    <div class="hw-steps">
-      <div class="hw-step">
-        <div class="icon">📸</div>
-        <div>
-          <h4 data-i18n="hwStep1Title">صوّروا السؤال</h4>
-          <p data-i18n="hwStep1Body">حتى تمرين مكتوب بخط اليد، أو صفحة كاملة من الدفتر أو الكتاب - بلا حاجة لكتابة أي شي</p>
-        </div>
-      </div>
-      <div class="hw-step">
-        <div class="icon">🧠</div>
-        <div>
-          <h4 data-i18n="hwStep2Title">المعلّم يحلّل ويفهم</h4>
-          <p data-i18n="hwStep2Body">يقرأ السؤال من الصورة بالضبط متل ما هو مكتوب، بما فيها المعادلات والرسومات</p>
-        </div>
-      </div>
-      <div class="hw-step">
-        <div class="icon">💬</div>
-        <div>
-          <h4 data-i18n="hwStep3Title">حل موجّه، مش جاهز</h4>
-          <p data-i18n="hwStep3Body">بالضبط متل النص - أسئلة موجّهة بتوصّل للفهم، مش جواب جاهز بينسخ</p>
-        </div>
-      </div>
-    </div>
-    <div class="hw-mock">
-      <div class="hw-mock-header" data-i18n="hwMockLabel">محادثة تجريبية</div>
-      <div class="hw-mock-body">
-        <div class="hw-photo-bubble">
-          <div class="photo-frame">
-            <div class="photo-paper"><div class="eq">2x + 6 = 20</div></div>
-          </div>
-          <div class="caption" data-i18n="hwChatCaption">مساعدة لو سمحت 🙏</div>
-        </div>
-        <div class="bubble bot" data-i18n="hwChatBot">شايف! هاي معادلة فيها x. أول شي - شو الخطوة الأولى لعزل x؟</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="how">
-  <h2 class="section-title" data-i18n="howSub">أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي</h2>
-  <div class="steps">
-    <div class="step-card">
-      <div class="step-num">1</div>
-      <h3 data-i18n="step1Title">التسجيل في صفحة واحدة</h3>
-      <p data-i18n="step1Body">اختيار الصف والموضوع، وإدخال رقم واتساب الطالب.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">2</div>
-      <h3 data-i18n="step2Title">تُفتح محادثة على واتساب</h3>
-      <p data-i18n="step2Body">المعلّم الخاص يبدأ بالكتابة أولاً، يقدّم نفسه ويسأل من أين نبدأ.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">3</div>
-      <h3 data-i18n="step3Title">التعلّم بالوتيرة الخاصة بالطالب</h3>
-      <p data-i18n="step3Body">النموذج يتكيّف مع مستوى كل طالب، وبالسرعة التي تناسبه.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">4</div>
-      <h3 data-i18n="step4Title">الأهل يتلقّون تحديثاً أسبوعياً</h3>
-      <p data-i18n="step4Body">تقرير أسبوعي قصير على رقم هاتف الأهل، عن المواد اللي تدرّبنا عليها خلال الأسبوع.</p>
-    </div>
-  </div>
-</section>
-
-<section id="feelings">
-  <h2 class="section-title" data-i18n="feelingsTitle">شو اللي فعلاً بيتغيّر</h2>
-  <div class="feelings-grid">
-    <div class="feeling-card">
-      <div class="feeling-icon">💡</div>
-      <div>
-        <h4 data-i18n="feel1Title">اللحظة يلي بتنور</h4>
-        <p data-i18n="feel1Body">لما ابنك يقول فجأة "فهمت!" وعيونه بتلمع — مش مجرد حفظ جواب، إنما فعلاً استوعب.</p>
-      </div>
-    </div>
-    <div class="feeling-card">
-      <div class="feeling-icon">📈</div>
-      <div>
-        <h4 data-i18n="feel2Title">تقدّم بتشوفه</h4>
-        <p data-i18n="feel2Body">تمرين مستمر بينعكس على العلامات يوم بعد يوم .</p>
-      </div>
-    </div>
-    <div class="feeling-card">
-      <div class="feeling-icon">😌</div>
-      <div>
-        <h4 data-i18n="feel3Title">أهل بيقدروا أخيرًا ياخدوا نفس</h4>
-        <p data-i18n="feel3Body">بيعرفوا إنه في معلم خاص لابنك ، 24 ساعة باليوم، يرافقه في مسيرة النجاح.</p>
-      </div>
-    </div>
-    <div class="feeling-card">
-      <div class="feeling-icon">💪</div>
-      <div>
-        <h4 data-i18n="feel4Title">ثقة بالنفس، مش بس علامة</h4>
-        <p data-i18n="feel4Body">الطالب يؤمن بإنه قادر على مواجهة مسألة صعبة.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="pricing-wrap">
-  <div class="price-card">
-    <div data-i18n="priceLabel">اشتراك شهري، لطالب واحد</div>
-    <div class="amount">₪120</div>
-    <div class="per" data-i18n="perMonth">يمكن الإلغاء في أي وقت</div>
-    <ul>
-      <li data-i18n="perk1">محادثة مفتوحة على واتساب على مدار الساعة</li>
-      <li data-i18n="perk2">متوافق مع المنهاج المعتمد رسميا</li>
-      <li data-i18n="perk3">تقرير تقدّم أسبوعي للأهل</li>
-    </ul>
-    <a href="#signup" class="btn btn-primary" data-i18n="priceBtn">اشترك الآن</a>
-  </div>
-</section>
-
-<section id="curriculum-proof">
-  <p class="proof-note" data-i18n="proofNote">كل وحدة تعليمية مبنية على أساس مناهج وزارة التربية والتعليم الرسمية، حسب الصف والمجال — ليتمرّن الطالب بالضبط على ما يتعلّمه في الصف، لا مواد عشوائية من الإنترنت.</p>
-</section>
-
-<section id="trust-safety">
-  <h2 class="section-title" data-i18n="trustTitle">الأمان والشفافية أولاً</h2>
-  <p class="section-sub" data-i18n="trustSub">نتفهّم إنه الموضوع عن ابنك — هيك بالضبط النموذج شغال من وراء الكواليس</p>
-  <div class="trust-grid">
-    <div class="trust-card">
-      <div class="trust-icon">📚</div>
-      <h4 data-i18n="trust1Title">فقط مواد رسمية</h4>
-      <p data-i18n="trust1Body">النموذج يعلّم فقط حسب مناهج وزارة التربية والتعليم الرسمية — مش محتوى عشوائي من الإنترنت.</p>
-    </div>
-    <div class="trust-card">
-      <div class="trust-icon">👨‍👩‍👧</div>
-      <h4 data-i18n="trust2Title">الأهل دايمًا بالصورة</h4>
-      <p data-i18n="trust2Body">تقرير أسبوعي قصير يُرسل لرقم الأهل الخاص.</p>
-    </div>
-    <div class="trust-card">
-      <div class="trust-icon">🔒</div>
-      <h4 data-i18n="trust3Title">بدون مشاركة معلومات زايدة</h4>
-      <p data-i18n="trust3Body">المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع جهة ثالثة.</p>
-    </div>
-    <div class="trust-card">
-      <div class="trust-icon">✋</div>
-      <h4 data-i18n="trust4Title">سيطرة كاملة، دايمًا</h4>
-      <p data-i18n="trust4Body">يمكن إيقاف أو تعليق أو إلغاء الاشتراك بأي لحظة، بدون أسئلة وبدون التزام.</p>
-    </div>
-    <div class="trust-card">
-      <div class="trust-icon">💰</div>
-      <h4 data-i18n="trust5Title">استرجاع كامل خلال 7 أيام</h4>
-      <p data-i18n="trust5Body">مش راضين؟ بترجعلكم كل المبلغ، بلا أي أسئلة.</p>
-    </div>
-  </div>
-</section>
-
-<section id="compare">
-  <h2 class="section-title" data-i18n="compareTitle">كيف نقارن مقابل معلّم خصوصي عادي</h2>
-  <p class="section-sub" data-i18n="compareSub">نفس جودة التعليم الصبور والشخصي - بتكلفة أقل بكثير</p>
-  <table class="compare-table">
-    <tbody>
-      <tr><th></th><th data-i18n="compareColHuman">معلّم خصوصي عادي</th><th class="highlight" data-i18n="compareColUs">daiZ</th></tr>
-      <tr><td data-i18n="compareRow1">التكلفة الشهرية</td><td>600–2,400 ₪</td><td class="highlight">120–220 ₪</td></tr>
-      <tr><td data-i18n="compareRow2">التوفر</td><td data-i18n="compareRow2Human">مرة أو مرتين بالأسبوع</td><td class="highlight" data-i18n="compareRow2Us">24/7 - بأي وقت</td></tr>
-      <tr><td data-i18n="compareRow3">الصبر</td><td data-i18n="compareRow3Human">يعتمد على المعلّم</td><td class="highlight" data-i18n="compareRow3Us">بلا حدود</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<section id="signup">
-  <h2 class="section-title" data-i18n="formTitle">لنبدأ</h2>
-  <p class="section-sub" data-i18n="formSub">تعبئة النموذج تستغرق أقل من دقيقة</p>
-  <div class="form-box">
-    <form onsubmit="event.preventDefault(); alert(currentLang==='he' ? 'תודה! זהו דף הדגמה בלבד.' : 'شكراً! هذه صفحة تجريبية فقط.');">
-      <div class="field">
-        <label data-i18n="labelChildName">اسم الطالب</label>
-        <input type="text" required>
-      </div>
-      <div class="field">
-        <label data-i18n="labelGrade">الصف <span class="hint" data-i18n="hintGrade">(لمعرفة الكتاب المناسب للتدريس)</span></label>
-        <select>
-          <option data-i18n="grade4">الصف الرابع</option>
-          <option data-i18n="grade5">الصف الخامس</option>
-          <option data-i18n="grade6">الصف السادس</option>
-          <option data-i18n="grade7">الصف السابع</option>
-          <option data-i18n="grade8">الصف الثامن</option>
-          <option data-i18n="grade9">الصف التاسع</option>
-          <option data-i18n="grade10">الصف العاشر</option>
-          <option data-i18n="grade11">الصف الحادي عشر</option>
-          <option data-i18n="grade12">الصف الثاني عشر</option>
-        </select>
-      </div>
-      <div class="field" style="display:none">
-        <label data-i18n="labelLangPref">لغة التدريس</label>
-        <select id="langPrefSelect" onchange="onLangPrefChange()">
-          <option value="he">עברית</option>
-          <option value="ar">العربية</option>
-        </select>
-      </div>
-      </div>
-      <div class="field">
-        <label data-i18n="labelSubjects">الماده التي تريد تسجيل ابنك فيها</label>
-        <div class="channel-grid" id="subjectsGridHebrew">
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="math" checked onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjMath">الرياضيات (بالعبرية)</span></div>
-          </label>
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="hebrew-grammar" onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjHebrewGrammar">قواعد اللغة العبرية</span></div>
-          </label>
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="english" onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjEnglish">الإنجليزية</span></div>
-          </label>
-        </div>
-        <div class="channel-grid" id="subjectsGridArabic" style="display:none">
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="math-arabic" checked onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjMathArabic">الرياضيات</span></div>
-          </label>
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="arabic-grammar" onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjArabicGrammar">قواعد اللغة العربية</span></div>
-          </label>
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="hebrew-second-language" onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjHebrewL2">العبرية</span></div>
-          </label>
-          <label class="channel-card">
-            <input type="checkbox" name="subjects" value="english" onchange="updateSubjectsPrice()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjEnglish">الإنجليزية</span></div>
-          </label>
-        </div>
-        <div class="subjects-note" id="subjectsPriceNote"></div>
-      </div>
-      <div class="field">
-        <label data-i18n="labelChannel">كيف بدو الطالب/ة يتعلّم/تتعلّم؟</label>
-        <div class="channel-grid">
-          <label class="channel-card">
-            <input type="radio" name="channel" value="whatsapp" checked onchange="onChannelChange()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWhatsapp">واتساب</span></div>
-            <div class="ch-hint" data-i18n="channelWhatsappHint">بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب</div>
-          </label>
-          <label class="channel-card">
-            <input type="radio" name="channel" value="website" onchange="onChannelChange()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWebsite">محادثة عبر الموقع</span></div>
-            <div class="ch-hint" data-i18n="channelWebsiteHint">يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع</div>
-          </label>
-        </div>
-      </div>
-      <div class="field" id="childPhoneField">
-        <label data-i18n="labelChildPhone">رقم واتساب الطالب <span class="hint" data-i18n="hintChildPhone">(هنا ستجري المحادثة مع المعلّم)</span></label>
-        <input type="tel" id="childPhoneInput" placeholder="050-1234567" required>
-      </div>
-      <div class="channel-note" id="channelNoteWebsite" style="display:none" data-i18n="channelNoteWebsite">رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.</div>
-      <div class="field">
-        <label data-i18n="labelParentPhone">رقم هاتف أحد الوالدين <span class="hint" data-i18n="hintParentPhone">(لتلقي تحديث التقدّم الأسبوعي فقط)</span></label>
-        <input type="tel" placeholder="050-1234567" required>
-      </div>
-      <div class="field" style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;">
-        <input type="checkbox" id="tosCheckbox" required style="margin-top:3px;flex-shrink:0;width:16px;height:16px;" onchange="document.getElementById('formSubmitBtn').disabled = !this.checked || document.querySelectorAll('input[name=subjects]:checked').length === 0;">
-        <label for="tosCheckbox" style="font-size:12.5px;font-weight:400;line-height:1.6;margin:0;" data-i18n="labelTosAgree">قرأت وأوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و<a href="/privacy.html" target="_blank">سياسة الخصوصية</a></label>
-      </div>
-      <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit" disabled>ابدأ الاشتراك — ₪120 شهرياً</button>
-      <p class="form-note" data-i18n="formNote">بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.</p>
-    </form>
-  </div>
-</section>
-
-<section id="testimonials">
-  <h2 class="section-title" data-i18n="testiTitle">طلاب جرّبوا المعلّم... وهذا ما قالوه</h2>
-  <p class="section-sub" data-i18n="testiSub">طلاب يتعلّمون فعلاً مع daiZ، بكلماتهم</p>
-  <div class="steps">
-    <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi1Quote">كل عمرها الرياضيات كانت تعمل لي توتر، خصوصاً لما المسألة تكون معقدة. daiZ بيعرف كيف يجزّئ السؤال لأجزاء صغيرة ويفهمني إياها حبة حبة. لأول مرة بفوت على امتحان وأنا حاسس حالي جاهز ومطمئن.</p>
-      <h3 data-i18n="testi1Name" style="margin-top:10px;">كريم - الصف الثامن</h3>
-    </div>
-    <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi2Quote">أحلى إشي إنه ما بتفرق معه قديش الوقت متأخر أو كم مرة عدت السؤال. لما كنت أستحي أسأل بالصف عشان ما يبين إني مش فاهمة، daiZ كان يرجع يشرح لي بالوقت والطريقة اللي بتناسبني أنا.</p>
-      <h3 data-i18n="testi2Name" style="margin-top:10px;">ليلى - الصف العاشر</h3>
-    </div>
-    <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi3Quote">في البجروت الوقت ضيق والمواد كثيرة. بدل ما أضيع ساعات وأنا أدور على شرح أو حل بالإنترنت، بسأله وبحصل على إجابة دقيقة ومباشرة بتوفر عليّ وقت وجهد خرافي.</p>
-      <h3 data-i18n="testi3Name" style="margin-top:10px;">يوسف - الصف الحادي عشر</h3>
-    </div>
-    <div class="step-card">
-      <div class="testi-icon">🎓</div>
-      <p data-i18n="testi4Quote">مش بس بيعطيني الشرح، كمان بيعمل لي اختبارات صغيرة ومراجعة عشان يتأكد إن المعلومة ثبتت بعقلي. طريقة الشرح تبعته خلتني أحب مواد كنت أعتبرها ممله وصعبة.</p>
-      <h3 data-i18n="testi4Name" style="margin-top:10px;">رزان - الصف الثاني عشر</h3>
-    </div>
-  </div>
-</section>
-
-
-<section id="faq">
-  <h2 class="section-title" data-i18n="faqTitle">أسئلة شائعة</h2>
-  <div class="faq-list">
-    <details class="faq-item">
-      <summary data-i18n="faq1Q">هل هذا بديل عن دروس خصوصية أو مساعدة من معلم المدرسة؟</summary>
-      <p data-i18n="faq1A">مش بالضرورة — هذا مكمّل. daiZ يقدّم إجابة متوفرة على مدار الساعة للتمرين والأسئلة اليومية، بس ما بيعوّض عن التواصل الإنساني عند الحاجة.</p>
-    </details>
-    <details class="faq-item">
-      <summary data-i18n="faq2Q">شو بيصير إذا ابني/بنتي بيتقدّم بوتيرة مختلفة عن المعدل؟</summary>
-      <p data-i18n="faq2A">الوكيل يتكيّف مع وتيرة كل طالب/ة شخصيًا — ما في «معدل صف»، في بس وتيرة ابنكم/ابنتكم.</p>
-    </details>
-    <details class="faq-item">
-      <summary data-i18n="faq3Q">كيف ألغي الاشتراك؟</summary>
-      <p data-i18n="faq3A">برسالة بسيطة عبر واتساب، بأي لحظة — بدون استمارات، بدون مكالمات هاتفية، بدون فترة التزام.</p>
-    </details>
-    <details class="faq-item">
-      <summary data-i18n="faq4Q">شو بيصير إذا الوكيل ما بيعرف يجاوب على سؤال معيّن؟</summary>
-      <p data-i18n="faq4A">رح يقول هيك بصراحة، ويوجّه الطالب/ة للمكان الصحيح (معلم، أهل) بدل ما يخمّن جواب.</p>
-    </details>
-    <details class="faq-item">
-      <summary data-i18n="faq5Q">هل معلومات ابني/بنتي بأمان؟</summary>
-      <p data-i18n="faq5A">المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهة ثالثة لأغراض إعلانية.</p>
-    </details>
-    <details class="faq-item">
-      <summary data-i18n="faq6Q">شو الفرق بينه وبين ChatGPT أو Gemini؟</summary>
-      <p data-i18n="faq6A">بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.</p>
-    </details>
-  </div>
-</section>
-
-<section id="about">
-  <h2 class="section-title" data-i18n="aboutTitle">من نحن</h2>
-  <div class="about-grid">
-    <div class="about-avatar">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#FBF7EE"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="#FBF7EE" stroke-width="2" stroke-linecap="round"/></svg>
-    </div>
-    <div class="about-body">
-      <p data-i18n="aboutP2">أنشأنا daiZ من منطلق إيمان بسيط ولكنه عميق: كل طالب وطالبة يستحقون غلافًا تعليميًا شخصيًا، صبورًا ومحددًا بالظبط – في أي ساعة من اليوم، وبانسجام تام مع ما يحدث فعليًا داخل الصف. نحن لسنا مجرد "مساعد دراسي" عشوائي آخر من الإنترنت، بل شركاء في المسار التعليمي.</p>
-      <p data-i18n="aboutP3">فلسفتنا تستند إلى حكمة عريقة بروح عصرنا. التعلم الحقيقي والمؤثر لا يقتصر على تقديم إجابات جاهزة؛ بل يبدأ بالطرح الصحيح للسؤال المناسب، في اللحظة المناسبة. تمامًا كما علّم سقراط منذ آلاف السنين، نحن نؤمن بأن دورنا هو الإرشاد، التحدي، وتمكين الطلاب من الوصول إلى الفهم والاستنتاج بأنفسهم. كل محادثة مع daiZ مصممة لتوجيه عملية تفكير عميقة، وليس لإعطاء حلول جاهزة.</p>
-      <p data-i18n="aboutP4">اللغة هي البيت، والتعلم يجب أن يشعرك بأنه في بيتك. سواء بالعبرية أو بالعربية – فإن النفاذ اللغوي والثقافي ليس امتيازًا، بل هو نقطة انطلاق أساسية. كل وحدة تعليمية لدينا تُبنى بدقة متناهية وتُصمم خصيصًا وفقًا للمنهاج الدراسي الرسمي (فالترجمة ليست سوى الغلاف، أما الجوهر فهو الملاءمة التربوية الكاملة).</p>
-      <p data-i18n="aboutP5">التعليم النوعي هو حق أساسي، وليس امتيازًا ماليًا. الرؤية التي تدفعنا هي ضمان أن كل عائلة، في أي حي أو بلد، تستطيع أن توفر لنفسها دعمًا نوعيًا ومتقدمًا – دون الارتهان للتكاليف الباهظة للدروس الخصوصية.</p>
-      <p data-i18n="aboutP6">لهذا السبب نحن هنا، وهذا هو وعدنا.</p>
-      <div class="about-name" data-i18n="aboutName">فريق daiZ</div>
-    </div>
-  </div>
-
-  <div class="contact-block">
-    <h3 data-i18n="contactTitle">بدكم تحكوا معنا؟</h3>
-    <div class="contact-actions">
-      <a class="contact-btn whatsapp" href="https://wa.me/972500000000?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"/></svg>
-        <span data-i18n="contactWa">واتساب</span>
-      </a>
-      <a class="contact-btn" href="mailto:info@daiz.co.il">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#1B2A44" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-        <span>info@daiz.co.il</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div data-i18n="footer">daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية</div>
-  <div class="footer-links">
-    <a href="/terms.html" data-i18n="footerTerms">شروط الاستخدام</a>
-    <a href="/privacy.html" data-i18n="footerPrivacy">سياسة الخصوصية</a>
-  </div>
-  <div class="footer-copyright" data-i18n="footerCopyright">© 2026 daiZ. جميع الحقوق محفوظة.</div>
-</footer>
-
-<a class="whatsapp-fab" href="https://wa.me/972500000000?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%9C%D7%A4%D7%A0%D7%99%20%D7%A9%D7%90%D7%A0%D7%A8%D7%A9%D7%9D" target="_blank" rel="noopener" aria-label="أسئلة عبر واتساب">
-  <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"/></svg>
-</a>
-
-<div class="floating-cta">
-  <span data-i18n="floatingCtaText">جاهزين تبدأوا؟</span>
-  <a href="#signup" class="btn btn-primary" data-i18n="floatingCtaBtn">سجّل الآن</a>
+<div class="brand">
+<svg class="mark" height="44" viewbox="0 0 120 120" width="44" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="navGoldGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#F0C670"></stop>
+<stop offset="100%" stop-color="#C6923A"></stop>
+</lineargradient>
+</defs>
+<rect fill="#2F6F5E" height="120" rx="27" width="120"></rect>
+<text fill="#FBF7EE" font-family="Poppins,Arial" font-size="46" font-weight="800" text-anchor="middle" x="60" y="80">d<tspan fill="url(#navGoldGrad)">Z</tspan></text>
+</svg>
+<div class="brand-text">
+<span class="wordmark"><span data-i18n="brand">dai<span style="color:#C6923A">Z</span></span><span class="ai-pill">AI</span></span>
+<span class="tagline" data-i18n="tagline">كل يوم، بجانبك</span>
 </div>
-
+</div>
+<div class="lang-toggle">
+<a id="btn-he" href="/">עברית</a>
+<a id="btn-ar" class="active" href="/ar/" onclick="setLang('ar'); return false;">العربية</a>
+</div>
+</nav>
+<section class="hero">
+<div class="badge" data-i18n="badge">تعلّم شخصي · للاعدادي والثانوي</div>
+<h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — معلّم خاص عبر واتساب وعبر الموقع، على مدار 24 ساعة</h1>
+<p class="sub" data-i18n="heroSub">ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.</p>
+<div class="ai-note" data-i18n="aiNote">🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span></div>
+<div class="subjects-pills" data-i18n="subjectsPills"><span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span></div>
+<div class="cta-row">
+<a class="btn btn-primary" data-i18n="ctaMain" href="#signup">ابدأ الاشتراك الشهري</a>
+<a class="btn btn-ghost" data-i18n="ctaSecondary" href="#how">كيف يعمل؟</a>
+</div>
+</section>
+<section id="demo">
+<h2 class="section-title" data-i18n="demoTitle">جربوا بأنفسكم: هيك بيعلّم المعلّم</h2>
+<div class="demo-topics" id="demoTopics">
+<button class="demo-topic-btn" data-topic="fractions" onclick="playDemo('fractions')">🍕 <span data-i18n="demoTopic1">كسور بمقامات مختلفة</span></button>
+<button class="demo-topic-btn" data-topic="word" onclick="playDemo('word')">📖 <span data-i18n="demoTopic2">مسائل لفظية</span></button>
+<button class="demo-topic-btn" data-topic="percent" onclick="playDemo('percent')">📊 <span data-i18n="demoTopic3">نسب مئوية</span></button>
+<button class="demo-topic-btn" data-topic="coords" onclick="playDemo('coords')">📐 <span data-i18n="demoTopic4">محاور الإحداثيات</span></button>
+</div>
+<div class="demo-window">
+<div class="demo-header">
+<span class="label" data-i18n="demoLabel">درس تجريبي - عرض توضيحي</span>
+<button class="demo-replay" id="demoReplay" style="display:none" onclick="replayDemo()" data-i18n="demoReplay">↻ مرة تانية</button>
+</div>
+<div class="demo-body" id="demoBody"><div class="demo-empty" id="demoEmpty" data-i18n="demoEmpty">اختاروا موضوع للبدء</div></div>
+</div>
+</section>
+<section id="how">
+<h2 class="section-title" data-i18n="howSub">أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي</h2>
+<div class="steps">
+<div class="step-card">
+<div class="step-num">1</div>
+<h3 data-i18n="step1Title">التسجيل في صفحة واحدة</h3>
+<p data-i18n="step1Body">اختيار الصف والموضوع، وإدخال رقم واتساب الطالب.</p>
+</div>
+<div class="step-card">
+<div class="step-num">2</div>
+<h3 data-i18n="step2Title">تُفتح محادثة على واتساب</h3>
+<p data-i18n="step2Body">المعلّم الخاص يبدأ بالكتابة أولاً، يقدّم نفسه ويسأل من أين نبدأ.</p>
+</div>
+<div class="step-card">
+<div class="step-num">3</div>
+<h3 data-i18n="step3Title">التعلّم بالوتيرة الخاصة بالطالب</h3>
+<p data-i18n="step3Body">النموذج يتكيّف مع مستوى كل طالب، وبالسرعة التي تناسبه.</p>
+</div>
+<div class="step-card">
+<div class="step-num">4</div>
+<h3 data-i18n="step4Title">الأهل يتلقّون تحديثاً أسبوعياً</h3>
+<p data-i18n="step4Body">تقرير أسبوعي قصير على رقم هاتف الأهل، عن المواد اللي تدرّبنا عليها خلال الأسبوع.</p>
+</div>
+</div>
+</section>
+<section id="feelings">
+<h2 class="section-title" data-i18n="feelingsTitle">شو اللي فعلاً بيتغيّر</h2>
+<div class="feelings-grid">
+<div class="feeling-card">
+<div class="feeling-icon">💡</div>
+<div>
+<h4 data-i18n="feel1Title">اللحظة يلي بتنور</h4>
+<p data-i18n="feel1Body">لما ابنك يقول فجأة "فهمت!" وعيونه بتلمع — مش مجرد حفظ جواب، إنما فعلاً استوعب.</p>
+</div>
+</div>
+<div class="feeling-card">
+<div class="feeling-icon">📈</div>
+<div>
+<h4 data-i18n="feel2Title">تقدّم بتشوفه</h4>
+<p data-i18n="feel2Body">تمرين مستمر بينعكس على العلامات يوم بعد يوم .</p>
+</div>
+</div>
+<div class="feeling-card">
+<div class="feeling-icon">😌</div>
+<div>
+<h4 data-i18n="feel3Title">أهل بيقدروا أخيرًا ياخدوا نفس</h4>
+<p data-i18n="feel3Body">بيعرفوا إنه في معلم خاص لابنك ، 24 ساعة باليوم، يرافقه في مسيرة النجاح.</p>
+</div>
+</div>
+<div class="feeling-card">
+<div class="feeling-icon">💪</div>
+<div>
+<h4 data-i18n="feel4Title">ثقة بالنفس، مش بس علامة</h4>
+<p data-i18n="feel4Body">الطالب يؤمن بإنه قادر على مواجهة مسألة صعبة.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="pricing-wrap">
+<div class="price-card">
+<div data-i18n="priceLabel">اشتراك شهري، لطالب واحد</div>
+<div class="amount">₪120</div>
+<div class="per" data-i18n="perMonth">يمكن الإلغاء في أي وقت</div>
+<ul>
+<li data-i18n="perk1">محادثة مفتوحة على واتساب على مدار الساعة</li>
+<li data-i18n="perk2">متوافق مع المنهاج المعتمد رسميا</li>
+<li data-i18n="perk3">تقرير تقدّم أسبوعي للأهل</li>
+</ul>
+<a class="btn btn-primary" data-i18n="priceBtn" href="#signup">اشترك الآن</a>
+</div>
+</section>
+<section id="curriculum-proof">
+<p class="proof-note" data-i18n="proofNote">كل وحدة تعليمية مبنية على أساس مناهج وزارة التربية والتعليم الرسمية، حسب الصف والمجال — ليتمرّن الطالب بالضبط على ما يتعلّمه في الصف، لا مواد عشوائية من الإنترنت.</p>
+</section>
+<section id="trust-safety">
+<h2 class="section-title" data-i18n="trustTitle">الأمان والشفافية أولاً</h2>
+<p class="section-sub" data-i18n="trustSub">نتفهّم إنه الموضوع عن ابنك — هيك بالضبط النموذج شغال من وراء الكواليس</p>
+<div class="trust-grid">
+<div class="trust-card">
+<div class="trust-icon">📚</div>
+<h4 data-i18n="trust1Title">فقط مواد رسمية</h4>
+<p data-i18n="trust1Body">النموذج يعلّم فقط حسب مناهج وزارة التربية والتعليم الرسمية — مش محتوى عشوائي من الإنترنت.</p>
+</div>
+<div class="trust-card">
+<div class="trust-icon">👨‍👩‍👧</div>
+<h4 data-i18n="trust2Title">الأهل دايمًا بالصورة</h4>
+<p data-i18n="trust2Body">تقرير أسبوعي قصير يُرسل لرقم الأهل الخاص.</p>
+</div>
+<div class="trust-card">
+<div class="trust-icon">🔒</div>
+<h4 data-i18n="trust3Title">بدون مشاركة معلومات زايدة</h4>
+<p data-i18n="trust3Body">المحادثات تُستخدم لغرض التعليم فقط، وما بتنباع أو تتشارك مع جهة ثالثة.</p>
+</div>
+<div class="trust-card">
+<div class="trust-icon">✋</div>
+<h4 data-i18n="trust4Title">سيطرة كاملة، دايمًا</h4>
+<p data-i18n="trust4Body">يمكن إيقاف أو تعليق أو إلغاء الاشتراك بأي لحظة، بدون أسئلة وبدون التزام.</p>
+</div>
+<div class="trust-card">
+<div class="trust-icon">💰</div>
+<h4 data-i18n="trust5Title">استرجاع كامل خلال 7 أيام</h4>
+<p data-i18n="trust5Body">مش راضين؟ بترجعلكم كل المبلغ، بلا أي أسئلة.</p>
+</div>
+</div>
+</section>
+<section id="compare">
+<h2 class="section-title" data-i18n="compareTitle">كيف نقارن مقابل معلّم خصوصي عادي</h2>
+<p class="section-sub" data-i18n="compareSub">نفس جودة التعليم الصبور والشخصي - بتكلفة أقل بكثير</p>
+<table class="compare-table">
+<tbody>
+<tr><th></th><th data-i18n="compareColHuman">معلّم خصوصي عادي</th><th class="highlight" data-i18n="compareColUs">daiZ</th></tr>
+<tr><td data-i18n="compareRow1">التكلفة الشهرية</td><td>600–2,400 ₪</td><td class="highlight">120–220 ₪</td></tr>
+<tr><td data-i18n="compareRow2">التوفر</td><td data-i18n="compareRow2Human">مرة أو مرتين بالأسبوع</td><td class="highlight" data-i18n="compareRow2Us">24/7 - بأي وقت</td></tr>
+<tr><td data-i18n="compareRow3">الصبر</td><td data-i18n="compareRow3Human">يعتمد على المعلّم</td><td class="highlight" data-i18n="compareRow3Us">بلا حدود</td></tr>
+</tbody>
+</table>
+</section>
+<section id="signup">
+<h2 class="section-title" data-i18n="formTitle">لنبدأ</h2>
+<p class="section-sub" data-i18n="formSub">تعبئة النموذج تستغرق أقل من دقيقة</p>
+<div class="form-box">
+<form onsubmit="event.preventDefault(); alert(currentLang==='he' ? 'תודה! זהו דף הדגמה בלבד.' : 'شكراً! هذه صفحة تجريبية فقط.');">
+<div class="field">
+<label data-i18n="labelChildName">اسم الطالب</label>
+<input required="" type="text"/>
+</div>
+<div class="two-col">
+<div class="field">
+<label data-i18n="labelGrade">الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span></label>
+<select id="gradeSelect" onchange="onGradeChange()">
+<option data-i18n="grade5" value="ה">الصف الخامس</option>
+<option data-i18n="grade6" value="ו">الصف السادس</option>
+<option data-i18n="grade7" value="ז">الصف السابع</option>
+<option data-i18n="grade8" value="ח">الصف الثامن</option>
+<option data-i18n="grade9" value="ט">الصف التاسع</option>
+<option data-i18n="grade10" value="י">الصف العاشر</option>
+<option data-i18n="grade11" value="יא">الصف الحادي عشر</option>
+<option data-i18n="grade12" value="יב">الصف الثاني عشر</option>
+</select>
+</div>
+<div class="field">
+<label data-i18n="labelLangPref">لغة التدريس</label>
+<select id="langPrefSelect" onchange="onLangPrefChange()">
+<option value="he">עברית</option>
+<option value="ar">العربية</option>
+</select>
+</div>
+</div>
+<div class="field">
+<label data-i18n="labelSubjects">الماده التي تريد تسجيل ابنك فيها</label>
+<div class="channel-grid" id="subjectsGridHebrew">
+<label class="channel-card">
+<input checked="" name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="math"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjMath">الرياضيات (بالعبرية)</span></div>
+</label>
+<label class="channel-card">
+<input name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="hebrew-grammar"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjHebrewGrammar">قواعد اللغة العبرية</span></div>
+</label>
+<label class="channel-card">
+<input name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="english"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjEnglish">الإنجليزية</span></div>
+</label>
+</div>
+<div class="channel-grid" id="subjectsGridArabic" style="display:none">
+<label class="channel-card">
+<input checked="" name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="math-arabic"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjMathArabic">الرياضيات</span></div>
+</label>
+<label class="channel-card">
+<input name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="arabic-grammar"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjArabicGrammar">قواعد اللغة العربية</span></div>
+</label>
+<label class="channel-card">
+<input name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="hebrew-second-language"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjHebrewL2">العبرية</span></div>
+</label>
+<label class="channel-card">
+<input name="subjects" onchange="updateSubjectsPrice()" type="checkbox" value="english"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="subjEnglish">الإنجليزية</span></div>
+</label>
+</div>
+<div class="subjects-note" id="subjectsPriceNote"></div>
+</div>
+<div class="field" id="mathLevelField">
+<label data-i18n="labelMathLevel">كم وحدة دراسة بالرياضيات؟ <span class="hint" data-i18n="hintMathLevel">(يخص الصف العاشر فما فوق)</span></label>
+<select id="mathLevelSelect">
+<option value="3" data-i18n="mathLevel3">3 وحدات</option>
+<option value="4" data-i18n="mathLevel4">4 وحدات</option>
+<option value="5" data-i18n="mathLevel5">5 وحدات</option>
+</select>
+</div>
+<div class="field">
+<label data-i18n="labelChannel">كيف بدو الطالب/ة يتعلّم/تتعلّم؟</label>
+<div class="channel-grid">
+<label class="channel-card">
+<input checked="" name="channel" onchange="onChannelChange()" type="radio" value="whatsapp"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWhatsapp">واتساب</span></div>
+<div class="ch-hint" data-i18n="channelWhatsappHint">بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب</div>
+</label>
+<label class="channel-card">
+<input name="channel" onchange="onChannelChange()" type="radio" value="website"/>
+<div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWebsite">محادثة عبر الموقع</span></div>
+<div class="ch-hint" data-i18n="channelWebsiteHint">يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع</div>
+</label>
+</div>
+</div>
+<div class="field" id="childPhoneField">
+<label data-i18n="labelChildPhone">رقم واتساب الطالب</label>
+<input id="childPhoneInput" placeholder="050-1234567" required="" type="tel"/>
+</div>
+<div class="channel-note" data-i18n="channelNoteWebsite" id="channelNoteWebsite" style="display:none">رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.</div>
+<div class="field">
+<label data-i18n="labelParentPhone">رقم هاتف أحد الوالدين</label>
+<input placeholder="050-1234567" required="" type="tel"/>
+</div>
+<button class="btn btn-primary submit-btn" data-i18n="formSubmit" id="formSubmitBtn" type="submit">ابدأ الاشتراك — ₪120 شهرياً</button>
+<p class="form-note" data-i18n="formNote">بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.</p>
+</form>
+</div>
+</section>
+<section id="testimonials">
+<h2 class="section-title" data-i18n="testiTitle">طلاب جرّبوا المعلّم... وهذا ما قالوه</h2>
+<p class="section-sub" data-i18n="testiSub">أمثلة على التوصيات — مخصّصة لتُستبدل بتوصيات حقيقية من طلاب</p>
+<div class="steps">
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi1Quote">فهمت أخيراً الكسور، من دون أن أشعر بالإحراج من تكرار السؤال.</p>
+<h3 data-i18n="testi1Name" style="margin-top:10px;">نور، الصف الخامس</h3>
+</div>
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi2Quote">أقدر أسأل حتى الساعة عشرة ليلاً قبل الامتحان، ويردّ فوراً.</p>
+<h3 data-i18n="testi2Name" style="margin-top:10px;">عادل، الصف الثامن</h3>
+</div>
+<div class="step-card">
+<div class="step-num">"</div>
+<p data-i18n="testi3Quote">ما بيعطيني الجواب مباشرة، بل يساعدني أوصله لحالي.</p>
+<h3 data-i18n="testi3Name" style="margin-top:10px;">مايا، الصف العاشر</h3>
+</div>
+</div>
+</section>
+<section id="faq">
+<h2 class="section-title" data-i18n="faqTitle">أسئلة شائعة</h2>
+<div class="faq-list">
+<details class="faq-item">
+<summary data-i18n="faq1Q">هل هذا بديل عن دروس خصوصية أو مساعدة من معلم المدرسة؟</summary>
+<p data-i18n="faq1A">مش بالضرورة — هذا مكمّل. daiZ يقدّم إجابة متوفرة على مدار الساعة للتمرين والأسئلة اليومية، بس ما بيعوّض عن التواصل الإنساني عند الحاجة.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq2Q">شو بيصير إذا ابني/بنتي بيتقدّم بوتيرة مختلفة عن المعدل؟</summary>
+<p data-i18n="faq2A">الوكيل يتكيّف مع وتيرة كل طالب/ة شخصيًا — ما في «معدل صف»، في بس وتيرة ابنكم/ابنتكم.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq3Q">كيف ألغي الاشتراك؟</summary>
+<p data-i18n="faq3A">برسالة بسيطة عبر واتساب، بأي لحظة — بدون استمارات، بدون مكالمات هاتفية، بدون فترة التزام.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq4Q">شو بيصير إذا الوكيل ما بيعرف يجاوب على سؤال معيّن؟</summary>
+<p data-i18n="faq4A">رح يقول هيك بصراحة، ويوجّه الطالب/ة للمكان الصحيح (معلم، أهل) بدل ما يخمّن جواب.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq5Q">هل معلومات ابني/بنتي بأمان؟</summary>
+<p data-i18n="faq5A">المحادثات تُستخدم فقط لغرض التعليم. ما في بيع أو مشاركة معلومات مع جهة ثالثة لأغراض إعلانية.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq6Q">شو الفرق بينه وبين ChatGPT أو Gemini؟</summary>
+<p data-i18n="faq6A">بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.</p>
+</details>
+</div>
+</section>
+<section id="about">
+<h2 class="section-title" data-i18n="aboutTitle">من نحن</h2>
+<div class="about-grid">
+<div class="about-avatar">
+<svg fill="none" height="30" viewbox="0 0 24 24" width="30"><circle cx="12" cy="8" fill="#FBF7EE" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="#FBF7EE" stroke-linecap="round" stroke-width="2"></path></svg>
+</div>
+<div class="about-body">
+<p data-i18n="aboutP2">أنشأنا daiZ من منطلق إيمان بسيط ولكنه عميق: كل طالب وطالبة يستحقون غلافًا تعليميًا شخصيًا، صبورًا ومحددًا بالظبط – في أي ساعة من اليوم، وبانسجام تام مع ما يحدث فعليًا داخل الصف. نحن لسنا مجرد "مساعد دراسي" عشوائي آخر من الإنترنت، بل شركاء في المسار التعليمي.</p>
+<p data-i18n="aboutP3">فلسفتنا تستند إلى حكمة عريقة بروح عصرنا. التعلم الحقيقي والمؤثر لا يقتصر على تقديم إجابات جاهزة؛ بل يبدأ بالطرح الصحيح للسؤال المناسب، في اللحظة المناسبة. تمامًا كما علّم سقراط منذ آلاف السنين، نحن نؤمن بأن دورنا هو الإرشاد، التحدي، وتمكين الطلاب من الوصول إلى الفهم والاستنتاج بأنفسهم. كل محادثة مع daiZ مصممة لتوجيه عملية تفكير عميقة، وليس لإعطاء حلول جاهزة.</p>
+<p data-i18n="aboutP4">اللغة هي البيت، والتعلم يجب أن يشعرك بأنه في بيتك. سواء بالعبرية أو بالعربية – فإن النفاذ اللغوي والثقافي ليس امتيازًا، بل هو نقطة انطلاق أساسية. كل وحدة تعليمية لدينا تُبنى بدقة متناهية وتُصمم خصيصًا وفقًا للمنهاج الدراسي الرسمي (فالترجمة ليست سوى الغلاف، أما الجوهر فهو الملاءمة التربوية الكاملة).</p>
+<p data-i18n="aboutP5">التعليم النوعي هو حق أساسي، وليس امتيازًا ماليًا. الرؤية التي تدفعنا هي ضمان أن كل عائلة، في أي حي أو بلد، تستطيع أن توفر لنفسها دعمًا نوعيًا ومتقدمًا – دون الارتهان للتكاليف الباهظة للدروس الخصوصية.</p>
+<p data-i18n="aboutP6">لهذا السبب نحن هنا، وهذا هو وعدنا.</p>
+<div class="about-name" data-i18n="aboutName">فريق daiZ</div>
+</div>
+</div>
+<div class="contact-block">
+<h3 data-i18n="contactTitle">بدكم تحكوا معنا؟</h3>
+<div class="contact-actions">
+<a class="contact-btn whatsapp" href="https://wa.me/972553301316?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94" rel="noopener" target="_blank">
+<svg fill="white" viewbox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"></path></svg>
+<span data-i18n="contactWa">واتساب</span>
+</a>
+<a class="contact-btn" href="mailto:info@daiz.co.il">
+<svg fill="none" stroke="#1B2A44" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="18" x="3" y="5"></rect><path d="M3 7l9 6 9-6"></path></svg>
+<span>info@daiz.co.il</span>
+</a>
+</div>
+</div>
+</section>
+<footer>
+<div data-i18n="footer">daiZ · معلّمك الخاص، عبر واتساب وعبر الموقع · عبرية وعربية</div>
+<div class="footer-links">
+<a href="/terms.html" data-i18n="footerTerms">شروط الاستخدام</a>
+<a href="/privacy.html" data-i18n="footerPrivacy">سياسة الخصوصية</a>
+</div>
+<div class="footer-copyright" data-i18n="footerCopyright">© 2026 daiZ. جميع الحقوق محفوظة.</div>
+</footer>
+<a aria-label="أسئلة عبر واتساب" class="whatsapp-fab" href="https://wa.me/972553301316?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%9C%D7%A4%D7%A0%D7%99%20%D7%A9%D7%90%D7%A0%D7%A8%D7%A9%D7%9D" rel="noopener" target="_blank">
+<svg fill="white" viewbox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.005c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97s.73-2.11 1-2.4c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.7-.17 1.38Z"></path></svg>
+</a>
+<div class="floating-cta">
+<span data-i18n="floatingCtaText">جاهزين تبدأوا؟</span>
+<a class="btn btn-primary" data-i18n="floatingCtaBtn" href="#signup">سجّل الآن</a>
+</div>
 <script>
   const translations = {
     he: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"כל יום, לצידך",
-      badge:"לימוד אישי · יסודי, חטיבה ותיכון",
-      heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ, 24 שעות ביממה',
+      badge:"לימוד אישי · חטיבה ותיכון",
+      heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ ובאתר, 24 שעות ביממה',
       heroSub:"התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.",
       chatOnline:"מקוון עכשיו",
       chatMsg1:"שלום! אני המורה הפרטי שלך. אני כאן כדי לעזור לך להתקדם ולהגיע לציון שתמיד רצית 💪",
@@ -940,32 +837,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       demoLabel:'שיעור לדוגמה — הדגמה',
       demoReplay:'↻ שוב',
       demoEmpty:'בחרו נושא כדי להתחיל',
-      hwTitle:'תקוע בשיעורי בית? פשוט תצלם את השאלה',
-      hwSub:'בלי להקליד את כל התרגיל - התלמיד מצלם את השאלה מהמחברת, והמורה מנתח ועוזר לפתור, צעד אחרי צעד',
-      hwStep1Title:'מצלמים את השאלה',
-      hwStep1Body:'גם תרגיל בכתב יד, גם עמוד שלם מהמחברת או מהספר - אין צורך להקליד כלום',
-      hwStep2Title:'המורה מנתח ומבין',
-      hwStep2Body:'קורא את השאלה מהתמונה בדיוק כמו שהיא כתובה, כולל נוסחאות וציורים',
-      hwStep3Title:'פתרון מודרך, לא מוכן',
-      hwStep3Body:'בדיוק כמו בטקסט - שאלות מנחות שמובילות להבנה, לא תשובה מוכנה שמעתיקים',
-      hwMockLabel:'שיחה לדוגמה',
-      hwChatCaption:'עזרה בבקשה 🙏',
-      hwChatBot:'רואה! זו משוואה עם x. קודם כל - מה השלב הראשון כדי לבודד את x?',
       labelGrade:'כיתה <span class="hint">(כדי לדעת מאיזה ספר ללמד)</span>',
       hintGrade:"(כדי לדעת מאיזה ספר ללמד)",
       grade1:"כיתה א'", grade2:"כיתה ב'", grade3:"כיתה ג'", grade4:"כיתה ד'",
       grade5:"כיתה ה'", grade6:"כיתה ו'", grade7:"כיתה ז'", grade8:"כיתה ח'",
       grade9:"כיתה ט'", grade10:"כיתה י'", grade11:'כיתה י"א', grade12:'כיתה י"ב',
       testiTitle:"מה אומרים תלמידים שכבר ניסו",
-      testiSub:"תלמידים שכבר לומדים עם daiZ, בעצמם",
-      testi1Quote:"כשעברתי לחטיבה הכל הפך להיות בהרבה יותר קשה ומהיר. מול המורה בכיתה פחדתי לשאול שוב ושוב כדי לא לצאת \"חופר\", אבל עם daiZ שאלתי אותו איזה חמש פעמים את אותה שאלה עד שהבנתי. הוא הסביר לי את זה ממש כמו חבר ובלי לשפוט.",
-      testi1Name:"נועם, כיתה ז'",
-      testi2Quote:"תמיד כשאני יושב על שיעורי בית בערב אני נתקע ומאבד סבלנות. daiZ לא סתם זורק לי את התשובה הסופית כדי שאעתיק, אלא ממש מסביר לי שלב אחרי שלב איך לפתור בעצמי. פתאום לעשות שיעורים פחות מרגיש כמו סיוט.",
-      testi2Name:"עמית, כיתה ט'",
-      testi3Quote:"העומס של הבגרויות בכיתה י\"א הוא מטורף. היו לי לילות לפני מתכונות שישבתי ב-11 בלילה ולא היה לי את מי לשאול. daiZ פשוט זמין 24/7, עונה בשנייה ומפשט אפילו את החומר הכי מסובך. הוא פשוט הציל אותי בבגרויות.",
-      testi3Name:"שירה, כיתה י\"א",
-      testi4Quote:"מה שמגניב זה שהוא קולט איך הכי נוח לי ללמוד. ביקשתי ממנו להסביר לי תרגיל קשה בעזרת דוגמה מעולם הכדורגל והוא אשכרה עשה את זה וזה עבד! זה מרגיש כאילו יש לי מורה פרטי שמבין אותי בול.",
-      testi4Name:"רועי, כיתה י'",
+      testiSub:"דוגמאות להמלצות — מיועד להחלפה בהמלצות אמיתיות מתלמידים",
+      testi1Quote:"הבנתי סוף סוף שברים, בלי שהרגשתי מביך שאני שואל שוב ושוב.",
+      testi1Name:"נועה, כיתה ה'",
+      testi2Quote:"אפשר לשאול גם בעשר בלילה לפני מבחן, וזה עונה מיד.",
+      testi2Name:"עאדל, כיתה ח'",
+      testi3Quote:"זה לא נותן לי את התשובה ישר, אלא עוזר לי להגיע אליה לבד.",
+      testi3Name:"מאיה, כיתה י'",
       proofTitle:"בדיוק לפי הספר שלכם",
       proofSub:"ככה נראה שיעור אמיתי — שאלה, ופתרון מוסבר צעד-אחר-צעד",
       ex1Tag:"כיתה ז' · משוואות",
@@ -992,6 +876,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       subjMathArabic:"מתמטיקה (בערבית)",
       subjArabicGrammar:"قواعد اللغة العربية",
       subjHebrewL2:"העברית",
+      labelMathLevel:'כמה יחידות לימוד במתמטיקה?',
+      hintMathLevel:"(רלוונטי מכיתה י' ומעלה)",
+      mathLevel3:'3 יח"ל',
+      mathLevel4:'4 יח"ל',
+      mathLevel5:'5 יח"ל',
       labelChannel:"איך התלמיד/ה ילמד/תלמד?",
       channelWhatsapp:"וואטסאפ",
       channelWhatsappHint:"הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ",
@@ -1002,7 +891,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
       hintParentPhone:"(לקבלת עדכון התקדמות שבועי בלבד)",
-      labelTosAgree:'קראתי ואני מסכים/ה ל<a href="/terms.html" target="_blank">תנאי השימוש</a> ול<a href="/privacy.html" target="_blank">מדיניות הפרטיות</a>',
       formSubmit:"התחל מנוי — ₪120 לחודש",
       formNote:"בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.",
       aboutTitle:"מי אנחנו",
@@ -1061,7 +949,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       faq6A:"בשני דברים מרכזיים: daiZ מלמד אך ורק מתוך התוכן הרשמי של משרד החינוך, מותאם בדיוק לכיתה ולתוכנית הלימודים - לא ידע כללי מהאינטרנט. וגם, הוא לא נותן תשובה מוכנה מיד, אלא מלמד ברוח סוקרטס - שואל שאלות מנחות שמובילות את התלמיד להבין בעצמו.",
       floatingCtaText:"מוכנים להתחיל?",
       floatingCtaBtn:"הרשמה",
-      footer:"daiZ · המורה הפרטי שלך בוואטסאפ · עברית וערבית",
+      footer:"daiZ · המורה הפרטי שלך, בוואטסאפ ובאתר · עברית וערבית",
       footerTerms:"תנאי שימוש",
       footerPrivacy:"מדיניות פרטיות",
       footerCopyright:"© 2026 daiZ. כל הזכויות שמורות.",
@@ -1069,8 +957,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"كل يوم، بجانبك",
-      badge:"تعلّم شخصي · للابتدائي للاعدادي والثانوي",
-      heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب، على مدار 24 ساعة',
+      badge:"تعلّم شخصي · للاعدادي والثانوي",
+      heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب وعبر الموقع، على مدار 24 ساعة',
       heroSub:"ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.",
       chatOnline:"متصل الآن",
       chatMsg1:"أهلاً بك! أنا معلّمك الخاص، وأنا هنا لمساعدتك على التقدّم والوصول إلى العلامة التي حلمت بها دائماً 💪",
@@ -1107,32 +995,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       demoLabel:'درس تجريبي - عرض توضيحي',
       demoReplay:'↻ مرة تانية',
       demoEmpty:'اختاروا موضوع للبدء',
-      hwTitle:'الوظيفة صعبة عليك؟ الحل بصورة وحدة',
-      hwSub:'بدون كتابة التمرين كامل - الطالب يصوّر السؤال من الدفتر، والمعلّم يحلّل ويساعد في الحل، خطوة بخطوة',
-      hwStep1Title:'صوّروا السؤال',
-      hwStep1Body:'حتى تمرين مكتوب بخط اليد، أو صفحة كاملة من الدفتر أو الكتاب - بلا حاجة لكتابة أي شي',
-      hwStep2Title:'المعلّم يحلّل ويفهم',
-      hwStep2Body:'يقرأ السؤال من الصورة بالضبط متل ما هو مكتوب، بما فيها المعادلات والرسومات',
-      hwStep3Title:'حل موجّه، مش جاهز',
-      hwStep3Body:'بالضبط متل النص - أسئلة موجّهة بتوصّل للفهم، مش جواب جاهز بينسخ',
-      hwMockLabel:'محادثة تجريبية',
-      hwChatCaption:'مساعدة لو سمحت 🙏',
-      hwChatBot:'شايف! هاي معادلة فيها x. أول شي - شو الخطوة الأولى لعزل x؟',
       labelGrade:'الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span>',
       hintGrade:"(لمعرفة الكتاب المناسب للتدريس)",
       grade1:"الصف الأول", grade2:"الصف الثاني", grade3:"الصف الثالث", grade4:"الصف الرابع",
       grade5:"الصف الخامس", grade6:"الصف السادس", grade7:"الصف السابع", grade8:"الصف الثامن",
       grade9:"الصف التاسع", grade10:"الصف العاشر", grade11:"الصف الحادي عشر", grade12:"الصف الثاني عشر",
       testiTitle:"طلاب جرّبوا المعلّم... وهذا ما قالوه",
-      testiSub:"طلاب يتعلّمون فعلاً مع daiZ، بكلماتهم",
-      testi1Quote:"كل عمرها الرياضيات كانت تعمل لي توتر، خصوصاً لما المسألة تكون معقدة. daiZ بيعرف كيف يجزّئ السؤال لأجزاء صغيرة ويفهمني إياها حبة حبة. لأول مرة بفوت على امتحان وأنا حاسس حالي جاهز ومطمئن.",
-      testi1Name:"كريم - الصف الثامن",
-      testi2Quote:"أحلى إشي إنه ما بتفرق معه قديش الوقت متأخر أو كم مرة عدت السؤال. لما كنت أستحي أسأل بالصف عشان ما يبين إني مش فاهمة، daiZ كان يرجع يشرح لي بالوقت والطريقة اللي بتناسبني أنا.",
-      testi2Name:"ليلى - الصف العاشر",
-      testi3Quote:"في البجروت الوقت ضيق والمواد كثيرة. بدل ما أضيع ساعات وأنا أدور على شرح أو حل بالإنترنت، بسأله وبحصل على إجابة دقيقة ومباشرة بتوفر عليّ وقت وجهد خرافي.",
-      testi3Name:"يوسف - الصف الحادي عشر",
-      testi4Quote:"مش بس بيعطيني الشرح، كمان بيعمل لي اختبارات صغيرة ومراجعة عشان يتأكد إن المعلومة ثبتت بعقلي. طريقة الشرح تبعته خلتني أحب مواد كنت أعتبرها ممله وصعبة.",
-      testi4Name:"رزان - الصف الثاني عشر",
+      testiSub:"أمثلة على التوصيات — مخصّصة لتُستبدل بتوصيات حقيقية من طلاب",
+      testi1Quote:"فهمت أخيراً الكسور، من دون أن أشعر بالإحراج من تكرار السؤال.",
+      testi1Name:"نور، الصف الخامس",
+      testi2Quote:"أقدر أسأل حتى الساعة عشرة ليلاً قبل الامتحان، ويردّ فوراً.",
+      testi2Name:"عادل، الصف الثامن",
+      testi3Quote:"ما بيعطيني الجواب مباشرة، بل يساعدني أوصله لحالي.",
+      testi3Name:"مايا، الصف العاشر",
       proofTitle:"بالضبط حسب منهاجكم",
       proofSub:"هكذا يبدو الدرس الحقيقي — سؤال، وحل مشروح خطوة بخطوة",
       ex1Tag:"الصف السابع · معادلات",
@@ -1159,6 +1034,11 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       subjMathArabic:"الرياضيات",
       subjArabicGrammar:"قواعد اللغة العربية",
       subjHebrewL2:"العبرية",
+      labelMathLevel:'كم وحدة دراسة بالرياضيات؟',
+      hintMathLevel:"(يخص الصف العاشر فما فوق)",
+      mathLevel3:'3 وحدات',
+      mathLevel4:'4 وحدات',
+      mathLevel5:'5 وحدات',
       labelChannel:"كيف بدو الطالب/ة يتعلّم/تتعلّم؟",
       channelWhatsapp:"واتساب",
       channelWhatsappHint:"بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب",
@@ -1169,7 +1049,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
       hintParentPhone:"(لتلقي تحديث التقدّم الأسبوعي فقط)",
-      labelTosAgree:'قرأت وأوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و<a href="/privacy.html" target="_blank">سياسة الخصوصية</a>',
       formSubmit:"ابدأ الاشتراك — ₪120 شهرياً",
       formNote:"بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.",
       aboutTitle:"من نحن",
@@ -1228,7 +1107,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       faq6A:"بشيئين أساسيين: daiZ بيعلّم فقط من المحتوى الرسمي لوزارة التربية والتعليم، متوافق بالضبط مع الصف والمنهاج - مش معرفة عامة من الإنترنت. وكمان، هو ما بيعطي جواب جاهز فورًا، إنما بيعلّم بروح سقراط - بيسأل أسئلة موجّهة بتوصّل الطالب ليفهم بنفسه.",
       floatingCtaText:"جاهزين تبدأوا؟",
       floatingCtaBtn:"سجّل الآن",
-      footer:"daiZ · معلّمك الخاص عبر واتساب · عبرية وعربية",
+      footer:"daiZ · معلّمك الخاص، عبر واتساب وعبر الموقع · عبرية وعربية",
       footerTerms:"شروط الاستخدام",
       footerPrivacy:"سياسة الخصوصية",
       footerCopyright:"© 2026 daiZ. جميع الحقوق محفوظة.",
@@ -1247,6 +1126,26 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: (price) => 'ابدأ الاشتراك — ₪' + price + ' شهرياً'
   };
 
+  // Study-unit level (3/4/5 وحدات) is only relevant for MATH, and only
+  // from grade 10 up (matches the same split built into the tutor itself)
+  // - the field stays hidden otherwise so it never confuses a parent
+  // registering for, say, grade 7 or for English/grammar only.
+  const MATH_LEVEL_GRADES = ['י', 'יא', 'יב'];
+  function isMathChecked(){
+    const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
+    const mathValue = isArabicTrack ? 'math-arabic' : 'math';
+    const box = document.querySelector('input[name="subjects"][value="' + mathValue + '"]');
+    return !!(box && box.checked);
+  }
+  function updateMathLevelVisibility(){
+    const grade = document.getElementById('gradeSelect').value;
+    const show = isMathChecked() && MATH_LEVEL_GRADES.includes(grade);
+    document.getElementById('mathLevelField').style.display = show ? 'block' : 'none';
+  }
+  function onGradeChange(){
+    updateMathLevelVisibility();
+  }
+
   function onLangPrefChange(){
     const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
     document.getElementById('subjectsGridHebrew').style.display = isArabicTrack ? 'none' : 'grid';
@@ -1260,13 +1159,13 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     const checked = document.querySelectorAll('#' + activeGridId + ' input[name="subjects"]:checked').length;
     const submitBtn = document.getElementById('formSubmitBtn');
     const note = document.getElementById('subjectsPriceNote');
-    const tosOk = document.getElementById('tosCheckbox').checked;
+    updateMathLevelVisibility();
     if(checked === 0){
       note.textContent = SUBJECTS_NOTE_TEXT[currentLang][0];
       submitBtn.disabled = true;
       return;
     }
-    submitBtn.disabled = !tosOk;
+    submitBtn.disabled = false;
     const price = SUBJECT_PRICE_TABLE[checked] || SUBJECT_PRICE_TABLE[3];
     note.textContent = SUBJECTS_NOTE_TEXT[currentLang][checked] || SUBJECTS_NOTE_TEXT[currentLang][3];
     submitBtn.textContent = SUBMIT_BTN_TEXT[currentLang](price);
@@ -1279,6 +1178,31 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
   }
 
+  let currentDemoTopic = null;
+  let demoTimers = [];
+  window.playDemo = function(topic){
+    currentDemoTopic = topic;
+    document.querySelectorAll('.demo-topic-btn').forEach(b => b.classList.toggle('active', b.dataset.topic === topic));
+    demoTimers.forEach(t => clearTimeout(t));
+    demoTimers = [];
+    const body = document.getElementById('demoBody');
+    body.innerHTML = '';
+    const lines = demoData[currentLang][topic];
+    document.getElementById('demoReplay').style.display = 'inline-block';
+    lines.forEach((text, i) => {
+      const t = setTimeout(() => {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble ' + (i % 2 === 0 ? 'user' : 'bot');
+        bubble.textContent = text;
+        body.appendChild(bubble);
+        body.scrollTop = body.scrollHeight;
+      }, i * 850);
+      demoTimers.push(t);
+    });
+  };
+  window.replayDemo = function(){
+    if(currentDemoTopic) playDemo(currentDemoTopic);
+  };
   const demoData = {
     he: {
       fractions: ['איך פותרים 2/3 + 1/4? יש להם מכנים שונים...',
@@ -1357,31 +1281,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         'جذر 4 تربيع زائد 3 تربيع، يعني جذر 25، يعني 5!']
     }
   };
-  let currentDemoTopic = null;
-  let demoTimers = [];
-  window.playDemo = function(topic){
-    currentDemoTopic = topic;
-    document.querySelectorAll('.demo-topic-btn').forEach(b => b.classList.toggle('active', b.dataset.topic === topic));
-    demoTimers.forEach(t => clearTimeout(t));
-    demoTimers = [];
-    const body = document.getElementById('demoBody');
-    body.innerHTML = '';
-    const lines = demoData[currentLang][topic];
-    document.getElementById('demoReplay').style.display = 'inline-block';
-    lines.forEach((text, i) => {
-      const t = setTimeout(() => {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble ' + (i % 2 === 0 ? 'user' : 'bot');
-        bubble.textContent = text;
-        body.appendChild(bubble);
-        body.scrollTop = body.scrollHeight;
-      }, i * 850);
-      demoTimers.push(t);
-    });
-  };
-  window.replayDemo = function(){
-    if(currentDemoTopic) playDemo(currentDemoTopic);
-  };
 
   function setLang(lang){
     currentLang = lang;
@@ -1399,10 +1298,6 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     onLangPrefChange();
   }
 
-  // This is the Arabic-default page (daiz.co.il/ar/) - default to Arabic
-  // regardless of browser signals, so it matches what crawlers and users
-  // see in the raw HTML. An explicit ?lang=he still lets ad campaigns or
-  // a manual link force Hebrew on this URL if ever needed.
   (function chooseInitialLang(){
     const urlLang = new URLSearchParams(window.location.search).get('lang');
     let initialLang = 'ar';
@@ -1412,7 +1307,5 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     setLang(initialLang);
   })();
 </script>
-
-
 </body>
 </html>

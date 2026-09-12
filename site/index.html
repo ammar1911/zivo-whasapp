@@ -125,7 +125,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   }
   h1 .accent{color:var(--teal);}
   .hero p.sub{
-    font-size:16px;color:var(--muted);max-width:560px;margin:0 auto 30px;line-height:1.7;
+    font-size:19px;color:var(--ink);font-weight:600;max-width:620px;margin:0 auto 30px;line-height:1.7;
   }
   .ai-note{
     display:inline-flex;align-items:center;gap:10px;background:var(--teal-tint);border:1.5px solid var(--teal);
@@ -170,6 +170,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
      rather than giving it away, no signup required. */
   #demo{padding:70px 20px 20px;max-width:720px;margin:0 auto;}
   .demo-topics{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 22px;}
+  .demo-hint{ margin:-10px 0 22px; font-weight:700; color:var(--teal-dark); animation:demoHintBounce 1.8s ease-in-out infinite; }
+  @keyframes demoHintBounce{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(4px); } }
   .demo-topic-btn{
     background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 18px;
     font-weight:700;font-size:14px;cursor:pointer;color:var(--ink);transition:all 0.15s ease;
@@ -228,6 +230,33 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   }
   .step-card h3{font-size:15.5px;margin:0 0 6px;font-weight:800;}
   .step-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
+
+  /* HOW IT WORKS - redesigned as a message thread, echoing the product's
+     actual medium (WhatsApp), instead of generic numbered cards. */
+  .howto-thread{
+    max-width:560px;margin:0 auto;position:relative;
+  }
+  .howto-thread::before{
+    content:"";position:absolute;top:22px;bottom:22px;
+    inset-inline-start:21px;width:2px;
+    background:repeating-linear-gradient(to bottom, var(--line) 0, var(--line) 6px, transparent 6px, transparent 12px);
+  }
+  .howto-item{
+    position:relative;display:flex;gap:18px;padding-inline-start:0;
+  }
+  .howto-item:not(:last-child){ margin-bottom:26px; }
+  .howto-node{
+    position:relative;z-index:1;flex-shrink:0;width:44px;height:44px;border-radius:50%;
+    background:var(--paper);border:2px solid var(--teal);color:var(--teal);
+    display:flex;align-items:center;justify-content:center;font-size:19px;
+  }
+  .howto-bubble{
+    flex:1;background:#fff;border:1px solid var(--line);border-radius:14px;
+    border-start-start-radius:4px;padding:14px 18px;box-shadow:0 2px 8px rgba(30,42,68,0.05);
+    margin-top:2px;
+  }
+  .howto-bubble h3{font-size:15px;margin:0 0 4px;font-weight:800;color:var(--ink);}
+  .howto-bubble p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
 
   /* PRICING */
   .pricing-wrap{display:flex;justify-content:center;}
@@ -458,9 +487,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </nav>
 
 <section class="hero">
-  <div class="badge" data-i18n="badge">מתמטיקה · חטיבה ותיכון</div>
+  <div class="badge" data-i18n="badge">מתמטיקה · יסוד, חטיבה ותיכון</div>
   <h1 data-i18n="heroTitle"><span class="accent">daiZ</span> — מורה פרטי בוואטסאפ ובאתר, 24 שעות ביממה</h1>
-  <p class="sub" data-i18n="heroSub">התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.</p>
+  <p class="sub" data-i18n="heroSub">התלמיד שולח הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.</p>
   <div class="ai-note" data-i18n="aiNote">🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span></div>
   <div class="subjects-pills" data-i18n="subjectsPills"><span>מתמטיקה</span><span>אנגלית</span><span>דקדוק עברית</span></div>
   <div class="cta-row">
@@ -471,11 +500,14 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
 <section id="demo">
   <h2 class="section-title" data-i18n="demoTitle">נסו בעצמכם: ככה המורה מלמד</h2>
+  <p class="section-sub demo-hint" data-i18n="demoHint">👇 לחצו על אחד הנושאים למטה כדי לראות שיחה אמיתית</p>
   <div class="demo-topics" id="demoTopics">
     <button class="demo-topic-btn" data-topic="fractions" onclick="playDemo('fractions')">🍕 <span data-i18n="demoTopic1">שברים עם מכנים שונים</span></button>
     <button class="demo-topic-btn" data-topic="word" onclick="playDemo('word')">📖 <span data-i18n="demoTopic2">בעיות מילוליות</span></button>
     <button class="demo-topic-btn" data-topic="percent" onclick="playDemo('percent')">📊 <span data-i18n="demoTopic3">אחוזים</span></button>
     <button class="demo-topic-btn" data-topic="coords" onclick="playDemo('coords')">📐 <span data-i18n="demoTopic4">מערכת צירים</span></button>
+    <button class="demo-topic-btn" data-topic="english" onclick="playDemo('english')">🔤 <span data-i18n="demoTopic5">אנגלית</span></button>
+    <button class="demo-topic-btn" data-topic="grammar" onclick="playDemo('grammar')">✏️ <span data-i18n="demoTopic6">דקדוק עברית</span></button>
   </div>
   <div class="demo-window">
     <div class="demo-header">
@@ -488,26 +520,34 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 
 <section id="how">
   <h2 class="section-title" data-i18n="howSub">ארבעה שלבים פשוטים, בלי אפליקציה נוספת להוריד</h2>
-  <div class="steps">
-    <div class="step-card">
-      <div class="step-num">1</div>
-      <h3 data-i18n="step1Title">נרשמים בדף אחד</h3>
-      <p data-i18n="step1Body">בוחרים שכבת גיל ושפה, ומזינים את מספר הוואטסאפ של התלמיד/ה.</p>
+  <div class="howto-thread">
+    <div class="howto-item">
+      <div class="howto-node">📝</div>
+      <div class="howto-bubble">
+        <h3 data-i18n="step1Title">נרשמים בדף אחד</h3>
+        <p data-i18n="step1Body">בוחרים שכבת גיל ושפה, ומזינים את מספר הוואטסאפ של התלמיד/ה.</p>
+      </div>
     </div>
-    <div class="step-card">
-      <div class="step-num">2</div>
-      <h3 data-i18n="step2Title">נפתחת שיחה בוואטסאפ</h3>
-      <p data-i18n="step2Body">המורה הפרטי כותב ראשון, מציג את עצמו ושואל במה להתחיל.</p>
+    <div class="howto-item">
+      <div class="howto-node">💬</div>
+      <div class="howto-bubble">
+        <h3 data-i18n="step2Title">נפתחת שיחה - גם בוואטסאפ וגם באתר</h3>
+        <p data-i18n="step2Body">המורה הפרטי כותב ראשון בוואטסאפ, ובמקביל מקבלים גם קישור אישי לאתר - ושואל במה להתחיל.</p>
+      </div>
     </div>
-    <div class="step-card">
-      <div class="step-num">3</div>
-      <h3 data-i18n="step3Title">לומדים בקצב אישי</h3>
-      <p data-i18n="step3Body">שאלות, תרגילים והסברים מותאמים — בכל שעה, כל יום בשנה.</p>
+    <div class="howto-item">
+      <div class="howto-node">📈</div>
+      <div class="howto-bubble">
+        <h3 data-i18n="step3Title">לומדים בקצב אישי</h3>
+        <p data-i18n="step3Body">שאלות, תרגילים והסברים מותאמים — בכל שעה, כל יום בשנה.</p>
+      </div>
     </div>
-    <div class="step-card">
-      <div class="step-num">4</div>
-      <h3 data-i18n="step4Title">ההורה מקבל עדכון שבועי</h3>
-      <p data-i18n="step4Body">דוח שבועי קצר למספר של ההורה, על איזה חומר עברנו השבוע.</p>
+    <div class="howto-item">
+      <div class="howto-node">👪</div>
+      <div class="howto-bubble">
+        <h3 data-i18n="step4Title">ההורה מקבל עדכון שבועי</h3>
+        <p data-i18n="step4Body">דוח שבועי קצר למספר של ההורה, על איזה חומר עברנו השבוע.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -519,7 +559,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       <div class="feeling-icon">💡</div>
       <div>
         <h4 data-i18n="feel1Title">הרגע שזה נדלק</h4>
-        <p data-i18n="feel1Body">כשהבן שלך פתאום אומר "הבנתי!" בעיניים בורקות — לא רק שינן תשובה, אלא באמת קלט.</p>
+        <p data-i18n="feel1Body">ברגע שהם אומרים 'הבנתי!' בעיניים בורקות, אתם יודעים שזו לא סתם למידה בעל פה — זו הבנה אמיתית.</p>
       </div>
     </div>
     <div class="feeling-card">
@@ -617,6 +657,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       <div class="field">
         <label data-i18n="labelChildName">שם התלמיד/ה</label>
         <input type="text" required>
+      </div>
+      <div class="field">
+        <label data-i18n="labelSchool">בית ספר <span class="hint" data-i18n="hintSchool">(לא חובה)</span></label>
+        <input type="text" id="schoolInput" data-i18n-placeholder="placeholderSchool" placeholder="שם בית הספר">
       </div>
       <div class="two-col">
         <div class="field">
@@ -825,9 +869,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     he: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"כל יום, לצידך",
-      badge:"לימוד אישי · חטיבה ותיכון",
+      badge:"לימוד אישי · יסוד, חטיבה ותיכון",
       heroTitle:'<span class="accent">daiZ</span> — מורה פרטי בוואטסאפ ובאתר, 24 שעות ביממה',
-      heroSub:"התלמיד/ה שולח/ת הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.",
+      heroSub:"התלמיד שולח הודעה — והמורה הפרטי עונה מיד: עוזר בשיעורי הבית, ומכין לקראת מבחנים, שלב אחרי שלב.",
       chatOnline:"מקוון עכשיו",
       chatMsg1:"שלום! אני המורה הפרטי שלך. אני כאן כדי לעזור לך להתקדם ולהגיע לציון שתמיד רצית 💪",
       chatMsg2:"אני רואה שנרשמת לכיתה ח' — באיזה נושא היית רוצה להתחיל?",
@@ -838,8 +882,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       howSub:"ארבעה שלבים פשוטים, בלי אפליקציה נוספת להוריד",
       step1Title:"נרשמים בדף אחד",
       step1Body:"בוחרים שכבת גיל ושפה, ומזינים את מספר הוואטסאפ של התלמיד/ה.",
-      step2Title:"נפתחת שיחה בוואטסאפ",
-      step2Body:"המורה הפרטי כותב ראשון, מציג את עצמו ושואל במה להתחיל.",
+      step2Title:"נפתחת שיחה - גם בוואטסאפ וגם באתר",
+      step2Body:"המורה הפרטי כותב ראשון בוואטסאפ, ובמקביל מקבלים גם קישור אישי לאתר - ושואל במה להתחיל.",
       step3Title:"לומדים בקצב אישי",
       step3Body:"שאלות, תרגילים והסברים מותאמים — בכל שעה, כל יום בשנה.",
       step4Title:"ההורה מקבל עדכון שבועי",
@@ -853,13 +897,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       formTitle:"בואו נתחיל",
       formSub:"מילוי הטופס לוקח פחות מדקה",
       labelChildName:"שם התלמיד/ה",
+      labelSchool:"בית ספר",
+      hintSchool:"(לא חובה)",
+      placeholderSchool:"שם בית הספר",
       aiNote:'🤖 <span><b>מורה פרטי מבוסס בינה מלאכותית:</b> daiZ מלמד <mark>אך ורק לפי חומרי הלימוד הרשמיים של משרד החינוך</mark>, בהתאם לכיתה ולתוכנית הלימודים שנבחרו.</span>',
       subjectsPills:'<span>מתמטיקה</span><span>אנגלית</span><span>דקדוק עברית</span>',
       demoTitle:'נסו בעצמכם: ככה המורה מלמד',
+      demoHint:'👇 לחצו על אחד הנושאים למטה כדי לראות שיחה אמיתית',
       demoTopic1:'שברים עם מכנים שונים',
       demoTopic2:'בעיות מילוליות',
       demoTopic3:'אחוזים',
       demoTopic4:'מערכת צירים',
+      demoTopic5:'אנגלית',
+      demoTopic6:'דקדוק עברית',
       demoLabel:'שיעור לדוגמה — הדגמה',
       demoReplay:'↻ שוב',
       demoEmpty:'בחרו נושא כדי להתחיל',
@@ -932,7 +982,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       aboutName:"צוות daiZ",
       feelingsTitle:"מה באמת משתנה",
       feel1Title:"הרגע שזה נדלק",
-      feel1Body:"כשהבן שלך פתאום אומר \"הבנתי!\" בעיניים בורקות — לא רק שינן תשובה, אלא באמת קלט.",
+      feel1Body:"ברגע שהם אומרים 'הבנתי!' בעיניים בורקות, אתם יודעים שזו לא סתם למידה בעל פה — זו הבנה אמיתית.",
       feel2Title:"התקדמות שרואים",
       feel2Body:"תרגול מתמיד שמשתקף בציונים יום אחרי יום.",
       feel3Title:"הורים שסוף-סוף יכולים לנשום",
@@ -985,9 +1035,9 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     ar: {
       brand:'dai<span style="color:#C6923A">Z</span>',
       tagline:"كل يوم، بجانبك",
-      badge:"تعلّم شخصي · للاعدادي والثانوي",
+      badge:"تعلّم شخصي · للابتدائي والاعدادي والثانوي",
       heroTitle:'<span class="accent">daiZ</span> — معلّم خاص عبر واتساب وعبر الموقع، على مدار 24 ساعة',
-      heroSub:"ترسل رسالة على واتساب، ويردّ عليك معلّمك الخاص فوراً - يساعدك في الواجبات المدرسية، ويحضّرك للامتحانات، خطوة بخطوة.",
+      heroSub:"يرسل الطالب رسالة، ويردّ عليه معلّمه الخاص فوراً - يساعده في الواجبات المدرسية، ويحضّره للامتحانات، خطوة بخطوة.",
       chatOnline:"متصل الآن",
       chatMsg1:"أهلاً بك! أنا معلّمك الخاص، وأنا هنا لمساعدتك على التقدّم والوصول إلى العلامة التي حلمت بها دائماً 💪",
       chatMsg2:"أرى أنك مسجّل في الصف الثامن — في أي موضوع تحب أن نبدأ؟",
@@ -998,8 +1048,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       howSub:"أربع خطوات بسيطة، دون تحميل أي تطبيق إضافي",
       step1Title:"التسجيل في صفحة واحدة",
       step1Body:"اختيار الصف والموضوع، وإدخال رقم واتساب الطالب.",
-      step2Title:"تُفتح محادثة على واتساب",
-      step2Body:"المعلّم الخاص يبدأ بالكتابة أولاً، يقدّم نفسه ويسأل من أين نبدأ.",
+      step2Title:"تُفتح محادثة - عبر واتساب وعبر الموقع معاً",
+      step2Body:"المعلّم الخاص يبدأ بالكتابة أولاً عبر واتساب، وبنفس الوقت يصلكم رابط شخصي للموقع أيضاً - ويسأل من أين نبدأ.",
       step3Title:"التعلّم بالوتيرة الخاصة بالطالب",
       step3Body:"النموذج يتكيّف مع مستوى كل طالب، وبالسرعة التي تناسبه.",
       step4Title:"الأهل يتلقّون تحديثاً أسبوعياً",
@@ -1013,13 +1063,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       formTitle:"لنبدأ",
       formSub:"تعبئة النموذج تستغرق أقل من دقيقة",
       labelChildName:"اسم الطالب",
+      labelSchool:"المدرسة",
+      hintSchool:"(اختياري)",
+      placeholderSchool:"اسم المدرسة",
       aiNote:'🤖 <span><b>معلّم خاص مبني على الذكاء الاصطناعي:</b> daiZ يعلّم <mark>فقط وفق المواد الرسمية لوزارة التربية والتعليم</mark>، بحسب الصف والمنهاج المختارين.</span>',
       subjectsPills:'<span>الرياضيات</span><span>الإنجليزية</span><span>قواعد اللغة العربية</span><span>العبرية</span>',
       demoTitle:'جربوا بأنفسكم: هيك بيعلّم المعلّم',
+      demoHint:'👇 اضغطوا على أحد المواضيع تحت لمشاهدة محادثة حقيقية',
       demoTopic1:'كسور بمقامات مختلفة',
       demoTopic2:'مسائل لفظية',
       demoTopic3:'نسب مئوية',
       demoTopic4:'محاور الإحداثيات',
+      demoTopic5:'إنجليزي',
+      demoTopic6:'قواعد اللغة العبرية',
       demoLabel:'درس تجريبي - عرض توضيحي',
       demoReplay:'↻ مرة تانية',
       demoEmpty:'اختاروا موضوع للبدء',
@@ -1092,7 +1148,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       aboutName:"فريق daiZ",
       feelingsTitle:"شو اللي فعلاً بيتغيّر",
       feel1Title:"اللحظة يلي بتنور",
-      feel1Body:"لما ابنك يقول فجأة \"فهمت!\" وعيونه بتلمع — مش مجرد حفظ جواب، إنما فعلاً استوعب.",
+      feel1Body:"في اللحظة التي يقولون فيها 'فهمت!' بعيون تلمع، تعلمون أنه ليس مجرد حفظ — بل هو فهم حقيقي.",
       feel2Title:"تقدّم بتشوفه",
       feel2Body:"تمرين مستمر بينعكس على العلامات يوم بعد يوم .",
       feel3Title:"أهل بيقدروا أخيرًا ياخدوا نفس",
@@ -1256,7 +1312,25 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         'יופי! עכשיו יש לך שני ניצבים של משולש ישר-זווית - 4 ו-3. איך מוצאים את הצלע השלישית, המרחק עצמו?',
         'משפט פיתגורס?',
         'בדיוק! אז מה יוצא?',
-        'שורש של 4 בריבוע ועוד 3 בריבוע, זה שורש של 25, שזה 5!']
+        'שורש של 4 בריבוע ועוד 3 בריבוע, זה שורש של 25, שזה 5!'],
+      english: ['איזו מילה נכונה: "I saw ___ elephant at the zoo"?',
+        'שאלה טובה! קודם כל - האם מילה שמתחילה בתנועה צריכה a או an?',
+        'an, כי elephant מתחיל בתנועה?',
+        'בדיוק! אז מה התשובה המלאה?',
+        'I saw an elephant at the zoo',
+        'מושלם! ועכשיו - למה לא נגיד a orange, למשל?',
+        'כי orange גם מתחיל בתנועה?',
+        'בדיוק ככה - זה תמיד לפי הצליל, לא לפי האות. אז מה נגיד?',
+        'an orange!'],
+      grammar: ['מה הבעיה במשפט: "הילדה הלך לבית הספר"?',
+        'שאלה טובה - קודם כל, מה המין (זכר או נקבה) של המילה "ילדה"?',
+        'נקבה?',
+        'בדיוק! אז הפועל צריך להתאים לה. מה הצורה הנכונה של "הלך" בנקבה?',
+        'הלכה?',
+        'מדויק! אז איך המשפט התקין נראה?',
+        'הילדה הלכה לבית הספר',
+        'מעולה! זוכר/ת את הכלל - הפועל תמיד חייב להתאים במין ובמספר לנושא המשפט.',
+        'הבנתי, תודה!']
     },
     ar: {
       fractions: ['كيف نحل 2/3 + 1/4؟ لهما مقامان مختلفان...',
@@ -1294,7 +1368,25 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         'حلو! هلق عندك ضلعين لمثلث قائم الزاوية - 4 و3. كيف منلاقي الضلع التالت، يعني المسافة نفسها؟',
         'نظرية فيثاغورس؟',
         'بالضبط! طيب شو بيطلع؟',
-        'جذر 4 تربيع زائد 3 تربيع، يعني جذر 25، يعني 5!']
+        'جذر 4 تربيع زائد 3 تربيع، يعني جذر 25، يعني 5!'],
+      english: ['شو الكلمة الصح: "I saw ___ elephant at the zoo"؟',
+        'سؤال ممتاز! أول شي - الكلمة يلي بتبلش بحرف متحرك بدها a ولا an؟',
+        'an، لأنه elephant بيبلش بحرف متحرك؟',
+        'بالضبط! طيب شو الجواب الكامل؟',
+        'I saw an elephant at the zoo',
+        'ممتاز! وهلق - ليش ما منقول a orange مثلاً؟',
+        'لأنه orange كمان بيبلش بحرف متحرك؟',
+        'بالضبط هيك - دايماً حسب الصوت، مش حسب الحرف المكتوب. طيب شو منقول؟',
+        'an orange!'],
+      grammar: ['شو المشكلة بجملة: "הילדה הלך לבית הספר"؟',
+        'سؤال ممتاز - أول شي، شو جنس كلمة "הילדה" (بنت)؟',
+        'مؤنث؟',
+        'بالضبط! فلازم الفعل يتوافق معها. شو الشكل الصح لفعل "הלך" بالمؤنث؟',
+        'هل هو "הלכה"؟',
+        'مضبوط! طيب كيف بتصير الجملة الصحيحة؟',
+        '"הילדה הלכה לבית הספר"',
+        'ممتاز! تذكّر القاعدة - الفعل لازم دايماً يتوافق بالجنس والعدد مع فاعل الجملة.',
+        'فهمت، شكراً!']
     }
   };
   let currentDemoTopic = null;
@@ -1333,6 +1425,12 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       const key = el.getAttribute('data-i18n');
       if(translations[lang][key] !== undefined){
         el.innerHTML = translations[lang][key];
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(translations[lang][key] !== undefined){
+        el.setAttribute('placeholder', translations[lang][key]);
       }
     });
     // Keep the signup form's "language of instruction" selector in lockstep

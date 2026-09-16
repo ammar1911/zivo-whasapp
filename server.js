@@ -1014,7 +1014,12 @@ app.post("/api/cardcom-webhook", async (req, res) => {
   res.status(200).send("OK");
 
   try {
-    const lowProfileCode = req.body.LowProfileCode || req.body.lowprofilecode;
+    // Cardcom's webhook payload uses LowProfileId (confirmed from real
+    // webhook logs) - LowProfileCode/lowprofilecode is what the /Create
+    // response calls the same value, and was wrongly assumed to carry over
+    // to the webhook body too. Checking all three keeps this working
+    // either way.
+    const lowProfileCode = req.body.LowProfileId || req.body.LowProfileCode || req.body.lowprofilecode;
     if (!lowProfileCode) {
       console.log("[cardcom] webhook had no LowProfileCode - nothing to do");
       return;

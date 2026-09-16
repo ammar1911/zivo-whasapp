@@ -1152,6 +1152,54 @@ app.get("/api/manual-complete", async (req, res) => {
   }
 });
 
+// Same as /api/manual-complete above, but for when Cardcom's own LowProfile
+// lookup has gone stale (their GetLpResult only seems to work for a limited
+// window after the transaction) - this skips querying Cardcom again and
+// takes the token/expiry straight from a webhook payload you already saw
+// in the logs, so it works no matter how much time has passed:
+//   /api/manual-complete-token?token=...&expiryMonth=7&expiryYear=2030&orderId=reg-...&childPhone=0501234567&grade=י&subjects=math&mathLevel=3&langPref=he
+// orderId is only used for logging here (there's no pendingRegistrations
+// entry to clear against it after this much time) - any string is fine.
+app.get("/api/manual-complete-token", async (req, res) => {
+  try {
+    const { token, expiryMonth, expiryYear, orderId, childPhone, grade, mathLevel, langPref, parentPhone, parentEmail, childName, school } = req.query;
+    let subjects = req.query.subjects;
+    if (!subjects) subjects = [];
+    if (!Array.isArray(subjects)) subjects = [subjects];
+
+    if (!token || !expiryMonth || !expiryYear || !childPhone || !grade || subjects.length === 0) {
+      return res.status(400).send("חסרים פרמטרים: token, expiryMonth, expiryYear, childPhone, grade, subjects נדרשים.");
+    }
+
+    const result = {
+      ok: true,
+      orderId: orderId || ("manual-" + Date.now()),
+      token,
+      tokenExpiryMonth: expiryMonth,
+      tokenExpiryYear: expiryYear,
+    };
+
+    const pending = {
+      childName: childName || null,
+      school: school || null,
+      grade,
+      langPref: langPref === "ar" ? "ar" : "he",
+      mathLevel: mathLevel ? Number(mathLevel) : null,
+      subjects,
+      childPhone,
+      parentPhone: parentPhone || childPhone,
+      parentEmail: parentEmail || null,
+      amount: SUBJECT_PRICE_TABLE[subjects.length] || SUBJECT_PRICE_TABLE[3],
+    };
+
+    const keys = await finalizeRegistration(result, pending);
+    res.json({ ok: true, message: "נרשם ונשלחה הודעת פתיחה.", keys });
+  } catch (err) {
+    console.error("[manual-complete-token] error:", err && err.stack ? err.stack : err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Branded pages for the browser redirect after payment (the webhook above
 // is what actually matters for registration - these are just what the
 // parent sees in their browser right after paying).

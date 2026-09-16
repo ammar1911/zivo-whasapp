@@ -640,19 +640,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 <h2 class="section-title" data-i18n="formTitle">لنبدأ</h2>
 <p class="section-sub" data-i18n="formSub">تعبئة النموذج تستغرق أقل من دقيقة</p>
 <div class="form-box">
-<form onsubmit="event.preventDefault(); alert(currentLang==='he' ? 'תודה! זהו דף הדגמה בלבד.' : 'شكراً! هذه صفحة تجريبية فقط.');">
+<form id="signupForm" action="" method="POST" onsubmit="return submitRegistration(event)">
 <div class="field">
 <label data-i18n="labelChildName">اسم الطالب</label>
-<input required="" type="text"/>
+<input id="childNameInput" name="childName" required="" type="text"/>
 </div>
 <div class="field">
 <label data-i18n="labelSchool">المدرسة <span class="hint" data-i18n="hintSchool">(اختياري)</span></label>
-<input id="schoolInput" data-i18n-placeholder="placeholderSchool" placeholder="اسم المدرسة" type="text"/>
+<input id="schoolInput" name="school" data-i18n-placeholder="placeholderSchool" placeholder="اسم المدرسة" type="text"/>
 </div>
 <div class="two-col">
 <div class="field">
 <label data-i18n="labelGrade">الصف <span class="hint">(لمعرفة الكتاب المناسب للتدريس)</span></label>
-<select id="gradeSelect" onchange="onGradeChange()">
+<select id="gradeSelect" name="grade" onchange="onGradeChange()">
 <option data-i18n="grade5" value="ה">الصف الخامس</option>
 <option data-i18n="grade6" value="ו">الصف السادس</option>
 <option data-i18n="grade7" value="ז">الصف السابع</option>
@@ -665,7 +665,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </div>
 <div class="field">
 <label data-i18n="labelLangPref">لغة التدريس</label>
-<select id="langPrefSelect" onchange="onLangPrefChange()">
+<select id="langPrefSelect" name="langPref" onchange="onLangPrefChange()">
 <option value="he">עברית</option>
 <option value="ar">العربية</option>
 </select>
@@ -709,38 +709,24 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </div>
 <div class="field" id="mathLevelField">
 <label data-i18n="labelMathLevel">كم وحدة دراسة بالرياضيات؟ <span class="hint" data-i18n="hintMathLevel">(يخص الصف العاشر فما فوق)</span></label>
-<select id="mathLevelSelect">
+<select id="mathLevelSelect" name="mathLevel">
 <option value="3" data-i18n="mathLevel3">3 وحدات</option>
 <option value="4" data-i18n="mathLevel4">4 وحدات</option>
 <option value="5" data-i18n="mathLevel5">5 وحدات</option>
 </select>
 </div>
-<div class="field">
-<label data-i18n="labelChannel">كيف بدو الطالب/ة يتعلّم/تتعلّم؟</label>
-<div class="channel-grid">
-<label class="channel-card">
-<input checked="" name="channel" onchange="onChannelChange()" type="radio" value="whatsapp"/>
-<div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWhatsapp">واتساب</span></div>
-<div class="ch-hint" data-i18n="channelWhatsappHint">بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب</div>
-</label>
-<label class="channel-card">
-<input name="channel" onchange="onChannelChange()" type="radio" value="website"/>
-<div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWebsite">محادثة عبر الموقع</span></div>
-<div class="ch-hint" data-i18n="channelWebsiteHint">يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع</div>
-</label>
-</div>
-</div>
 <div class="field" id="childPhoneField">
 <label data-i18n="labelChildPhone">رقم واتساب الطالب</label>
-<input id="childPhoneInput" placeholder="050-1234567" required="" type="tel"/>
+<input id="childPhoneInput" name="childPhone" placeholder="050-1234567" required="" type="tel"/>
 </div>
-<div class="channel-note" data-i18n="channelNoteWebsite" id="channelNoteWebsite" style="display:none">رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.</div>
+<div class="channel-note" data-i18n="channelNoteWebsite" id="channelNoteWebsite">رح تقدروا تتعلّموا عبر واتساب وعبر الموقع بنفس الوقت - القناتين ضمن نفس الاشتراك، بدون أي تكلفة إضافية.</div>
 <div class="field">
 <label data-i18n="labelParentPhone">رقم هاتف أحد الوالدين</label>
-<input placeholder="050-1234567" required="" type="tel"/>
+<input id="parentPhoneInput" name="parentPhone" placeholder="050-1234567" required="" type="tel"/>
 </div>
 <button class="btn btn-primary submit-btn" data-i18n="formSubmit" id="formSubmitBtn" type="submit">ابدأ الاشتراك — ₪120 شهرياً</button>
 <p class="form-note" data-i18n="formNote">بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.</p>
+<p class="form-error" id="formError" style="display:none;color:#b3441e;font-size:12.5px;text-align:center;margin-top:10px;"></p>
 </form>
 </div>
 </section>
@@ -844,6 +830,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 <a class="btn btn-primary" data-i18n="floatingCtaBtn" href="#signup">سجّل الآن</a>
 </div>
 <script>
+  const API_BASE = 'https://zivo-whatsapp.onrender.com';
   const translations = {
     he: {
       brand:'dai<span style="color:#C6923A">Z</span>',
@@ -943,7 +930,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       channelWhatsappHint:"הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ",
       channelWebsite:"צ'אט באתר",
       channelWebsiteHint:"הילד/ה יקבל/תקבל קישור אישי לחדר הלמידה באתר",
-      channelNoteWebsite:"קישור אישי לחדר הלמידה יישלח למספר ההורה מיד לאחר ההרשמה. 💻 טיפ: מומלץ ללמוד דרך מחשב ולא דרך טלפון - נוח יותר לקרוא ולהקליד.",
+      channelNoteWebsite:"תוכל/י ללמוד גם בוואטסאפ וגם באתר - שני הערוצים כלולים באותו מנוי, בלי תוספת תשלום.",
       labelChildPhone:"מספר וואטסאפ של התלמיד/ה",
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
@@ -1109,7 +1096,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       channelWhatsappHint:"بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب",
       channelWebsite:"محادثة عبر الموقع",
       channelWebsiteHint:"يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع",
-      channelNoteWebsite:"رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.",
+      channelNoteWebsite:"رح تقدروا تتعلّموا عبر واتساب وعبر الموقع بنفس الوقت - القناتين ضمن نفس الاشتراك، بدون أي تكلفة إضافية.",
       labelChildPhone:"رقم واتساب الطالب",
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
@@ -1236,11 +1223,36 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     submitBtn.textContent = SUBMIT_BTN_TEXT[currentLang](price);
   }
 
-  function onChannelChange(){
-    const isWebsite = document.querySelector('input[name="channel"]:checked').value === 'website';
-    document.getElementById('childPhoneField').style.display = isWebsite ? 'none' : 'block';
-    document.getElementById('childPhoneInput').required = !isWebsite;
-    document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
+  // Real registration submit - see the matching function in the Hebrew
+  // landing page (site/index.html) for the full explanation of why this
+  // is a native form POST rather than fetch().
+  function submitRegistration(event){
+    const errorEl = document.getElementById('formError');
+    errorEl.style.display = 'none';
+
+    const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
+    const activeGridId = isArabicTrack ? 'subjectsGridArabic' : 'subjectsGridHebrew';
+    const inactiveGridId = isArabicTrack ? 'subjectsGridHebrew' : 'subjectsGridArabic';
+    const checkedInActive = document.querySelectorAll('#' + activeGridId + ' input[name="subjects"]:checked').length;
+
+    if(checkedInActive === 0){
+      event.preventDefault();
+      errorEl.textContent = currentLang === 'ar' ? 'الرجاء اختيار مادة واحدة على الأقل.' : 'בחר/י לפחות מקצוע אחד.';
+      errorEl.style.display = 'block';
+      return false;
+    }
+
+    document.querySelectorAll('#' + inactiveGridId + ' input[name="subjects"]').forEach(el => { el.disabled = true; });
+
+    const showsMathLevel = document.getElementById('mathLevelField').style.display !== 'none';
+    document.getElementById('mathLevelSelect').disabled = !showsMathLevel;
+
+    document.getElementById('signupForm').action = API_BASE + '/api/register';
+
+    const submitBtn = document.getElementById('formSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = currentLang === 'ar' ? 'جارٍ التحويل...' : 'מעביר לתשלום...';
+    return true;
   }
 
   let currentDemoTopic = null;

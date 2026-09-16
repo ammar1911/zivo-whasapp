@@ -915,7 +915,7 @@ app.post("/api/register", express.urlencoded({ extended: false }), async (req, r
   try {
     const {
       childName, school, grade, langPref, mathLevel,
-      childPhone, parentPhone,
+      childPhone, parentPhone, parentEmail,
     } = req.body;
     let subjects = req.body.subjects;
     if (!subjects) subjects = [];
@@ -930,10 +930,11 @@ app.post("/api/register", express.urlencoded({ extended: false }), async (req, r
 
     const amount = SUBJECT_PRICE_TABLE[subjects.length] || SUBJECT_PRICE_TABLE[3];
     const orderId = "reg-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    const productName = `daiZ - מנוי חודשי (${subjects.length} מקצועות)`;
 
     pendingRegistrations.set(orderId, {
       childName, school, grade, langPref: langPref || "he", mathLevel: mathLevel || null,
-      subjects, childPhone, parentPhone, amount,
+      subjects, childPhone, parentPhone, parentEmail: parentEmail || null, amount,
       createdAt: new Date().toISOString(),
     });
 
@@ -941,11 +942,19 @@ app.post("/api/register", express.urlencoded({ extended: false }), async (req, r
     const session = await cardcom.createPaymentSession({
       orderId,
       amount,
-      productName: `daiZ - מנוי חודשי (${subjects.length} מקצועות)`,
+      productName,
       successUrl: `${baseUrl}/api/payment-success`,
       failUrl: `${baseUrl}/api/payment-failed`,
       webhookUrl: `${baseUrl}/api/cardcom-webhook`,
-      language: langPref === "ar" ? "ar" : "he",
+      // Always Hebrew, regardless of langPref (which is the CHILD's
+      // instruction language, not the parent's) - parents are used to
+      // paying in Hebrew either way, so there's no need for an Arabic
+      // payment page.
+      language: "he",
+      // Only when an email was given does Cardcom generate+email an
+      // invoice for this charge - see cardcom.js for details.
+      customerName: childName || undefined,
+      customerEmail: parentEmail || undefined,
     });
 
     if (!session.ok || !session.url) {
@@ -1045,6 +1054,7 @@ app.post("/api/cardcom-webhook", async (req, res) => {
       childName: pending.childName || undefined,
       school: pending.school || undefined,
       parentPhone: pending.parentPhone,
+      parentEmail: pending.parentEmail || undefined,
       cardcomToken: result.token,
       cardcomTokenExpiryMonth: result.tokenExpiryMonth,
       cardcomTokenExpiryYear: result.tokenExpiryYear,

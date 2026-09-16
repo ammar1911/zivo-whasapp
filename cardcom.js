@@ -57,10 +57,14 @@ async function cardcomPost(path, body) {
  * @param {string} params.failUrl       - where the parent is sent after a failed/cancelled payment
  * @param {string} params.webhookUrl    - your server endpoint Cardcom calls with the result (Step 2)
  * @param {"he"|"en"|"ar"} [params.language]
+ * @param {string} [params.customerName]  - for the invoice; the whole Document block is skipped without an email
+ * @param {string} [params.customerEmail] - if given (with customerName), Cardcom auto-generates and
+ *   emails a tax invoice+receipt (חשבונית מס + קבלה) for this charge - no separate call needed.
+ *   Without an email, no document is created at all for this charge.
  * @returns {Promise<{ok: boolean, url?: string, lowProfileCode?: string, raw: object}>}
  */
-async function createPaymentSession({ orderId, amount, productName, successUrl, failUrl, webhookUrl, language = "he" }) {
-  const data = await cardcomPost("/LowProfile/Create", {
+async function createPaymentSession({ orderId, amount, productName, successUrl, failUrl, webhookUrl, language = "he", customerName, customerEmail }) {
+  const body = {
     TerminalNumber: TERMINAL_NUMBER,
     ApiName: API_NAME,
     Operation: "ChargeAndCreateToken",
@@ -72,7 +76,24 @@ async function createPaymentSession({ orderId, amount, productName, successUrl, 
     WebHookUrl: webhookUrl,
     CoinID: 1, // 1 = ILS
     Language: language,
-  });
+  };
+
+  // Osek murshe (licensed dealer, charges VAT) -> TaxInvoiceAndReceipt.
+  // If this business is ever an osek patur instead, this should be
+  // "Receipt" only - an osek patur cannot issue tax invoices.
+  if (customerEmail) {
+    body.Document = {
+      DocumentTypeToCreate: "TaxInvoiceAndReceipt",
+      Name: customerName || "לקוח daiZ",
+      Email: customerEmail,
+      IsSendByEmail: true,
+      Products: [
+        { Description: productName, Quantity: 1, UnitCost: amount },
+      ],
+    };
+  }
+
+  const data = await cardcomPost("/LowProfile/Create", body);
 
   return {
     ok: data.ResponseCode === 0,
@@ -122,9 +143,13 @@ async function getLowProfileResult(lowProfileCode) {
  * @param {string|number} params.expiryYear   - YYYY, from the saved token info
  * @param {number} params.amount              - amount to charge this cycle, in ILS
  * @param {string} [params.orderId]           - your own reference id for this specific charge (e.g. `studentId-2026-11`)
+ * @param {string} [params.productName]       - shown on the invoice line item, e.g. "daiZ - מנוי חודשי"
+ * @param {string} [params.customerName]      - for the invoice; the whole Document block is skipped without an email
+ * @param {string} [params.customerEmail]     - if given (with customerName), auto-generates+emails an
+ *   invoice for this month's charge too, same as the first payment - see createPaymentSession above.
  */
-async function chargeToken({ token, expiryMonth, expiryYear, amount, orderId }) {
-  const data = await cardcomPost("/Transactions/Transaction", {
+async function chargeToken({ token, expiryMonth, expiryYear, amount, orderId, productName, customerName, customerEmail }) {
+  const body = {
     TerminalNumber: TERMINAL_NUMBER,
     ApiName: API_NAME,
     ApiPassword: API_PASSWORD,
@@ -136,7 +161,21 @@ async function chargeToken({ token, expiryMonth, expiryYear, amount, orderId }) 
       CardExpirationMonth: Number(expiryMonth),
       CardExpirationYear: Number(expiryYear),
     },
-  });
+  };
+
+  if (customerEmail) {
+    body.Document = {
+      DocumentTypeToCreate: "TaxInvoiceAndReceipt",
+      Name: customerName || "לקוח daiZ",
+      Email: customerEmail,
+      IsSendByEmail: true,
+      Products: [
+        { Description: productName || "daiZ - מנוי חודשי", Quantity: 1, UnitCost: amount },
+      ],
+    };
+  }
+
+  const data = await cardcomPost("/Transactions/Transaction", body);
 
   return {
     ok: data.ResponseCode === 0,

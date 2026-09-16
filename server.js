@@ -1050,13 +1050,74 @@ app.post("/api/cardcom-webhook", async (req, res) => {
   }
 });
 
-// Simple pages for the browser redirect after test payment (the webhook
-// above is what actually matters - these are just for a friendly screen).
+// Branded pages for the browser redirect after payment (the webhook above
+// is what actually matters for registration - these are just what the
+// parent sees in their browser right after paying).
+function paymentPageHtml({ title, body, isSuccess }) {
+  const icon = isSuccess ? "🎉" : "😕";
+  const accentColor = isSuccess ? "#2F6F5E" : "#b3441e";
+  const waLink = "https://wa.me/972553307828?text=" + encodeURIComponent("שלום! צריך עזרה עם daiZ");
+  return `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>daiZ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500;700;800&family=Poppins:wght@800&display=swap');
+  *{box-sizing:border-box;}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FBF7EE;font-family:'Heebo',sans-serif;padding:24px;}
+  .card{max-width:440px;width:100%;background:#fff;border-radius:20px;padding:40px 32px;box-shadow:0 16px 40px -16px rgba(30,42,68,0.2);text-align:center;}
+  .logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
+  .mark{width:44px;height:44px;border-radius:12px;background:#2F6F5E;display:flex;align-items:center;justify-content:center;}
+  .mark span{font-family:'Poppins',sans-serif;font-weight:800;font-size:20px;color:#FBF7EE;}
+  .mark span b{color:#D9A441;}
+  .wordmark{font-family:'Poppins',sans-serif;font-weight:800;font-size:24px;color:#2F6F5E;}
+  .wordmark b{color:#D9A441;}
+  .icon{font-size:48px;margin-bottom:14px;}
+  h1{font-size:22px;color:${accentColor};margin:0 0 14px;}
+  p{font-size:15px;color:#1B2A44;line-height:1.7;margin:0 0 10px;}
+  .trouble{font-size:13px;color:#5b6b7f;margin-top:22px;padding-top:18px;border-top:1px solid rgba(30,42,68,0.1);line-height:1.7;}
+  .contact-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;}
+  .btn.wa{background:#25D366;color:#fff;}
+  .btn.mail{background:#E4EFEA;color:#204F42;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="mark"><span>d<b>Z</b></span></div>
+    <div class="wordmark">dai<b>Z</b></div>
+  </div>
+  <div class="icon">${icon}</div>
+  <h1>${title}</h1>
+  <p>${body}</p>
+  <div class="trouble">
+    נתקלתם בבעיה?
+    <div class="contact-row">
+      <a class="btn wa" href="${waLink}" target="_blank" rel="noopener">וואטסאפ</a>
+      <a class="btn mail" href="mailto:info@daiz.co.il">info@daiz.co.il</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>`;
+}
+
 app.get("/api/payment-success", (req, res) => {
-  res.send("<h1>התשלום הצליח! (בדיקה)</h1><p>בדוק את הלוגים ב-Render כדי לראות את פרטי ה-Token.</p>");
+  res.send(paymentPageHtml({
+    title: "התשלום הצליח! 🎉",
+    body: "תוך כמה דקות תקבלו הודעת פתיחה מ-daiZ בוואטסאפ - שם הלימוד מתחיל.",
+    isSuccess: true,
+  }));
 });
 app.get("/api/payment-failed", (req, res) => {
-  res.send("<h1>התשלום נכשל (בדיקה)</h1>");
+  res.send(paymentPageHtml({
+    title: "התשלום לא הושלם",
+    body: "משהו השתבש באמצע התהליך - זה קורה לפעמים. אין חיוב שנוצר, אפשר לנסות שוב מהאתר.",
+    isSuccess: false,
+  }));
 });
 // -------------------------------------------------------------------------
 

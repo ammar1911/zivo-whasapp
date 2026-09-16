@@ -478,7 +478,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </div>
 <div class="lang-toggle">
 <a id="btn-he" href="/">עברית</a>
-<a id="btn-ar" class="active" href="/ar/" onclick="setLang('ar'); return false;">العربية</a>
+<a id="btn-ar" class="active" href="/ar/" onclick="setLang('ar', true); return false;">العربية</a>
 </div>
 </nav>
 <section class="hero">
@@ -724,6 +724,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 <label data-i18n="labelParentPhone">رقم هاتف أحد الوالدين</label>
 <input id="parentPhoneInput" name="parentPhone" placeholder="050-1234567" required="" type="tel"/>
 </div>
+<div class="field">
+<label data-i18n="labelParentEmail">البريد الإلكتروني لأحد الوالدين <span class="hint" data-i18n="hintParentEmail">(لتلقي الفاتورة)</span></label>
+<input id="parentEmailInput" name="parentEmail" placeholder="name@example.com" type="email"/>
+</div>
 <button class="btn btn-primary submit-btn" data-i18n="formSubmit" id="formSubmitBtn" type="submit">ابدأ الاشتراك — ₪120 شهرياً</button>
 <p class="form-note" data-i18n="formNote">بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.</p>
 <p class="form-error" id="formError" style="display:none;color:#b3441e;font-size:12.5px;text-align:center;margin-top:10px;"></p>
@@ -935,6 +939,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
       hintParentPhone:"(לקבלת עדכון התקדמות שבועי בלבד)",
+      labelParentEmail:"אימייל של ההורה",
+      hintParentEmail:"(לקבלת חשבונית)",
       formSubmit:"התחל מנוי — ₪120 לחודש",
       formNote:"בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.",
       aboutTitle:"מי אנחנו",
@@ -1101,6 +1107,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
       hintParentPhone:"(لتلقي تحديث التقدّم الأسبوعي فقط)",
+      labelParentEmail:"البريد الإلكتروني لأحد الوالدين",
+      hintParentEmail:"(لتلقي الفاتورة)",
       formSubmit:"ابدأ الاشتراك — ₪120 شهرياً",
       formNote:"بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.",
       aboutTitle:"من نحن",
@@ -1395,7 +1403,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     }
   };
 
-  function setLang(lang){
+  function setLang(lang, syncFormLang){
     currentLang = lang;
     document.documentElement.lang = lang;
     document.body.classList.toggle('lang-ar', lang === 'ar');
@@ -1413,8 +1421,14 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         el.setAttribute('placeholder', translations[lang][key]);
       }
     });
-    document.getElementById('langPrefSelect').value = lang;
-    onLangPrefChange();
+    // See the matching comment in site/index.html's setLang() - only a
+    // deliberate toggle click (syncFormLang === true) should change the
+    // signup form's language-of-instruction field; the automatic initial
+    // detection below must not silently flip it.
+    if(syncFormLang){
+      document.getElementById('langPrefSelect').value = lang;
+      onLangPrefChange();
+    }
   }
 
   (function chooseInitialLang(){
@@ -1423,7 +1437,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     if(urlLang === 'ar' || urlLang === 'he'){
       initialLang = urlLang;
     }
-    setLang(initialLang);
+    setLang(initialLang, false);
   })();
 </script>
 </body>

@@ -1147,6 +1147,17 @@ function paymentPageHtml({ title, body, isSuccess }) {
     </div>
   </div>
 </div>
+<script>
+  // Cardcom appends its own transaction parameters (LowProfileId,
+  // ResponseCode, internalDealNumber, etc.) to this page's URL when it
+  // redirects the browser back here - useful technically, but it makes the
+  // address bar look messy and exposes internal details for no reason once
+  // the page has already rendered. This swaps in a clean URL without
+  // triggering a reload or losing the page the person is looking at.
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
 </body>
 </html>`;
 }

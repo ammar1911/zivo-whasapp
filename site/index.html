@@ -653,19 +653,19 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
   <h2 class="section-title" data-i18n="formTitle">בואו נתחיל</h2>
   <p class="section-sub" data-i18n="formSub">מילוי הטופס לוקח פחות מדקה</p>
   <div class="form-box">
-    <form onsubmit="event.preventDefault(); alert(currentLang==='he' ? 'תודה! זהו דף הדגמה בלבד.' : 'شكراً! هذه صفحة تجريبية فقط.');">
+    <form id="signupForm" action="" method="POST" onsubmit="return submitRegistration(event)">
       <div class="field">
         <label data-i18n="labelChildName">שם התלמיד/ה</label>
-        <input type="text" required>
+        <input type="text" id="childNameInput" name="childName" required>
       </div>
       <div class="field">
         <label data-i18n="labelSchool">בית ספר <span class="hint" data-i18n="hintSchool">(לא חובה)</span></label>
-        <input type="text" id="schoolInput" data-i18n-placeholder="placeholderSchool" placeholder="שם בית הספר">
+        <input type="text" id="schoolInput" name="school" data-i18n-placeholder="placeholderSchool" placeholder="שם בית הספר">
       </div>
       <div class="two-col">
         <div class="field">
           <label data-i18n="labelGrade">כיתה <span class="hint" data-i18n="hintGrade">(כדי לדעת מאיזה ספר ללמד)</span></label>
-          <select id="gradeSelect" onchange="onGradeChange()">
+          <select id="gradeSelect" name="grade" onchange="onGradeChange()">
             <option data-i18n="grade5" value="ה">כיתה ה'</option>
             <option data-i18n="grade6" value="ו">כיתה ו'</option>
             <option data-i18n="grade7" value="ז">כיתה ז'</option>
@@ -678,7 +678,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         </div>
         <div class="field">
           <label data-i18n="labelLangPref">שפת השיעורים</label>
-          <select id="langPrefSelect" onchange="onLangPrefChange()">
+          <select id="langPrefSelect" name="langPref" onchange="onLangPrefChange()">
             <option value="he">עברית</option>
             <option value="ar">العربية</option>
           </select>
@@ -722,38 +722,24 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       </div>
       <div class="field" id="mathLevelField">
         <label data-i18n="labelMathLevel">כמה יחידות לימוד במתמטיקה? <span class="hint" data-i18n="hintMathLevel">(רלוונטי מכיתה י' ומעלה)</span></label>
-        <select id="mathLevelSelect">
+        <select id="mathLevelSelect" name="mathLevel">
           <option value="3" data-i18n="mathLevel3">3 יח"ל</option>
           <option value="4" data-i18n="mathLevel4">4 יח"ל</option>
           <option value="5" data-i18n="mathLevel5">5 יח"ל</option>
         </select>
       </div>
-      <div class="field">
-        <label data-i18n="labelChannel">איך התלמיד/ה ילמד/תלמד?</label>
-        <div class="channel-grid">
-          <label class="channel-card">
-            <input type="radio" name="channel" value="whatsapp" checked onchange="onChannelChange()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWhatsapp">וואטסאפ</span></div>
-            <div class="ch-hint" data-i18n="channelWhatsappHint">הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ</div>
-          </label>
-          <label class="channel-card">
-            <input type="radio" name="channel" value="website" onchange="onChannelChange()">
-            <div class="ch-title"><span class="ch-dot"></span><span data-i18n="channelWebsite">צ'אט באתר</span></div>
-            <div class="ch-hint" data-i18n="channelWebsiteHint">הילד/ה יקבל/תקבל קישור אישי לחדר הלמידה באתר</div>
-          </label>
-        </div>
-      </div>
       <div class="field" id="childPhoneField">
         <label data-i18n="labelChildPhone">מספר וואטסאפ של התלמיד/ה <span class="hint" data-i18n="hintChildPhone">(כאן תתנהל השיחה עם המורה)</span></label>
-        <input type="tel" id="childPhoneInput" placeholder="050-1234567" required>
+        <input type="tel" id="childPhoneInput" name="childPhone" placeholder="050-1234567" required>
       </div>
-      <div class="channel-note" id="channelNoteWebsite" style="display:none" data-i18n="channelNoteWebsite">קישור אישי לחדר הלמידה יישלח למספר ההורה מיד לאחר ההרשמה. 💻 טיפ: מומלץ ללמוד דרך מחשב ולא דרך טלפון - נוח יותר לקרוא ולהקליד.</div>
+      <div class="channel-note" id="channelNoteWebsite" data-i18n="channelNoteWebsite">תוכל/י ללמוד גם בוואטסאפ וגם באתר - שני הערוצים כלולים באותו מנוי, בלי תוספת תשלום.</div>
       <div class="field">
         <label data-i18n="labelParentPhone">מספר טלפון של ההורה <span class="hint" data-i18n="hintParentPhone">(לקבלת עדכון התקדמות שבועי בלבד)</span></label>
-        <input type="tel" placeholder="050-1234567" required>
+        <input type="tel" id="parentPhoneInput" name="parentPhone" placeholder="050-1234567" required>
       </div>
       <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit">התחל מנוי — ₪120 לחודש</button>
       <p class="form-note" data-i18n="formNote">בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.</p>
+      <p class="form-error" id="formError" style="display:none;color:#b3441e;font-size:12.5px;text-align:center;margin-top:10px;"></p>
     </form>
   </div>
 </section>
@@ -865,6 +851,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
 </div>
 
 <script>
+  const API_BASE = 'https://zivo-whatsapp.onrender.com';
   const translations = {
     he: {
       brand:'dai<span style="color:#C6923A">Z</span>',
@@ -964,7 +951,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       channelWhatsappHint:"הילד/ה יקבל/תקבל הודעת פתיחה ישירות בוואטסאפ",
       channelWebsite:"צ'אט באתר",
       channelWebsiteHint:"הילד/ה יקבל/תקבל קישור אישי לחדר הלמידה באתר",
-      channelNoteWebsite:"קישור אישי לחדר הלמידה יישלח למספר ההורה מיד לאחר ההרשמה. 💻 טיפ: מומלץ ללמוד דרך מחשב ולא דרך טלפון - נוח יותר לקרוא ולהקליד.",
+      channelNoteWebsite:"תוכל/י ללמוד גם בוואטסאפ וגם באתר - שני הערוצים כלולים באותו מנוי, בלי תוספת תשלום.",
       labelChildPhone:"מספר וואטסאפ של התלמיד/ה",
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
@@ -1130,7 +1117,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       channelWhatsappHint:"بمجرد اكتمال التسجيل يتلقى الطالب رساله ترحيبية عبر الواتساب",
       channelWebsite:"محادثة عبر الموقع",
       channelWebsiteHint:"يتلقى الطالب رابط خاص به لغرفة التعلّم بالموقع",
-      channelNoteWebsite:"رح يتم إرسال رابط شخصي لغرفة التعلّم لرقم الأهل مباشرة بعد التسجيل. 💻 نصيحة: يُفضَّل التعلّم عبر الحاسوب لا عبر الهاتف - أسهل للقراءة والكتابة.",
+      channelNoteWebsite:"رح تقدروا تتعلّموا عبر واتساب وعبر الموقع بنفس الوقت - القناتين ضمن نفس الاشتراك، بدون أي تكلفة إضافية.",
       labelChildPhone:"رقم واتساب الطالب",
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
@@ -1263,11 +1250,48 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     submitBtn.textContent = SUBMIT_BTN_TEXT[currentLang](price);
   }
 
-  function onChannelChange(){
-    const isWebsite = document.querySelector('input[name="channel"]:checked').value === 'website';
-    document.getElementById('childPhoneField').style.display = isWebsite ? 'none' : 'block';
-    document.getElementById('childPhoneInput').required = !isWebsite;
-    document.getElementById('channelNoteWebsite').style.display = isWebsite ? 'block' : 'none';
+  // Real registration submit - the form does a normal (non-fetch) POST
+  // straight to the server, which redirects the browser to Cardcom's
+  // payment page. A plain full-page form submission is used deliberately
+  // instead of fetch(): fetch can't hand a cross-origin redirect back to
+  // the browser's address bar (that's a CORS limitation, not a bug), while
+  // a native form POST navigates exactly like clicking a link, with no
+  // such restriction.
+  //
+  // Before submitting, we still need to fix up two things the raw form
+  // can't express on its own: (1) only the subjects checkboxes from the
+  // CURRENTLY VISIBLE grid (Hebrew or Arabic track) should be sent - the
+  // other grid's checkboxes stay checked in the background even while
+  // hidden - so the inactive grid's checkboxes are disabled right before
+  // submitting (disabled inputs are excluded from a form POST); and (2)
+  // the math-level field should only be sent when it's actually shown.
+  function submitRegistration(event){
+    const errorEl = document.getElementById('formError');
+    errorEl.style.display = 'none';
+
+    const isArabicTrack = document.getElementById('langPrefSelect').value === 'ar';
+    const activeGridId = isArabicTrack ? 'subjectsGridArabic' : 'subjectsGridHebrew';
+    const inactiveGridId = isArabicTrack ? 'subjectsGridHebrew' : 'subjectsGridArabic';
+    const checkedInActive = document.querySelectorAll('#' + activeGridId + ' input[name="subjects"]:checked').length;
+
+    if(checkedInActive === 0){
+      event.preventDefault();
+      errorEl.textContent = currentLang === 'ar' ? 'الرجاء اختيار مادة واحدة على الأقل.' : 'בחר/י לפחות מקצוע אחד.';
+      errorEl.style.display = 'block';
+      return false;
+    }
+
+    document.querySelectorAll('#' + inactiveGridId + ' input[name="subjects"]').forEach(el => { el.disabled = true; });
+
+    const showsMathLevel = document.getElementById('mathLevelField').style.display !== 'none';
+    document.getElementById('mathLevelSelect').disabled = !showsMathLevel;
+
+    document.getElementById('signupForm').action = API_BASE + '/api/register';
+
+    const submitBtn = document.getElementById('formSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = currentLang === 'ar' ? 'جارٍ التحويل...' : 'מעביר לתשלום...';
+    return true; // let the native form submission proceed
   }
 
   // Live "try it yourself" demo - a genuine short Socratic exchange per

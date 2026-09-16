@@ -1000,6 +1000,66 @@ app.get("/api/test-payment", async (req, res) => {
   }
 });
 
+// Shared by the real webhook below and the manual-recovery endpoint after
+// it: given a Cardcom result (already confirmed ok) and the registration
+// details (either from pendingRegistrations, or supplied directly when
+// that's no longer available - e.g. after a server restart), registers the
+// student under both keys and sends the opening_welcome message. Returns
+// the keys used, or null if it can't proceed.
+async function finalizeRegistration(result, pending) {
+  if (!pending) return null;
+
+  console.log("[register] building student record for orderId", result.orderId);
+  // Every student gets BOTH access paths, regardless of which one they
+  // expect to use day to day: a WhatsApp-keyed record (so the number they
+  // gave us works immediately if they message in) AND a website-keyed
+  // record with its own generated id (so the personal
+  // chat.html?studentId=... link also works). Both point at the identical
+  // subscription details - same subjects, grade, etc. - they're just two
+  // lookup keys for one paid student.
+  const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
+  const websiteStudentId = makeStudentId();
+
+  const record = {
+    subjects: pending.subjects,
+    grade: pending.grade,
+    lang: pending.langPref,
+    mathLevel: pending.mathLevel || undefined,
+    childName: pending.childName || undefined,
+    school: pending.school || undefined,
+    parentPhone: pending.parentPhone,
+    parentEmail: pending.parentEmail || undefined,
+    cardcomToken: result.token,
+    cardcomTokenExpiryMonth: result.tokenExpiryMonth,
+    cardcomTokenExpiryYear: result.tokenExpiryYear,
+    monthlyAmount: pending.amount,
+    registeredAt: new Date().toISOString(),
+    whatsappKey,
+    websiteStudentId,
+  };
+
+  console.log("[register] saving student under", whatsappKey);
+  chatRouter.registerStudent(whatsappKey, record);
+  console.log("[register] saving student under", websiteStudentId);
+  chatRouter.registerStudent(websiteStudentId, record);
+  pendingRegistrations.delete(result.orderId);
+  console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
+
+  // The proactive opening_welcome template (fixed text, no variable slot -
+  // see its definition above) goes out right away on WhatsApp. It can't
+  // carry the personalized website link itself, but the moment the
+  // student replies to it, that reply is handled as a normal free-form
+  // message (see the ask_lang stage in the main webhook handler below),
+  // which DOES include their personal link - because a reply within an
+  // open session has none of a template's restrictions.
+  const langCode = pending.langPref === "ar" ? "ar" : "he";
+  console.log("[register] sending opening_welcome to", whatsappKey);
+  await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
+  console.log(`[register] opening_welcome sent to ${whatsappKey}`);
+
+  return { whatsappKey, websiteStudentId };
+}
+
 // Cardcom calls this address itself once the payment completes (server to
 // server - this is the reliable source of truth, not the redirect pages
 // below, which the payer's browser might close before it loads).
@@ -1040,59 +1100,55 @@ app.post("/api/cardcom-webhook", async (req, res) => {
       return;
     }
 
-    console.log("[register] building student record for orderId", result.orderId);
-    // Every student gets BOTH access paths, regardless of which one they
-    // expect to use day to day: a WhatsApp-keyed record (so the number
-    // they gave us works immediately if they message in) AND a
-    // website-keyed record with its own generated id (so the personal
-    // chat.html?studentId=... link also works). Both point at the
-    // identical subscription details - same subjects, grade, etc. -
-    // they're just two lookup keys for one paid student.
-    const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
-    const websiteStudentId = makeStudentId();
-
-    const record = {
-      subjects: pending.subjects,
-      grade: pending.grade,
-      lang: pending.langPref,
-      mathLevel: pending.mathLevel || undefined,
-      childName: pending.childName || undefined,
-      school: pending.school || undefined,
-      parentPhone: pending.parentPhone,
-      parentEmail: pending.parentEmail || undefined,
-      cardcomToken: result.token,
-      cardcomTokenExpiryMonth: result.tokenExpiryMonth,
-      cardcomTokenExpiryYear: result.tokenExpiryYear,
-      monthlyAmount: pending.amount,
-      registeredAt: new Date().toISOString(),
-      // cross-references so either record can point at its sibling -
-      // useful later if we ever need to look up "the other channel" for
-      // the same student.
-      whatsappKey,
-      websiteStudentId,
-    };
-
-    console.log("[register] saving student under", whatsappKey);
-    chatRouter.registerStudent(whatsappKey, record);
-    console.log("[register] saving student under", websiteStudentId);
-    chatRouter.registerStudent(websiteStudentId, record);
-    pendingRegistrations.delete(result.orderId);
-    console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
-
-    // The proactive opening_welcome template (fixed text, no variable
-    // slot - see its definition above) goes out right away on WhatsApp.
-    // It can't carry the personalized website link itself, but the
-    // moment the student replies to it, that reply is handled as a
-    // normal free-form message (see the ask_lang stage in the main
-    // webhook handler below), which DOES include their personal link -
-    // because a reply within an open session has none of a template's
-    // restrictions.
-    const langCode = pending.langPref === "ar" ? "ar" : "he";
-    console.log("[register] sending opening_welcome to", whatsappKey);
-    await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
-    console.log(`[register] opening_welcome sent to ${whatsappKey}`);
+    await finalizeRegistration(result, pending);
   } catch (err) {
     console.error("[cardcom] webhook processing error:", err && err.stack ? err.stack : err);
+  }
+});
+
+// TEMPORARY manual-recovery route: for a payment that already succeeded
+// (confirmed via Cardcom logs) but whose registration never completed -
+// e.g. the LowProfileId/LowProfileCode bug that was just fixed - this
+// re-fetches that SAME already-paid transaction by its LowProfileCode and
+// finishes registration, WITHOUT charging again. Visit it once with the
+// details as query params:
+//   /api/manual-complete?lowProfileCode=...&childPhone=0501234567&grade=י&subjects=math&mathLevel=3&langPref=he&parentPhone=0501234567
+// (mathLevel only needed for high-school math; parentPhone/parentEmail/
+// childName/school optional - childPhone defaults parentPhone if omitted)
+app.get("/api/manual-complete", async (req, res) => {
+  try {
+    const { lowProfileCode, childPhone, grade, mathLevel, langPref, parentPhone, parentEmail, childName, school } = req.query;
+    let subjects = req.query.subjects;
+    if (!subjects) subjects = [];
+    if (!Array.isArray(subjects)) subjects = [subjects];
+
+    if (!lowProfileCode || !childPhone || !grade || subjects.length === 0) {
+      return res.status(400).send("חסרים פרמטרים: לפחות lowProfileCode, childPhone, grade, subjects נדרשים.");
+    }
+
+    const result = await cardcom.getLowProfileResult(lowProfileCode);
+    if (!result.ok) {
+      return res.status(400).json({ error: "העסקה הזו לא נמצאה כמוצלחת אצל קארדקום.", raw: result.raw });
+    }
+
+    const pending = {
+      childName: childName || null,
+      school: school || null,
+      grade,
+      langPref: langPref === "ar" ? "ar" : "he",
+      mathLevel: mathLevel ? Number(mathLevel) : null,
+      subjects,
+      childPhone,
+      parentPhone: parentPhone || childPhone,
+      parentEmail: parentEmail || null,
+      amount: SUBJECT_PRICE_TABLE[subjects.length] || SUBJECT_PRICE_TABLE[3],
+    };
+
+    const keys = await finalizeRegistration(result, pending);
+    res.json({ ok: true, message: "נרשם ונשלחה הודעת פתיחה.", keys });
+  } catch (err) {
+    console.error("[manual-complete] error:", err && err.stack ? err.stack : err);
+    res.status(500).json({ error: err.message });
   }
 });
 

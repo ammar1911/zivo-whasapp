@@ -7575,17 +7575,26 @@ const SUBJECTS = [
 // WhatsApp number (add it as a row with owner:true) bypasses all
 // restriction - use that for your own testing/demo, never share it.
 //
-// Website: PAYWALL NOT YET ENFORCED (pilot/testing phase - by request) -
-// /api/subjects, /api/topics and /api/chat fall through to open access
-// when studentId is absent or unrecognized, so the plain link still
-// works for testers.
+// Website: PAYWALL ENFORCED - /api/subjects, /api/topics and /api/chat all
+// require a recognized studentId now; a missing or unrecognized one gets
+// an empty subjects/topics list (or a 403 from /api/chat) instead of open
+// access. This was intentionally left open during the pilot/testing phase
+// so existing test links kept working, but is closed now that real paid
+// registration (Cardcom) is live - see the /api/register flow in server.js.
 // WhatsApp: PAYWALL IS ENFORCED (server.js) - an unrecognized number
 // gets a message pointing to daiz.co.il to register, not a free session.
-// This asymmetry is intentional: the website flag exists to keep
-// existing test links working; WhatsApp has no live users yet, so it
-// starts locked down from day one instead of needing a flip later.
 // ---------------------------------------------------------------
-const STUDENTS = {
+// ---------------------------------------------------------------
+// STUDENTS is persisted to disk (students.json) so that real signups
+// survive server restarts/deploys - previously this was a hardcoded
+// in-memory object only, which is fine for manual testing (the owner
+// entries below) but would silently lose every real paying student on
+// the next deploy. The hardcoded entries below are the seed/default
+// data - loadStudents() merges the saved file on top of them at
+// startup, and saveStudents() must be called after every change.
+const STUDENTS_FILE = require("path").join(__dirname, "students.json");
+
+const STUDENTS_DEFAULTS = {
   "owner-full-access": { owner: true },
   "whatsapp:+972525775253": { owner: true }, // Ammar's own number, for testing the full flow
   // "example-student-1": { subjects: ["math", "english"], grade: "ח", lang: "he" },
@@ -7596,6 +7605,38 @@ const STUDENTS = {
   // language the student happens to type in day-to-day; it should match
   // the track they registered for.
 };
+
+function loadStudents() {
+  try {
+    const fs = require("fs");
+    if (fs.existsSync(STUDENTS_FILE)) {
+      const saved = JSON.parse(fs.readFileSync(STUDENTS_FILE, "utf8"));
+      return { ...STUDENTS_DEFAULTS, ...saved };
+    }
+  } catch (err) {
+    console.error("[students] failed to load students.json, starting from defaults:", err.message);
+  }
+  return { ...STUDENTS_DEFAULTS };
+}
+
+const STUDENTS = loadStudents();
+
+function saveStudents() {
+  try {
+    const fs = require("fs");
+    fs.writeFileSync(STUDENTS_FILE, JSON.stringify(STUDENTS, null, 2));
+  } catch (err) {
+    console.error("[students] failed to save students.json:", err.message);
+  }
+}
+
+// Adds (or overwrites) one student record and persists immediately -
+// call this once a payment/registration is confirmed.
+function registerStudent(key, record) {
+  STUDENTS[key] = record;
+  saveStudents();
+}
+// ---------------------------------------------------------------
 
 function subjectLabel(subj, lang) {
   return lang === "ar" ? subj.ar : subj.he;
@@ -7881,6 +7922,12 @@ router.get('/subjects', (req, res) => {
   const studentId = req.query.studentId;
   const student = studentId ? STUDENTS[studentId] : null;
 
+  // Paywall enforced: no recognized studentId means no subjects at all,
+  // not the old "show everything" fallback from the pilot/testing phase.
+  if (!student) {
+    return res.json({ subjects: [], notRegistered: true });
+  }
+
   let subjects = SUBJECTS
     .filter(s => (s.id === 'math' && lang === 'he')
       || (s.id === 'hebrew-grammar' && lang === 'he')
@@ -7890,8 +7937,8 @@ router.get('/subjects', (req, res) => {
       || (s.id === 'english'));
 
   // A registered (non-owner) student is restricted to exactly the subjects
-  // they paid for. Owner key and not-yet-enforced default both see everything.
-  if (student && !student.owner) {
+  // they paid for. Owner key sees everything.
+  if (!student.owner) {
     subjects = subjects.filter(s => student.subjects.includes(s.id));
   }
 
@@ -7911,12 +7958,17 @@ router.get('/topics', (req, res) => {
   const student = studentId ? STUDENTS[studentId] : null;
   const subject = SUBJECTS.find(s => s.id === subjectId);
 
+  // Paywall enforced: no recognized studentId, no topics.
+  if (!student) {
+    return res.json({ grades: [], topics: [], notRegistered: true });
+  }
+
   if (!subject || !subject.available) {
     return res.json({ grades: [], topics: [] });
   }
 
   // A registered (non-owner) student can only request a subject they paid for.
-  if (student && !student.owner && !student.subjects.includes(subjectId)) {
+  if (!student.owner && !student.subjects.includes(subjectId)) {
     return res.json({ grades: [], topics: [] });
   }
 
@@ -7928,7 +7980,7 @@ router.get('/topics', (req, res) => {
   )].sort((a, b) => GRADES.indexOf(a) - GRADES.indexOf(b));
 
   // A registered (non-owner) student only ever sees their own paid grade.
-  if (student && !student.owner) {
+  if (!student.owner) {
     gradesForSubject = gradesForSubject.filter(g => g === student.grade);
   }
 
@@ -7946,7 +7998,7 @@ router.get('/topics', (req, res) => {
   const isLeveled = isLeveledMathSubject(subject.kb_subject) && MATH_LEVEL_GRADES.includes(grade);
   let level = null;
   if (isLeveled) {
-    if (student && !student.owner && student.mathLevel) {
+    if (!student.owner && student.mathLevel) {
       level = student.mathLevel;
     } else if (req.query.level && [3, 4, 5].includes(Number(req.query.level))) {
       level = Number(req.query.level);
@@ -8024,10 +8076,15 @@ router.post('/chat', upload.single('image'), async (req, res) => {
     const unit = isGeneralChat ? {} : (findUnitById(topicId) || {});
 
     const student = studentId ? STUDENTS[studentId] : null;
-    // PAYWALL NOT YET ENFORCED (pilot/testing phase - by request): no
-    // studentId, or one that isn't recognized, still goes through - see
-    // the matching comment in /api/subjects above for why.
-    if (student && !student.owner) {
+    // Paywall enforced: no recognized studentId, no chat at all - point
+    // them at registration instead of letting the conversation through.
+    if (!student) {
+      return res.status(403).json({
+        error: 'צריך להירשם קודם כדי להתחיל ללמוד - daiz.co.il',
+        error_ar: 'يجب التسجيل أولاً للبدء بالتعلّم - daiz.co.il',
+      });
+    }
+    if (!student.owner) {
       // General-chat mode has no unit to derive the subject from, so it
       // uses the subject id sent directly by the client instead of
       // unit.subject (which topic-based mode relies on).
@@ -8145,6 +8202,7 @@ router.SUBJECTS = SUBJECTS;
 router.GRADES = GRADES;
 router.DOMAIN_AR = DOMAIN_AR;
 router.STUDENTS = STUDENTS;
+router.registerStudent = registerStudent;
 router.subjectLabel = subjectLabel;
 router.findUnitById = findUnitById;
 router.inferMathLevel = inferMathLevel;

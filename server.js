@@ -24,6 +24,17 @@ const chatRouter = require("./chat-route");
 const cardcom = require("./cardcom");
 
 const app = express();
+
+// Last-resort safety net: if something throws in a way that escapes every
+// try/catch in the app (a genuine bug, not user error), log it clearly
+// before Node's default behavior kicks in, instead of the process just
+// vanishing with zero explanation in the logs.
+process.on("uncaughtException", (err) => {
+  console.error("[fatal] uncaughtException:", err && err.stack ? err.stack : err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[fatal] unhandledRejection:", reason && reason.stack ? reason.stack : reason);
+});
 app.use(bodyParser.urlencoded({ extended: false }));
 // 360dialog's webhook body is JSON (Meta Cloud API format), not the
 // form-encoded body Twilio used - both parsers are mounted since /api
@@ -954,74 +965,88 @@ app.get("/api/test-payment", async (req, res) => {
 // below, which the payer's browser might close before it loads).
 app.post("/api/cardcom-webhook", async (req, res) => {
   console.log("[cardcom] webhook received:", JSON.stringify(req.body));
+  // Acknowledge immediately - Cardcom (like most webhook senders) may have
+  // its own short timeout waiting for our response, and everything below
+  // (another call back to Cardcom, writing students.json twice, sending a
+  // WhatsApp template) easily adds up to a few seconds. Better to tell
+  // Cardcom "received" right away and do the real work after, than risk
+  // the connection being cut mid-request while we're still inside it.
+  res.status(200).send("OK");
+
   try {
     const lowProfileCode = req.body.LowProfileCode || req.body.lowprofilecode;
-    if (lowProfileCode) {
-      const result = await cardcom.getLowProfileResult(lowProfileCode);
-      console.log("[cardcom] webhook result:", JSON.stringify(result));
-
-      if (result.ok && result.orderId) {
-        const pending = pendingRegistrations.get(result.orderId);
-        if (pending) {
-          // Every student gets BOTH access paths, regardless of which one
-          // they expect to use day to day: a WhatsApp-keyed record (so the
-          // number they gave us works immediately if they message in) AND
-          // a website-keyed record with its own generated id (so the
-          // personal chat.html?studentId=... link also works). Both point
-          // at the identical subscription details - same subjects, grade,
-          // etc. - they're just two lookup keys for one paid student.
-          const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
-          const websiteStudentId = makeStudentId();
-
-          const record = {
-            subjects: pending.subjects,
-            grade: pending.grade,
-            lang: pending.langPref,
-            mathLevel: pending.mathLevel || undefined,
-            childName: pending.childName || undefined,
-            school: pending.school || undefined,
-            parentPhone: pending.parentPhone,
-            cardcomToken: result.token,
-            cardcomTokenExpiryMonth: result.tokenExpiryMonth,
-            cardcomTokenExpiryYear: result.tokenExpiryYear,
-            monthlyAmount: pending.amount,
-            registeredAt: new Date().toISOString(),
-            // cross-references so either record can point at its sibling -
-            // useful later if we ever need to look up "the other channel"
-            // for the same student.
-            whatsappKey,
-            websiteStudentId,
-          };
-
-          chatRouter.registerStudent(whatsappKey, record);
-          chatRouter.registerStudent(websiteStudentId, record);
-          pendingRegistrations.delete(result.orderId);
-          console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
-
-          // The proactive opening_welcome template (fixed text, no
-          // variable slot - see its definition above) goes out right away
-          // on WhatsApp. It can't carry the personalized website link
-          // itself, but the moment the student replies to it, that reply
-          // is handled as a normal free-form message (see the ask_lang
-          // stage in the main webhook handler below), which DOES include
-          // their personal link - because a reply within an open session
-          // has none of a template's restrictions.
-          const langCode = pending.langPref === "ar" ? "ar" : "he";
-          try {
-            await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
-            console.log(`[register] opening_welcome sent to ${whatsappKey}`);
-          } catch (err) {
-            console.error(`[register] failed to send opening_welcome to ${whatsappKey}:`, err.message);
-          }
-        } else {
-          console.error(`[register] payment succeeded but no pending registration found for orderId ${result.orderId} - was this a stale/duplicate webhook call?`);
-        }
-      }
+    if (!lowProfileCode) {
+      console.log("[cardcom] webhook had no LowProfileCode - nothing to do");
+      return;
     }
-    res.status(200).send("OK");
+
+    console.log("[cardcom] fetching LowProfile result for", lowProfileCode);
+    const result = await cardcom.getLowProfileResult(lowProfileCode);
+    console.log("[cardcom] webhook result:", JSON.stringify(result));
+
+    if (!result.ok || !result.orderId) {
+      console.log("[cardcom] result not ok or missing orderId - stopping here");
+      return;
+    }
+
+    const pending = pendingRegistrations.get(result.orderId);
+    if (!pending) {
+      console.error(`[register] payment succeeded but no pending registration found for orderId ${result.orderId} - was this a stale/duplicate webhook call?`);
+      return;
+    }
+
+    console.log("[register] building student record for orderId", result.orderId);
+    // Every student gets BOTH access paths, regardless of which one they
+    // expect to use day to day: a WhatsApp-keyed record (so the number
+    // they gave us works immediately if they message in) AND a
+    // website-keyed record with its own generated id (so the personal
+    // chat.html?studentId=... link also works). Both point at the
+    // identical subscription details - same subjects, grade, etc. -
+    // they're just two lookup keys for one paid student.
+    const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
+    const websiteStudentId = makeStudentId();
+
+    const record = {
+      subjects: pending.subjects,
+      grade: pending.grade,
+      lang: pending.langPref,
+      mathLevel: pending.mathLevel || undefined,
+      childName: pending.childName || undefined,
+      school: pending.school || undefined,
+      parentPhone: pending.parentPhone,
+      cardcomToken: result.token,
+      cardcomTokenExpiryMonth: result.tokenExpiryMonth,
+      cardcomTokenExpiryYear: result.tokenExpiryYear,
+      monthlyAmount: pending.amount,
+      registeredAt: new Date().toISOString(),
+      // cross-references so either record can point at its sibling -
+      // useful later if we ever need to look up "the other channel" for
+      // the same student.
+      whatsappKey,
+      websiteStudentId,
+    };
+
+    console.log("[register] saving student under", whatsappKey);
+    chatRouter.registerStudent(whatsappKey, record);
+    console.log("[register] saving student under", websiteStudentId);
+    chatRouter.registerStudent(websiteStudentId, record);
+    pendingRegistrations.delete(result.orderId);
+    console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
+
+    // The proactive opening_welcome template (fixed text, no variable
+    // slot - see its definition above) goes out right away on WhatsApp.
+    // It can't carry the personalized website link itself, but the
+    // moment the student replies to it, that reply is handled as a
+    // normal free-form message (see the ask_lang stage in the main
+    // webhook handler below), which DOES include their personal link -
+    // because a reply within an open session has none of a template's
+    // restrictions.
+    const langCode = pending.langPref === "ar" ? "ar" : "he";
+    console.log("[register] sending opening_welcome to", whatsappKey);
+    await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
+    console.log(`[register] opening_welcome sent to ${whatsappKey}`);
   } catch (err) {
-    console.error("[cardcom] webhook error:", err);
-    res.status(200).send("OK"); // still 200 so Cardcom doesn't endlessly retry during testing
+    console.error("[cardcom] webhook processing error:", err && err.stack ? err.stack : err);
   }
 });
 

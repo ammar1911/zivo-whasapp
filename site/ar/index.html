@@ -1263,6 +1263,20 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     return true;
   }
 
+  // See the matching comment in site/index.html - resets the form if the
+  // browser restores this page from its back/forward cache (e.g. the
+  // parent hit "back" from Cardcom's payment page) instead of a fresh
+  // load, so the submit button doesn't stay stuck disabled.
+  window.addEventListener('pageshow', function(event){
+    if(event.persisted){
+      document.querySelectorAll('#subjectsGridHebrew input[name="subjects"], #subjectsGridArabic input[name="subjects"]').forEach(el => { el.disabled = false; });
+      document.getElementById('mathLevelSelect').disabled = false;
+      const formError = document.getElementById('formError');
+      if(formError) formError.style.display = 'none';
+      updateSubjectsPrice();
+    }
+  });
+
   let currentDemoTopic = null;
   let demoTimers = [];
   window.playDemo = function(topic){

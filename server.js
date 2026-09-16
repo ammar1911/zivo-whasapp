@@ -410,7 +410,31 @@ async function sendWhatsApp(to, body) {
 // approval rather than five.
 const WEEKLY_BOOST_TEMPLATE_NAME = "weekly_boost";
 
+// Sent once, to a brand-new WhatsApp-channel student who hasn't messaged
+// first - also business-initiated, so it also needs to be an approved
+// template. Fixed text, no {{1}} variable (see opening_welcome_he /
+// opening_welcome_ar in 360dialog - the same wording the owner already
+// tested as a reply, now submitted+approved as a template).
+const OPENING_WELCOME_TEMPLATE_NAME = "opening_welcome";
+
 async function sendTemplateWhatsApp(to, templateName, langCode, bodyText) {
+  const template = {
+    name: templateName,
+    language: { code: langCode },
+  };
+  // Not every template has a {{1}} variable - opening_welcome is fixed
+  // text with none, so only attach a body component when bodyText was
+  // actually given (sending an empty/mismatched components array is
+  // rejected by the API for a template that declares no variables).
+  if (bodyText !== undefined && bodyText !== null) {
+    template.components = [
+      {
+        type: "body",
+        parameters: [{ type: "text", text: bodyText }],
+      },
+    ];
+  }
+
   const res = await fetch(`${D360_BASE_URL}/messages`, {
     method: "POST",
     headers: {
@@ -422,16 +446,7 @@ async function sendTemplateWhatsApp(to, templateName, langCode, bodyText) {
       recipient_type: "individual",
       to: toD360Number(to),
       type: "template",
-      template: {
-        name: templateName,
-        language: { code: langCode },
-        components: [
-          {
-            type: "body",
-            parameters: [{ type: "text", text: bodyText }],
-          },
-        ],
-      },
+      template,
     }),
   });
   if (!res.ok) {
@@ -600,10 +615,18 @@ app.post("/whatsapp-webhook", async (req, res) => {
 
   try {
     if (session.stage === "ask_lang") {
-      await sendWhatsApp(
-        from,
-        "היי! ברוך הבא ל-daiZ 🌟\nאני כאן איתך – שותף לדרך הלימודית שלך. בכל נושא, שאלה או שיעורי בית שתרצה לעבור עליהם, נעשה את זה ביחד, צעד אחר צעד.\nתזכור: אין שאלות לא נכונות, ואין דבר שאי אפשר להבין כשמסבירים אותו בסבלנות ואהבה.\nעבורנו, חינוך ותרבות איכותיים הולכים יד ביד – כי ללמוד ולהתפתח כבן אדם חשובים בדיוק כמו להצליח במבחן.\n\nבאיזו שפה תרצה/י ללמוד? השיבו 1 לעברית, 2 للعربية.\n\nمرحباً بك في daiZ\nأنا هنا معك – شريكك في مسارك التعليمي. في أي موضوع، سؤال، أو واجبات مدرسية ترغب في مراجعتها، سنفعل ذلك معاً خطوة بخطوة.\nتذكّر دائماً: لا توجد أسئلة خاطئة، ولا يوجد شيء يصعب فهمه عندما نشرحه بصبر وحب.\nبالنسبة لنا، التربية والثقافة يسيران يداً بيد مع التعليم – فالبناء الإنساني لا يقل أهمية عن النجاح الدراسي.\n\nبأي لغة تحب التعلم؟ أجب 1 للعبرية، 2 للعربية."
-      );
+      let welcomeMsg =
+        "היי! ברוך הבא ל-daiZ 🌟\nאני כאן איתך – שותף לדרך הלימודית שלך. בכל נושא, שאלה או שיעורי בית שתרצה לעבור עליהם, נעשה את זה ביחד, צעד אחר צעד.\nתזכור: אין שאלות לא נכונות, ואין דבר שאי אפשר להבין כשמסבירים אותו בסבלנות ואהבה.\nעבורנו, חינוך ותרבות איכותיים הולכים יד ביד – כי ללמוד ולהתפתח כבן אדם חשובים בדיוק כמו להצליח במבחן.\n\nבאיזו שפה תרצה/י ללמוד? השיבו 1 לעברית, 2 للعربية.\n\nمرحباً بك في daiZ\nأنا هنا معك – شريكك في مسارك التعليمي. في أي موضوع، سؤال، أو واجبات مدرسية ترغب في مراجعتها، سنفعل ذلك معاً خطوة بخطوة.\nتذكّر دائماً: لا توجد أسئلة خاطئة، ولا يوجد شيء يصعب فهمه عندما نشرحه بصبر وحب.\nبالنسبة لنا، التربية والثقافة يسيران يداً بيد مع التعليم – فالبناء الإنساني لا يقل أهمية عن النجاح الدراسي.\n\nبأي لغة تحب التعلم؟ أجب 1 للعبرية، 2 للعربية.";
+      // A registered (non-owner) student also has a website login for the
+      // exact same subscription - this reply is a free-form message (not
+      // the proactive opening_welcome template above, which has no room
+      // for a personalized link), so this is the first safe place to
+      // actually hand them that link.
+      if (student.websiteStudentId) {
+        const link = `https://daiz.co.il/chat.html?studentId=${student.websiteStudentId}`;
+        welcomeMsg += `\n\nאפשר גם ללמוד דרך האתר, באותו מנוי בדיוק - הקישור האישי שלך:\n${link}\n\nممكن كمان تتعلّم عبر الموقع، بنفس الاشتراك بالضبط - رابطك الشخصي:\n${link}`;
+      }
+      await sendWhatsApp(from, welcomeMsg);
       session.stage = "wait_lang";
     } else if (session.stage === "wait_lang") {
       session.lang = body === "2" ? "ar" : "he";
@@ -834,7 +857,69 @@ app.post("/whatsapp-webhook", async (req, res) => {
   res.status(200).json({ received: true });
 });
 
-// --- Cardcom payment testing routes -----------------------------------
+// --- Real registration + payment flow -----------------------------------
+// The landing page form posts here. We calculate the price from how many
+// subjects were chosen (same table as the landing page's own live preview),
+// hold the submitted details in memory until payment is confirmed, then
+// send the family to Cardcom's hosted payment page.
+const SUBJECT_PRICE_TABLE = { 1: 120, 2: 180, 3: 200, 4: 220 };
+const pendingRegistrations = new Map(); // orderId -> registration details, cleared once payment completes
+
+function makeStudentId() {
+  return "stu_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+}
+
+app.post("/api/register", express.urlencoded({ extended: false }), async (req, res) => {
+  try {
+    const {
+      childName, school, grade, langPref, mathLevel,
+      childPhone, parentPhone,
+    } = req.body;
+    let subjects = req.body.subjects;
+    if (!subjects) subjects = [];
+    if (!Array.isArray(subjects)) subjects = [subjects];
+
+    // Every student gets both WhatsApp and website access, so the child's
+    // WhatsApp number is always required now - there's no more channel
+    // choice to gate it on.
+    if (subjects.length === 0 || !grade || !parentPhone || !childPhone) {
+      return res.status(400).send("חסרים פרטים בטופס - נא לחזור ולנסות שוב.");
+    }
+
+    const amount = SUBJECT_PRICE_TABLE[subjects.length] || SUBJECT_PRICE_TABLE[3];
+    const orderId = "reg-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+
+    pendingRegistrations.set(orderId, {
+      childName, school, grade, langPref: langPref || "he", mathLevel: mathLevel || null,
+      subjects, childPhone, parentPhone, amount,
+      createdAt: new Date().toISOString(),
+    });
+
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const session = await cardcom.createPaymentSession({
+      orderId,
+      amount,
+      productName: `daiZ - מנוי חודשי (${subjects.length} מקצועות)`,
+      successUrl: `${baseUrl}/api/payment-success`,
+      failUrl: `${baseUrl}/api/payment-failed`,
+      webhookUrl: `${baseUrl}/api/cardcom-webhook`,
+      language: langPref === "ar" ? "ar" : "he",
+    });
+
+    if (!session.ok || !session.url) {
+      console.error("[register] could not create payment session:", JSON.stringify(session.raw));
+      pendingRegistrations.delete(orderId);
+      return res.status(500).send("לא הצלחנו לפתוח את דף התשלום. נסו שוב או צרו קשר בוואטסאפ.");
+    }
+    res.redirect(session.url);
+  } catch (err) {
+    console.error("[register] error:", err);
+    res.status(500).send("שגיאה בהרשמה. נסו שוב או צרו קשר בוואטסאפ.");
+  }
+});
+// -------------------------------------------------------------------------
+
+
 // TEMPORARY test harness so we can confirm the Cardcom integration works
 // end-to-end before wiring it into the real signup flow. Visit
 // /api/test-payment in a browser - it creates a 1 ILS test charge (on
@@ -874,8 +959,64 @@ app.post("/api/cardcom-webhook", async (req, res) => {
     if (lowProfileCode) {
       const result = await cardcom.getLowProfileResult(lowProfileCode);
       console.log("[cardcom] webhook result:", JSON.stringify(result));
-      // TODO once this test passes: save result.token + expiry against the
-      // matching student record, so chargeToken() can bill them monthly.
+
+      if (result.ok && result.orderId) {
+        const pending = pendingRegistrations.get(result.orderId);
+        if (pending) {
+          // Every student gets BOTH access paths, regardless of which one
+          // they expect to use day to day: a WhatsApp-keyed record (so the
+          // number they gave us works immediately if they message in) AND
+          // a website-keyed record with its own generated id (so the
+          // personal chat.html?studentId=... link also works). Both point
+          // at the identical subscription details - same subjects, grade,
+          // etc. - they're just two lookup keys for one paid student.
+          const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
+          const websiteStudentId = makeStudentId();
+
+          const record = {
+            subjects: pending.subjects,
+            grade: pending.grade,
+            lang: pending.langPref,
+            mathLevel: pending.mathLevel || undefined,
+            childName: pending.childName || undefined,
+            school: pending.school || undefined,
+            parentPhone: pending.parentPhone,
+            cardcomToken: result.token,
+            cardcomTokenExpiryMonth: result.tokenExpiryMonth,
+            cardcomTokenExpiryYear: result.tokenExpiryYear,
+            monthlyAmount: pending.amount,
+            registeredAt: new Date().toISOString(),
+            // cross-references so either record can point at its sibling -
+            // useful later if we ever need to look up "the other channel"
+            // for the same student.
+            whatsappKey,
+            websiteStudentId,
+          };
+
+          chatRouter.registerStudent(whatsappKey, record);
+          chatRouter.registerStudent(websiteStudentId, record);
+          pendingRegistrations.delete(result.orderId);
+          console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
+
+          // The proactive opening_welcome template (fixed text, no
+          // variable slot - see its definition above) goes out right away
+          // on WhatsApp. It can't carry the personalized website link
+          // itself, but the moment the student replies to it, that reply
+          // is handled as a normal free-form message (see the ask_lang
+          // stage in the main webhook handler below), which DOES include
+          // their personal link - because a reply within an open session
+          // has none of a template's restrictions.
+          const langCode = pending.langPref === "ar" ? "ar" : "he";
+          try {
+            await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
+            console.log(`[register] opening_welcome sent to ${whatsappKey}`);
+          } catch (err) {
+            console.error(`[register] failed to send opening_welcome to ${whatsappKey}:`, err.message);
+          }
+        } else {
+          console.error(`[register] payment succeeded but no pending registration found for orderId ${result.orderId} - was this a stale/duplicate webhook call?`);
+        }
+      }
     }
     res.status(200).send("OK");
   } catch (err) {

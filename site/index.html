@@ -481,7 +481,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     </div>
   </div>
   <div class="lang-toggle">
-    <a id="btn-he" class="active" href="/" onclick="setLang('he'); return false;">עברית</a>
+    <a id="btn-he" class="active" href="/" onclick="setLang('he', true); return false;">עברית</a>
     <a id="btn-ar" href="/ar/">العربية</a>
   </div>
 </nav>
@@ -737,6 +737,10 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
         <label data-i18n="labelParentPhone">מספר טלפון של ההורה <span class="hint" data-i18n="hintParentPhone">(לקבלת עדכון התקדמות שבועי בלבד)</span></label>
         <input type="tel" id="parentPhoneInput" name="parentPhone" placeholder="050-1234567" required>
       </div>
+      <div class="field">
+        <label data-i18n="labelParentEmail">אימייל של ההורה <span class="hint" data-i18n="hintParentEmail">(לקבלת חשבונית)</span></label>
+        <input type="email" id="parentEmailInput" name="parentEmail" placeholder="name@example.com">
+      </div>
       <button type="submit" id="formSubmitBtn" class="btn btn-primary submit-btn" data-i18n="formSubmit">התחל מנוי — ₪120 לחודש</button>
       <p class="form-note" data-i18n="formNote">בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.</p>
       <p class="form-error" id="formError" style="display:none;color:#b3441e;font-size:12.5px;text-align:center;margin-top:10px;"></p>
@@ -956,6 +960,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(כאן תתנהל השיחה עם המורה)",
       labelParentPhone:"מספר טלפון של ההורה",
       hintParentPhone:"(לקבלת עדכון התקדמות שבועי בלבד)",
+      labelParentEmail:"אימייל של ההורה",
+      hintParentEmail:"(לקבלת חשבונית)",
       formSubmit:"התחל מנוי — ₪120 לחודש",
       formNote:"בלחיצה על הכפתור אתם מאשרים חיוב חודשי מתחדש, שניתן לבטל בכל עת דרך הוואטסאפ.",
       aboutTitle:"מי אנחנו",
@@ -1122,6 +1128,8 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       hintChildPhone:"(هنا ستجري المحادثة مع المعلّم)",
       labelParentPhone:"رقم هاتف أحد الوالدين",
       hintParentPhone:"(لتلقي تحديث التقدّم الأسبوعي فقط)",
+      labelParentEmail:"البريد الإلكتروني لأحد الوالدين",
+      hintParentEmail:"(لتلقي الفاتورة)",
       formSubmit:"ابدأ الاشتراك — ₪120 شهرياً",
       formNote:"بالضغط على الزر، أنت توافق على اشتراك شهري متجدد يمكن إلغاؤه في أي وقت عبر واتساب.",
       aboutTitle:"من نحن",
@@ -1439,7 +1447,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     if(currentDemoTopic) playDemo(currentDemoTopic);
   };
 
-  function setLang(lang){
+  function setLang(lang, syncFormLang){
     currentLang = lang;
     document.documentElement.lang = lang;
     document.body.classList.toggle('lang-ar', lang === 'ar');
@@ -1458,22 +1466,31 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
       }
     });
     // Keep the signup form's "language of instruction" selector in lockstep
-    // with the main he/ar toggle - this covers BOTH the initial auto-detect
-    // AND every manual click on the nav toggle afterward (previously only
-    // the initial page-load detection synced it, so manually switching the
-    // nav toggle to Arabic left the form silently stuck on the Hebrew-taught
-    // subject group). If someone opens the dropdown afterward and picks the
-    // other option on purpose, that manual choice is respected until the
-    // next nav-toggle click.
-    document.getElementById('langPrefSelect').value = lang;
-    onLangPrefChange();
+    // with the main he/ar toggle - but ONLY when the person actually
+    // clicked the toggle themselves (syncFormLang === true). The page also
+    // calls setLang() once on load to match the browser's detected
+    // language, purely so the TEXT displays correctly for that visitor -
+    // that auto-detection is about how the page reads, not a signal about
+    // which language the parent wants their child taught in, so it must
+    // NOT silently flip this field. Without this distinction, a parent
+    // with an Arabic-language phone visiting the plain daiz.co.il URL
+    // would see the page auto-switch to Arabic AND have "שפת שיעורים"
+    // silently set to Arabic too, even if they wanted Hebrew instruction -
+    // which is exactly what happened and sent them to an Arabic Cardcom
+    // page despite asking for Hebrew.
+    if(syncFormLang){
+      document.getElementById('langPrefSelect').value = lang;
+      onLangPrefChange();
+    }
   }
 
   // Default UI language: prefer an explicit ?lang=ar/he URL param (useful
   // for language-targeted ad campaigns), then fall back to the browser's
   // language, and only default to Hebrew if neither signals Arabic - so an
   // Arabic-speaking visitor isn't shown Hebrew first and doesn't have to
-  // find the toggle themselves.
+  // find the toggle themselves. This only affects how the page DISPLAYS -
+  // see the syncFormLang note in setLang() for why the signup form's own
+  // language-of-instruction field is deliberately left alone here.
   (function chooseInitialLang(){
     const urlLang = new URLSearchParams(window.location.search).get('lang');
     let initialLang = 'he';
@@ -1482,7 +1499,7 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     } else if(navigator.language && navigator.language.toLowerCase().startsWith('ar')){
       initialLang = 'ar';
     }
-    setLang(initialLang);
+    setLang(initialLang, false);
   })();
 </script>
 

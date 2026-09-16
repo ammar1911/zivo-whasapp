@@ -21,6 +21,7 @@ const bodyParser = require("body-parser");
 const Anthropic = require("@anthropic-ai/sdk");
 const fs = require("fs");
 const chatRouter = require("./chat-route");
+const cardcom = require("./cardcom");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -832,6 +833,66 @@ app.post("/whatsapp-webhook", async (req, res) => {
   saveSessions();
   res.status(200).json({ received: true });
 });
+
+// --- Cardcom payment testing routes -----------------------------------
+// TEMPORARY test harness so we can confirm the Cardcom integration works
+// end-to-end before wiring it into the real signup flow. Visit
+// /api/test-payment in a browser - it creates a 1 ILS test charge (on
+// Cardcom's sandbox terminal, no real money) and redirects you to their
+// hosted payment page. Use test card 4580000000000000, any future expiry,
+// CVV 123.
+app.get("/api/test-payment", async (req, res) => {
+  try {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const session = await cardcom.createPaymentSession({
+      orderId: "test-" + Date.now(),
+      amount: 1, // 1 ILS test charge - keep this low while testing
+      productName: "daiZ - בדיקת תשלום",
+      successUrl: `${baseUrl}/api/payment-success`,
+      failUrl: `${baseUrl}/api/payment-failed`,
+      webhookUrl: `${baseUrl}/api/cardcom-webhook`,
+      language: "he",
+    });
+    console.log("[cardcom] test session created:", JSON.stringify(session.raw));
+    if (!session.ok || !session.url) {
+      return res.status(500).json({ error: "Could not create payment session", details: session.raw });
+    }
+    res.redirect(session.url);
+  } catch (err) {
+    console.error("[cardcom] test-payment error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Cardcom calls this address itself once the payment completes (server to
+// server - this is the reliable source of truth, not the redirect pages
+// below, which the payer's browser might close before it loads).
+app.post("/api/cardcom-webhook", async (req, res) => {
+  console.log("[cardcom] webhook received:", JSON.stringify(req.body));
+  try {
+    const lowProfileCode = req.body.LowProfileCode || req.body.lowprofilecode;
+    if (lowProfileCode) {
+      const result = await cardcom.getLowProfileResult(lowProfileCode);
+      console.log("[cardcom] webhook result:", JSON.stringify(result));
+      // TODO once this test passes: save result.token + expiry against the
+      // matching student record, so chargeToken() can bill them monthly.
+    }
+    res.status(200).send("OK");
+  } catch (err) {
+    console.error("[cardcom] webhook error:", err);
+    res.status(200).send("OK"); // still 200 so Cardcom doesn't endlessly retry during testing
+  }
+});
+
+// Simple pages for the browser redirect after test payment (the webhook
+// above is what actually matters - these are just for a friendly screen).
+app.get("/api/payment-success", (req, res) => {
+  res.send("<h1>התשלום הצליח! (בדיקה)</h1><p>בדוק את הלוגים ב-Render כדי לראות את פרטי ה-Token.</p>");
+});
+app.get("/api/payment-failed", (req, res) => {
+  res.send("<h1>התשלום נכשל (בדיקה)</h1>");
+});
+// -------------------------------------------------------------------------
 
 app.get("/", (req, res) => res.send("daiZ WhatsApp trial server is running."));
 

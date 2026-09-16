@@ -420,6 +420,20 @@ function toD360Number(internalNumber) {
 function fromD360Number(rawNumber) {
   return "whatsapp:+" + rawNumber.replace(/^\+/, "");
 }
+// Converts an Israeli phone number in ANY common input format - local
+// (0522413377, 052-241-3377), with a stray leading +, or already
+// international (972522413377) - into the plain international digits
+// WhatsApp/360dialog expects (972522413377, no +, no leading 0). Every
+// landing-page phone field is filled in local format (see the
+// "050-1234567" placeholders), so this MUST run before building a
+// whatsappKey or sending anything - skipping it produces a garbled,
+// non-existent number like "+0522413377" that no message can reach.
+function normalizeIsraeliPhone(raw) {
+  let digits = String(raw || "").replace(/\D/g, "");
+  if (digits.startsWith("972")) return digits;
+  if (digits.startsWith("0")) return "972" + digits.slice(1);
+  return "972" + digits; // already missing both the 0 and 972 - best effort
+}
 
 async function sendWhatsApp(to, body) {
   const res = await fetch(`${D360_BASE_URL}/messages`, {
@@ -1017,7 +1031,7 @@ async function finalizeRegistration(result, pending) {
   // chat.html?studentId=... link also works). Both point at the identical
   // subscription details - same subjects, grade, etc. - they're just two
   // lookup keys for one paid student.
-  const whatsappKey = "whatsapp:+" + pending.childPhone.replace(/\D/g, "");
+  const whatsappKey = "whatsapp:+" + normalizeIsraeliPhone(pending.childPhone);
   const websiteStudentId = makeStudentId();
 
   const record = {

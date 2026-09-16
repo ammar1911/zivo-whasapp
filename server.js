@@ -99,6 +99,39 @@ function topicsForSubjectGrade(subjectObj, grade, level) {
   });
 }
 
+// Extracted so it can be called two ways: right after ask_lang when the
+// student's language is already known from registration (skipping the
+// "which language?" question entirely), or after wait_lang for the
+// fallback case (owner testing without a lang set) where we still had to
+// ask. Same logic either way - a registered student with only one subject
+// skips straight past picking it, everyone else sees a subject list.
+async function proceedToSubjectSelection(from, session, student) {
+  if (!student.owner && student.subjects.length === 1) {
+    const onlySubject = SUBJECTS.find(s => s.id === student.subjects[0]);
+    session.subject = onlySubject.id;
+    session.grade = student.grade;
+    await sendTopicListOrAskLevel(from, session, onlySubject, student);
+  } else {
+    let subjects = subjectsForLang(session.lang);
+    // A registered (non-owner) student only sees the subjects they paid
+    // for. Owner (student.owner) and the not-yet-registered-check having
+    // already passed means `student` here is always a real entry.
+    if (!student.owner) {
+      subjects = subjects.filter(s => student.subjects.includes(s.id));
+    }
+    session.availableSubjects = subjects; // remember the filtered list for the next stage
+    const list = subjects
+      .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
+      .join("\n");
+    const msg =
+      session.lang === "he"
+        ? `מעולה! באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.`
+        : `ممتاز! في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
+    await sendWhatsApp(from, msg);
+    session.stage = "wait_subject";
+  }
+}
+
 // Shared by both places that need to show the topic list after a
 // grade is known (registered-student fast path, and the owner's
 // separate grade-selection stage) - handles the high-school math
@@ -626,49 +659,47 @@ app.post("/whatsapp-webhook", async (req, res) => {
 
   try {
     if (session.stage === "ask_lang") {
-      let welcomeMsg =
-        "היי! ברוך הבא ל-daiZ 🌟\nאני כאן איתך – שותף לדרך הלימודית שלך. בכל נושא, שאלה או שיעורי בית שתרצה לעבור עליהם, נעשה את זה ביחד, צעד אחר צעד.\nתזכור: אין שאלות לא נכונות, ואין דבר שאי אפשר להבין כשמסבירים אותו בסבלנות ואהבה.\nעבורנו, חינוך ותרבות איכותיים הולכים יד ביד – כי ללמוד ולהתפתח כבן אדם חשובים בדיוק כמו להצליח במבחן.\n\nבאיזו שפה תרצה/י ללמוד? השיבו 1 לעברית, 2 للعربية.\n\nمرحباً بك في daiZ\nأنا هنا معك – شريكك في مسارك التعليمي. في أي موضوع، سؤال، أو واجبات مدرسية ترغب في مراجعتها، سنفعل ذلك معاً خطوة بخطوة.\nتذكّر دائماً: لا توجد أسئلة خاطئة، ولا يوجد شيء يصعب فهمه عندما نشرحه بصبر وحب.\nبالنسبة لنا، التربية والثقافة يسيران يداً بيد مع التعليم – فالبناء الإنساني لا يقل أهمية عن النجاح الدراسي.\n\nبأي لغة تحب التعلم؟ أجب 1 للعبرية، 2 للعربية.";
-      // A registered (non-owner) student also has a website login for the
-      // exact same subscription - this reply is a free-form message (not
-      // the proactive opening_welcome template above, which has no room
-      // for a personalized link), so this is the first safe place to
-      // actually hand them that link.
-      if (student.websiteStudentId) {
-        const link = `https://daiz.co.il/chat.html?studentId=${student.websiteStudentId}`;
-        welcomeMsg += `\n\nאפשר גם ללמוד דרך האתר, באותו מנוי בדיוק - הקישור האישי שלך:\n${link}\n\nممكن كمان تتعلّم عبر الموقع، بنفس الاشتراك بالضبط - رابطك الشخصي:\n${link}`;
+      // A registered (non-owner) student already told us their language
+      // preference on the signup form (student.lang) - asking again here
+      // is exactly the confusing double-question the owner flagged: someone
+      // who signed up for Hebrew shouldn't be asked "Hebrew or Arabic?"
+      // right after. So when it's known, skip straight to a single-language
+      // welcome and on to subject selection - no wait_lang round-trip.
+      // Only an owner testing account without a lang set yet falls back to
+      // the old bilingual ask-both-then-wait flow below.
+      if (student.lang === "he" || student.lang === "ar") {
+        session.lang = student.lang;
+        let welcomeMsg =
+          session.lang === "he"
+            ? "היי! ברוך הבא ל-daiZ 🌟\nאני כאן איתך – שותף לדרך הלימודית שלך. בכל נושא, שאלה או שיעורי בית שתרצה לעבור עליהם, נעשה את זה ביחד, צעד אחר צעד.\nתזכור: אין שאלות לא נכונות, ואין דבר שאי אפשר להבין כשמסבירים אותו בסבלנות ואהבה.\nעבורנו, חינוך ותרבות איכותיים הולכים יד ביד – כי ללמוד ולהתפתח כבן אדם חשובים בדיוק כמו להצליח במבחן."
+            : "مرحباً بك في daiZ\nأنا هنا معك – شريكك في مسارك التعليمي. في أي موضوع، سؤال، أو واجبات مدرسية ترغب في مراجعتها، سنفعل ذلك معاً خطوة بخطوة.\nتذكّر دائماً: لا توجد أسئلة خاطئة، ولا يوجد شيء يصعب فهمه عندما نشرحه بصبر وحب.\nبالنسبة لنا، التربية والثقافة يسيران يداً بيد مع التعليم – فالبناء الإنساني لا يقل أهمية عن النجاح الدراسي.";
+        if (student.websiteStudentId) {
+          const link = `https://daiz.co.il/chat.html?studentId=${student.websiteStudentId}`;
+          welcomeMsg +=
+            session.lang === "he"
+              ? `\n\nאפשר גם ללמוד דרך האתר, באותו מנוי בדיוק - הקישור האישי שלך:\n${link}`
+              : `\n\nممكن كمان تتعلّم عبر الموقع، بنفس الاشتراك بالضبط - رابطك الشخصي:\n${link}`;
+        }
+        await sendWhatsApp(from, welcomeMsg);
+        await proceedToSubjectSelection(from, session, student);
+      } else {
+        let welcomeMsg =
+          "היי! ברוך הבא ל-daiZ 🌟\nאני כאן איתך – שותף לדרך הלימודית שלך. בכל נושא, שאלה או שיעורי בית שתרצה לעבור עליהם, נעשה את זה ביחד, צעד אחר צעד.\nתזכור: אין שאלות לא נכונות, ואין דבר שאי אפשר להבין כשמסבירים אותו בסבלנות ואהבה.\nעבורנו, חינוך ותרבות איכותיים הולכים יד ביד – כי ללמוד ולהתפתח כבן אדם חשובים בדיוק כמו להצליח במבחן.\n\nבאיזו שפה תרצה/י ללמוד? השיבו 1 לעברית, 2 للعربية.\n\nمرحباً بك في daiZ\nأنا هنا معك – شريكك في مسارك التعليمي. في أي موضوع، سؤال، أو واجبات مدرسية ترغب في مراجعتها، سنفعل ذلك معاً خطوة بخطوة.\nتذكّر دائماً: لا توجد أسئلة خاطئة، ولا يوجد شيء يصعب فهمه عندما نشرحه بصبر وحب.\nبالنسبة لنا، التربية والثقافة يسيران يداً بيد مع التعليم – فالبناء الإنساني لا يقل أهمية عن النجاح الدراسي.\n\nبأي لغة تحب التعلم؟ أجب 1 للعبرية، 2 للعربية.";
+        // A registered (non-owner) student also has a website login for the
+        // exact same subscription - this reply is a free-form message (not
+        // the proactive opening_welcome template above, which has no room
+        // for a personalized link), so this is the first safe place to
+        // actually hand them that link.
+        if (student.websiteStudentId) {
+          const link = `https://daiz.co.il/chat.html?studentId=${student.websiteStudentId}`;
+          welcomeMsg += `\n\nאפשר גם ללמוד דרך האתר, באותו מנוי בדיוק - הקישור האישי שלך:\n${link}\n\nممكن كمان تتعلّم عبر الموقع، بنفس الاشتراك بالضبط - رابطك الشخصي:\n${link}`;
+        }
+        await sendWhatsApp(from, welcomeMsg);
+        session.stage = "wait_lang";
       }
-      await sendWhatsApp(from, welcomeMsg);
-      session.stage = "wait_lang";
     } else if (session.stage === "wait_lang") {
       session.lang = body === "2" ? "ar" : "he";
-      // Same shortcut as the menu command below: a registered student with
-      // only one subject has nothing to pick at this step either - skip
-      // straight past subject selection to grade/level/topics instead of
-      // making them confirm the one option they already have.
-      if (!student.owner && student.subjects.length === 1) {
-        const onlySubject = SUBJECTS.find(s => s.id === student.subjects[0]);
-        session.subject = onlySubject.id;
-        session.grade = student.grade;
-        await sendTopicListOrAskLevel(from, session, onlySubject, student);
-      } else {
-        let subjects = subjectsForLang(session.lang);
-        // A registered (non-owner) student only sees the subjects they paid
-        // for. Owner (student.owner) and the not-yet-registered-check above
-        // having already passed means `student` here is always a real entry.
-        if (!student.owner) {
-          subjects = subjects.filter(s => student.subjects.includes(s.id));
-        }
-        session.availableSubjects = subjects; // remember the filtered list for the next stage
-        const list = subjects
-          .map((s, i) => `${i + 1}. ${session.lang === "he" ? s.he : s.ar}`)
-          .join("\n");
-        const msg =
-          session.lang === "he"
-            ? `מעולה! באיזה מקצוע נתרגל היום?\n${list}\n\nהשיבו במספר.`
-            : `ممتاز! في أي مادة نتدرّب اليوم؟\n${list}\n\nأجب بالرقم.`;
-        await sendWhatsApp(from, msg);
-        session.stage = "wait_subject";
-      }
+      await proceedToSubjectSelection(from, session, student);
     } else if (session.stage === "wait_subject") {
       const subjects = session.availableSubjects || subjectsForLang(session.lang);
       const idx = parseInt(body, 10) - 1;

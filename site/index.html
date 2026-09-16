@@ -1302,6 +1302,25 @@ src="https://www.facebook.com/tr?id=1870528049644058&ev=PageView&noscript=1"
     return true; // let the native form submission proceed
   }
 
+  // If someone hits the browser's back button from Cardcom's payment page,
+  // the browser can restore this page from its back/forward cache (bfcache)
+  // exactly as it looked the instant we navigated away - disabled submit
+  // button, "מעביר לתשלום..." text, and the inactive subjects grid still
+  // disabled - rather than a fresh load. Without this, the form looks
+  // permanently stuck with no way to submit again. pageshow with
+  // event.persisted true fires specifically for that restored-from-cache
+  // case (a normal fresh load does NOT set persisted), so this only resets
+  // things when it's actually needed.
+  window.addEventListener('pageshow', function(event){
+    if(event.persisted){
+      document.querySelectorAll('#subjectsGridHebrew input[name="subjects"], #subjectsGridArabic input[name="subjects"]').forEach(el => { el.disabled = false; });
+      document.getElementById('mathLevelSelect').disabled = false;
+      const formError = document.getElementById('formError');
+      if(formError) formError.style.display = 'none';
+      updateSubjectsPrice(); // also restores the submit button's enabled state and correct price text
+    }
+  });
+
   // Live "try it yourself" demo - a genuine short Socratic exchange per
   // topic (student asks, tutor guides with a question instead of the
   // answer, student works it out step by step). No signup, no server call -

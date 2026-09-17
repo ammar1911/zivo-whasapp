@@ -1059,16 +1059,18 @@ async function finalizeRegistration(result, pending) {
   pendingRegistrations.delete(result.orderId);
   console.log(`[register] student registered under both ${whatsappKey} and ${websiteStudentId} (${pending.subjects.join(", ")}, grade ${pending.grade})`);
 
-  // The proactive opening_welcome template (fixed text, no variable slot -
-  // see its definition above) goes out right away on WhatsApp. It can't
-  // carry the personalized website link itself, but the moment the
-  // student replies to it, that reply is handled as a normal free-form
-  // message (see the ask_lang stage in the main webhook handler below),
-  // which DOES include their personal link - because a reply within an
-  // open session has none of a template's restrictions.
+  // The proactive opening_welcome template now carries {{1}} = the
+  // student's first name (Meta looks more favorably on a genuinely
+  // personalized variable for Utility classification than fully static
+  // text). It still can't carry the personalized website link itself, but
+  // the moment the student replies to it, that reply is handled as a
+  // normal free-form message (see the ask_lang stage in the main webhook
+  // handler below), which DOES include their personal link - because a
+  // reply within an open session has none of a template's restrictions.
   const langCode = pending.langPref === "ar" ? "ar" : "he";
+  const firstName = (pending.childName || "").trim().split(/\s+/)[0] || (langCode === "ar" ? "صديقنا" : "חבר/ה");
   console.log("[register] sending opening_welcome to", whatsappKey);
-  await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode);
+  await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode, firstName);
   console.log(`[register] opening_welcome sent to ${whatsappKey}`);
 
   return { whatsappKey, websiteStudentId };

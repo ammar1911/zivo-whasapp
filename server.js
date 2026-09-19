@@ -473,7 +473,15 @@ const WEEKLY_BOOST_TEMPLATE_NAME = "weekly_boost";
 // template. Fixed text, no {{1}} variable (see opening_welcome_he /
 // opening_welcome_ar in 360dialog - the same wording the owner already
 // tested as a reply, now submitted+approved as a template).
-const OPENING_WELCOME_TEMPLATE_NAME = "opening_welcome";
+//
+// IMPORTANT: despite this constant's name, the template as actually
+// approved in 360dialog is called "welcome_registration_completed" (not
+// "opening_welcome" - that was the internal/working name used while
+// drafting it, but Meta approved it under the name shown in the 360dialog
+// Templates tab). Sending "opening_welcome" gets Meta error 132001
+// ("Template name does not exist in the translation") because no such
+// template exists - the name has to match exactly what's approved.
+const OPENING_WELCOME_TEMPLATE_NAME = "welcome_registration_completed";
 
 async function sendTemplateWhatsApp(to, templateName, langCode, bodyText) {
   const template = {

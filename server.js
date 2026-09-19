@@ -510,7 +510,9 @@ async function sendTemplateWhatsApp(to, templateName, langCode, bodyText) {
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
     console.error(`360dialog template send failed (${res.status}) for ${to}:`, errText);
+    return false;
   }
+  return true;
 }
 
 // Five rotating messages, one pair per calendar week (index = ISO week
@@ -1070,10 +1072,18 @@ async function finalizeRegistration(result, pending) {
   const langCode = pending.langPref === "ar" ? "ar" : "he";
   const firstName = (pending.childName || "").trim().split(/\s+/)[0] || (langCode === "ar" ? "صديقنا" : "חבר/ה");
   console.log("[register] sending opening_welcome to", whatsappKey);
-  await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode, firstName);
-  console.log(`[register] opening_welcome sent to ${whatsappKey}`);
+  const welcomeSent = await sendTemplateWhatsApp(whatsappKey, OPENING_WELCOME_TEMPLATE_NAME, langCode, firstName);
+  if (welcomeSent) {
+    console.log(`[register] opening_welcome sent to ${whatsappKey}`);
+  } else {
+    // Don't let a failed opening_welcome look like a success in the logs -
+    // the student record above is still saved either way (they can still
+    // message in manually), but this surfaces the failure so it doesn't
+    // get missed the way it did when this line ran unconditionally.
+    console.error(`[register] opening_welcome FAILED to send to ${whatsappKey} - student is registered but never got the welcome message`);
+  }
 
-  return { whatsappKey, websiteStudentId };
+  return { whatsappKey, websiteStudentId, welcomeSent };
 }
 
 // Cardcom calls this address itself once the payment completes (server to
@@ -1161,7 +1171,10 @@ app.get("/api/manual-complete", async (req, res) => {
     };
 
     const keys = await finalizeRegistration(result, pending);
-    res.json({ ok: true, message: "נרשם ונשלחה הודעת פתיחה.", keys });
+    const message = keys && keys.welcomeSent
+      ? "נרשם ונשלחה הודעת פתיחה."
+      : "נרשם, אבל שליחת הודעת הפתיחה נכשלה - בדוק/י את לוגי השרת (360dialog).";
+    res.json({ ok: true, message, keys });
   } catch (err) {
     console.error("[manual-complete] error:", err && err.stack ? err.stack : err);
     res.status(500).json({ error: err.message });
@@ -1209,7 +1222,10 @@ app.get("/api/manual-complete-token", async (req, res) => {
     };
 
     const keys = await finalizeRegistration(result, pending);
-    res.json({ ok: true, message: "נרשם ונשלחה הודעת פתיחה.", keys });
+    const message = keys && keys.welcomeSent
+      ? "נרשם ונשלחה הודעת פתיחה."
+      : "נרשם, אבל שליחת הודעת הפתיחה נכשלה - בדוק/י את לוגי השרת (360dialog).";
+    res.json({ ok: true, message, keys });
   } catch (err) {
     console.error("[manual-complete-token] error:", err && err.stack ? err.stack : err);
     res.status(500).json({ error: err.message });

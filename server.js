@@ -616,6 +616,147 @@ async function checkAndSendWeeklyMessages() {
 }
 setInterval(checkAndSendWeeklyMessages, 60 * 60 * 1000); // check every hour
 
+// ---------------------------------------------------------------
+// Weekly parent progress report
+// ---------------------------------------------------------------
+// NOT YET SUBMITTED to 360dialog - "weekly_progress_report" below is a
+// placeholder name. Before this can actually send, create+submit the
+// matching template there (Hebrew + Arabic, one {{1}} body variable) and
+// update this constant to match the name 360dialog approves it under -
+// see the OPENING_WELCOME_TEMPLATE_NAME comment above for exactly why a
+// mismatched name fails (error 132001) even once approved.
+const WEEKLY_PROGRESS_REPORT_TEMPLATE_NAME = "weekly_progress_report";
+
+// Written by chat-route.js's logProgressEntry() on every successful
+// /api/chat reply - see the comment there for exactly what one line
+// contains. JSON-lines, not a single JSON array (see that file for why).
+const PROGRESS_LOG_FILE = "progress-log.jsonl";
+function readProgressLogEntries() {
+  if (!fs.existsSync(PROGRESS_LOG_FILE)) return [];
+  const raw = fs.readFileSync(PROGRESS_LOG_FILE, "utf8");
+  const entries = [];
+  for (const line of raw.split("\n")) {
+    if (!line.trim()) continue;
+    try {
+      entries.push(JSON.parse(line));
+    } catch (err) {
+      // One corrupted line (e.g. a partial write during a crash) should
+      // never take down the whole weekly report - skip it and move on.
+      console.error("[progress-log] skipping corrupted line:", err.message);
+    }
+  }
+  return entries;
+}
+
+// Builds the {{1}} variable text for one student's weekly report: a
+// short per-subject summary, in the student's own lang, of what they
+// worked on in the last 7 days. `studentKeys` is every key (whatsapp:...
+// and stu_...) that points at this same STUDENTS record, since a
+// student's activity might be logged under either one depending on
+// which channel they used - see the caller below.
+//
+// Returns null when there's no activity to report. Deliberately sends
+// nothing rather than an empty/awkward "you didn't do anything this
+// week" message - consistent with the no-fabricated-stats principle
+// used everywhere else in this codebase (Zivvo's landing page, the math
+// KB's honesty flags, etc.).
+function buildWeeklyProgressSummary(studentKeys, lang, childName) {
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const entries = readProgressLogEntries().filter(
+    e => studentKeys.includes(e.studentId) && new Date(e.ts).getTime() >= cutoff
+  );
+  if (entries.length === 0) return null;
+
+  const bySubject = {};
+  for (const e of entries) {
+    const key = e.subject || "כללי";
+    if (!bySubject[key]) bySubject[key] = { topicIds: new Set(), topicNames: [], messages: 0 };
+    if (e.topicId && !bySubject[key].topicIds.has(e.topicId)) {
+      bySubject[key].topicIds.add(e.topicId);
+      // topicName is the human-readable title chat-route.js already
+      // extracted from the model's [TOPIC: ...] tag for this reply -
+      // falling back to the raw topicId only for general-chat turns,
+      // which have no such tag.
+      bySubject[key].topicNames.push(e.topicName || e.topicId);
+    }
+    bySubject[key].messages += 1;
+  }
+
+  // Named up to 3 topics per subject, in the order first touched that
+  // week - enough for a parent to recognize what their kid worked on
+  // without the message turning into a wall of text for a student who
+  // covered many topics.
+  const MAX_NAMED_TOPICS = 3;
+  const lines = Object.entries(bySubject).map(([subjectId, stats]) => {
+    const subj = SUBJECTS.find(s => s.id === subjectId);
+    const name = subj ? chatRouter.subjectLabel(subj, lang) : subjectId;
+    const topicCount = stats.topicIds.size;
+    const named = stats.topicNames.slice(0, MAX_NAMED_TOPICS);
+    const overflow = stats.topicNames.length - named.length;
+    const namedList = named.join(lang === "ar" ? "، " : ", ");
+    return lang === "ar"
+      ? `• ${name} (${topicCount} مواضيع، ${stats.messages} رسالة): ${namedList}${overflow > 0 ? ` وأكتر بـ${overflow}` : ""}`
+      : `• ${name} (${topicCount} נושאים, ${stats.messages} הודעות): ${namedList}${overflow > 0 ? ` ועוד ${overflow}` : ""}`;
+  });
+
+  // Same firstName-with-fallback pattern already used for opening_welcome
+  // (see finalizeRegistration above) - a first name if we have one,
+  // otherwise a warm generic term rather than leaving it blank.
+  const firstName = (childName || "").trim().split(/\s+/)[0] || (lang === "ar" ? "ابنكم/ابنتكم" : "הילד/ה שלכם");
+  const heading = lang === "ar" ? `هاي أسبوع اشتغل/ت ${firstName} على:` : `השבוע ${firstName} עבד/ה על:`;
+
+  return `${heading}\n${lines.join("\n")}`;
+}
+
+// Sent Thursday morning - deliberately not Sunday like weekly_boost, so a
+// parent reading it still has the weekend ahead to actually act on it
+// (extra practice, a conversation with their kid) before the next school
+// week starts, rather than reading it after the week is already over.
+async function checkAndSendWeeklyProgressReports() {
+  const israelNow = nowInIsrael();
+  const day = israelNow.getUTCDay(); // 0=Sunday ... 4=Thursday
+  const hour = israelNow.getUTCHours();
+  const isSendWindow = day === 4 && hour === 9; // Thursday, 09:00-09:59 Israel time
+  if (!isSendWindow) return;
+
+  const isoWeek = getISOWeek(israelNow);
+
+  // A student record is stored under two keys (whatsapp:+972... and
+  // stu_... - see finalizeRegistration) that both point at the *same*
+  // object, so a plain Object.entries loop would process - and message -
+  // every parent twice. Track objects already handled this pass instead.
+  const handled = new Set();
+
+  for (const [, student] of Object.entries(STUDENTS)) {
+    if (handled.has(student)) continue;
+    handled.add(student);
+    if (!student.parentPhone) continue;
+
+    const studentKeys = Object.entries(STUDENTS)
+      .filter(([, s]) => s === student)
+      .map(([k]) => k);
+    // Prefer the stu_... id (what the website sends to /api/chat) as the
+    // stable per-week dedup key, since it's the one progress-log entries
+    // are actually recorded under for now.
+    const canonicalKey = studentKeys.find(k => k.startsWith("stu_")) || studentKeys[0];
+    const sentKey = `progress:${canonicalKey}:${isoWeek}`;
+    if (weeklySent[sentKey]) continue;
+
+    const summary = buildWeeklyProgressSummary(studentKeys, student.lang, student.childName);
+    if (!summary) continue; // no activity this week - stay silent
+
+    try {
+      const langCode = student.lang === "ar" ? "ar" : "he";
+      await sendTemplateWhatsApp(student.parentPhone, WEEKLY_PROGRESS_REPORT_TEMPLATE_NAME, langCode, summary);
+      weeklySent[sentKey] = true;
+      saveWeeklySent();
+    } catch (err) {
+      console.error(`Weekly progress report failed for ${canonicalKey}:`, err);
+    }
+  }
+}
+setInterval(checkAndSendWeeklyProgressReports, 60 * 60 * 1000);
+
 // ---- Main webhook: 360dialog calls this on every incoming WhatsApp message ----
 // Payload shape is Meta's WhatsApp Cloud API format - see the comment at
 // the top of this file. 360dialog also delivers "statuses" notifications

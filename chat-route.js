@@ -12,7 +12,6 @@
 const express = require('express');
 const multer = require('multer');
 const Anthropic = require('@anthropic-ai/sdk');
-const fs = require('fs');
 
 const router = express.Router();
 
@@ -39,30 +38,6 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 *
 const MAX_MESSAGE_LENGTH = 2000; // generous for a real question, blocks spam walls of text
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 const RATE_LIMIT_MAX_REQUESTS = 30; // per window, per identifier
-
-// ---------------------------------------------------------------
-// Progress log: one append-only JSON-lines file, one line per successful
-// /api/chat reply. This is the raw material the weekly parent-report
-// (built in server.js, see checkAndSendWeeklyProgressReports) reads and
-// aggregates from - so it only needs enough per-entry detail to compute
-// "which subjects, how many topics, how many messages this week" per
-// student. Kept deliberately minimal (no message text, no answers) since
-// this is bound for a WhatsApp summary to a parent, not a transcript.
-//
-// JSON-lines (one JSON object per line) rather than a single JSON array
-// so a crash mid-write can never corrupt earlier entries, and appending
-// never requires reading + rewriting the whole file.
-const PROGRESS_LOG_FILE = 'progress-log.jsonl';
-function logProgressEntry(entry) {
-  try {
-    fs.appendFileSync(PROGRESS_LOG_FILE, JSON.stringify(entry) + '\n');
-  } catch (err) {
-    // Never let a logging failure break the actual chat reply the
-    // student is waiting on - this is a "nice to have" for the parent
-    // report, not something the live chat depends on.
-    console.error('[progress-log] failed to write entry:', err);
-  }
-}
 const rateLimitLog = new Map(); // identifier -> array of request timestamps (ms)
 
 function checkRateLimit(identifier) {
@@ -7622,6 +7597,7 @@ const STUDENTS_FILE = require("path").join(__dirname, "students.json");
 const STUDENTS_DEFAULTS = {
   "owner-full-access": { owner: true },
   "whatsapp:+972525775253": { owner: true }, // Ammar's own number, for testing the full flow
+  "guest-rI2grLiRFRLkqXzOjlFKhg": { owner: true, lang: null }, // personal full-access link for 0545419376 (tablet/site). Revoke by deleting this line.
   // "example-student-1": { subjects: ["math", "english"], grade: "ח", lang: "he" },
   // "whatsapp:+972529876543": { subjects: ["math"], grade: "ז", lang: "he" }, // example paying WhatsApp student
   // lang ("he" or "ar") is required for the weekly motivational message
@@ -8109,15 +8085,13 @@ router.post('/chat', upload.single('image'), async (req, res) => {
         error_ar: 'يجب التسجيل أولاً للبدء بالتعلّم - daiz.co.il',
       });
     }
-    // General-chat mode has no unit to derive the subject from, so it uses
-    // the subject id sent directly by the client instead of unit.subject
-    // (which topic-based mode relies on). Computed here (not just inside
-    // the paywall check below) because the progress log further down
-    // needs a subject id regardless of whether this student is an owner.
-    const matchedSubject = isGeneralChat
-      ? SUBJECTS.find(s => s.id === subject)
-      : SUBJECTS.find(s => s.kb_subject === unit.subject);
     if (!student.owner) {
+      // General-chat mode has no unit to derive the subject from, so it
+      // uses the subject id sent directly by the client instead of
+      // unit.subject (which topic-based mode relies on).
+      const matchedSubject = isGeneralChat
+        ? SUBJECTS.find(s => s.id === subject)
+        : SUBJECTS.find(s => s.kb_subject === unit.subject);
       const subjectOk = matchedSubject && student.subjects.includes(matchedSubject.id);
       const gradeOk = grade && grade === student.grade;
       if (!subjectOk || !gradeOk) {
@@ -8208,19 +8182,8 @@ router.post('/chat', upload.single('image'), async (req, res) => {
     // רשת ביטחון: מסירים כוכביות markdown, למקרה שהמודל בכל זאת השתמש בהן
     cleanReply = cleanReply.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1');
 
-    // Weekly parent report material (see checkAndSendWeeklyProgressReports
-    // in server.js): one lightweight entry per successful reply. No
-    // message text or model output - just enough to later say "X worked
-    // on Y topics in Z subjects this week".
-    logProgressEntry({
-      studentId,
-      studentName: studentName || null,
-      grade: grade || student.grade || null,
-      subject: matchedSubject ? matchedSubject.id : (subject || null),
-      topicId: isGeneralChat ? 'general-chat' : topicId,
-      topicName: topic || null,
-      ts: new Date().toISOString(),
-    });
+    // TODO: שמירה למסד נתונים לצורך דוח שבועי להורים:
+    // studentId, studentName, grade, topic, timestamp
 
     res.json({ reply: cleanReply, topic, diagrams });
   } catch (err) {
